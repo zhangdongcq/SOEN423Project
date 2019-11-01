@@ -21,7 +21,6 @@ import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 import org.omg.PortableServer.POAPackage.ServantNotActive;
 import org.omg.PortableServer.POAPackage.WrongPolicy;
 
-import FrontEnd.UDPs.UdpFE2Sequencer;
 import FrontEnd.UDPs.UdpListenerOnRMs;
 import corbasystem.IFrontEndServer;
 import corbasystem.IFrontEndServerHelper;
@@ -34,10 +33,13 @@ public class FrontEndSever {
          InputStreamReader is = new InputStreamReader(System.in);
          BufferedReader br = new BufferedReader(is);
          String frontEndName;
-
          // Register FrontEnd name
-         logger.log(Level.INFO, "Enter a name for this front end server:");
+         logger.log(Level.INFO, "Enter the city:");
          frontEndName = (br.readLine()).trim().toLowerCase();
+         while (!Utils.isValidCityInput(frontEndName)) {
+            logger.log(Level.WARNING, "Invalid city! mtl, que, she are options. Input another one.");
+            frontEndName = (br.readLine()).trim().toLowerCase();
+         }
          //Get front end ip address
          String ipAddress = InetAddress.getLocalHost().getHostAddress();
 
@@ -62,20 +64,19 @@ public class FrontEndSever {
          // Get naming context
          org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
          NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-         //Publish the city into naming service
+         //Publish the frontend with specified name into naming service
          NameComponent[] nc = ncRef.to_name(frontEndName);
          ncRef.rebind(nc, href);
-         System.out.println("Front End server is ready and waiting......");
+         System.out.println(frontEndName + " Front End server is ready and waiting......");
 
          /**
           * Start RMs Listener UDP
           */
-         UdpListenerOnRMs listenerOnRMs = new UdpListenerOnRMs();
+         UdpListenerOnRMs listenerOnRMs = new UdpListenerOnRMs(server);
          listenerOnRMs.start();
 
-         logger.log(Level.INFO, "FrontEnd server is ready.");
-
          //Block until orb closes
+         logger.log(Level.INFO, "FrontEnd server is ready.");
          orb.run();
       } catch (ServantNotActive | WrongPolicy | InvalidName | org.omg.CORBA.ORBPackage.InvalidName | CannotProceed | NotFound | AdapterInactive | IOException servantNotActive) {
          servantNotActive.printStackTrace();

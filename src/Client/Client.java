@@ -51,8 +51,7 @@ public class Client {
          }
 
          //Get Frontend server name
-         loggerClient.log(Level.INFO, "Enter your a front end name to connect to:");
-         frontEndServerName = br.readLine();
+         frontEndServerName = Utils.getCity(userID);
 
          //Setup FileHandler for Logging in file
          try {
@@ -129,7 +128,9 @@ public class Client {
 
             appointmentType = getValidAppointmentType(br, Utils.APP_TYPE);
 
-            return frontEndServer.requestHandler(userId, "bookAppointment", String.join(",", patientId, appointmentId, appointmentType));
+            String realAppType = Utils.getRealAppType(appointmentType);
+
+            return frontEndServer.requestHandler(userId, "bookAppointment", String.join(",", patientId, appointmentId, realAppType));
          case "b":
             patientId = getValidPatientId(br);
 
@@ -146,9 +147,14 @@ public class Client {
          case "d":
             patientId = getValidPatientId(br);
             String oldAppointmentId = getValidAppointmentId(br, Utils.OLD_APP_ID);
+
             String newAppointmentId = getValidAppointmentId(br, Utils.NEW_APP_ID);
+
             String oldAppointmentType = getValidAppointmentType(br, Utils.OLD_APP_TYPE);
+            oldAppointmentType = Utils.getRealAppType(oldAppointmentType);
+
             String newAppointmentType = getValidAppointmentType(br, Utils.NEW_APP_TYPE);
+            newAppointmentType = Utils.getRealAppType(newAppointmentType);
             return frontEndServer.requestHandler(userId, "swapAppointment", String.join(",", patientId, oldAppointmentId, oldAppointmentType, newAppointmentId, newAppointmentType));
          default:
             return "Could not go here, no such a selection in patient menu!";
@@ -168,7 +174,7 @@ public class Client {
             if (!appointmentId.substring(0, 3).equalsIgnoreCase(targetCity)) {
                return String.format("Please only add your city-specific appointment. City: %s(A/E/M)XXXXXX.", targetCity.toUpperCase());
             }
-            return frontEndServer.requestHandler(userId, "swapAppointment", String.join(",", appointmentId, realType, capacity));
+            return frontEndServer.requestHandler(userId, "addAppointment", String.join(",", appointmentId, realType, capacity));
 
          case "2":
 
