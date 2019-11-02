@@ -21,7 +21,6 @@ import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 import org.omg.PortableServer.POAPackage.ServantNotActive;
 import org.omg.PortableServer.POAPackage.WrongPolicy;
 
-import FrontEnd.UDPs.UdpListenerOnRMs;
 import corbasystem.IFrontEndServer;
 import corbasystem.IFrontEndServerHelper;
 
@@ -72,8 +71,8 @@ public class FrontEndSever {
          /**
           * Start RMs Listener UDP
           */
-         UdpListenerOnRMs listenerOnRMs = new UdpListenerOnRMs(server);
-         listenerOnRMs.start();
+//         UdpListenerOnRMs listenerOnRMs = new UdpListenerOnRMs(server);
+//         listenerOnRMs.start();
 
          //Block until orb closes
          logger.log(Level.INFO, "FrontEnd server is ready.");
