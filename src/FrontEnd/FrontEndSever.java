@@ -26,6 +26,7 @@ import corbasystem.IFrontEndServerHelper;
 
 public class FrontEndSever {
    private static final Logger logger = Logger.getLogger("server");
+
    public static void main(String[] args) {
       try {
          //Get user input and Register frontend name
