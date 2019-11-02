@@ -26,7 +26,7 @@ public class Sequencer {
       try (DatagramSocket sequencerServerSocket = new DatagramSocket(6789)) {
          byte[] buffer = new byte[1024];// to stored the received data from
          // the client.
-         System.out.println("Sequencer server started, receiving msg from front end............");
+         logger.log(Level.INFO, "Sequencer server started, receiving msg from front end............");
          while (true) {// non-terminating loop as the server is always in listening mode.
             //TODO: Receiving msg from FE
             DatagramPacket request = new DatagramPacket(buffer, buffer.length);
@@ -45,6 +45,7 @@ public class Sequencer {
             //TODO: Multicast to Replica Managers
 
             MultiCaster(multicastPort, multicastAddress, allMsgs);
+            logger.log(Level.INFO, "Message sent to replica managers through Multicaster");
 
             //TODO: Send FE the client msg arrived successfully
             DatagramPacket reply = new DatagramPacket(request.getData(), request.getLength(), request.getAddress(),
