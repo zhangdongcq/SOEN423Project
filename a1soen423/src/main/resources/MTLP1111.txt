@@ -1,0 +1,7 @@
+2019-10-10 03:02:55PM > Request:[   bookAppointment MTLP1111 MTLA121212 Dental ] Response:[ Success ]
+2019-10-10 03:03:10PM > Request:[   swapAppointment MTLP1111 MTLA121212 Dental MTLA121212 Surgeon  ] Response:[ Success ]
+2019-10-10 03:03:12PM > Request:[   getAppointmentSchedule MTLP1111 ] Response:[ Surgeon MTLA121212, ]
+2019-10-10 03:03:30PM > Request:[   swapAppointment MTLP1111 MTLA121212 Surgeon QUEA111111 Physician  ] Response:[ Success ]
+2019-10-10 03:03:33PM > Request:[   getAppointmentSchedule MTLP1111 ] Response:[ Dental QUEA111111, ]
+2019-10-10 03:04:08PM > Request:[   getAppointmentSchedule MTLP1111 ] Response:[ Dental QUEA111111, ]
+2019-10-10 03:04:12PM > Request:[   logout ] Response:[ Logging out user ]

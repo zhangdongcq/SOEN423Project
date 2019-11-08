@@ -1,0 +1,25 @@
+module RemotelyInvokableHospitalApp
+{
+    interface RemotelyInvokableHospital
+    {
+
+            enum AppointmentType {
+                Physician, Surgeon, Dental
+            };
+
+            string addAppointment(in string appointmentId, in AppointmentType appointmentType, in long capacity);
+
+            string removeAppointment(in string appointmentId, in AppointmentType appointmentType);
+
+            string listAppointmentAvailability(in AppointmentType appointmentType);
+
+            string bookAppointment(in string patientId, in string appointmentId, in AppointmentType appointmentType);
+
+            string getAppointmentSchedule(in string patientId);
+
+            string cancelAppointment(in string patientId, in string appointmentId);
+
+            string swapAppointment(in string patientId, in string oldAppointmentId, in AppointmentType oldAppointmentType,
+                in string newAppointmentId, in AppointmentType newAppointmentType);
+    };
+};

@@ -1,0 +1,2 @@
+2019-10-21 09:57:38AM > Request:[ login ] Response:[ successful login ]
+2019-10-21 09:57:41AM > Request:[   getAppointmentSchedule MTLP1532 ] Response:[  ]
