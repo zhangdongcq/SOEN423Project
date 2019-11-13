@@ -159,7 +159,7 @@ public class DatabaseTest {
     {
         add12Appointments();
         database.bookAppointment(AppointmentType.Dental, "MTLM191119", "MTLP2345");
-        assertEquals("Dental MTLM191119,", database.getAppointmentSchedule("MTLP2345"));
+        assertEquals(";Dental;MTLM191119", database.getAppointmentSchedule("MTLP2345"));
     }
 
     @Test
@@ -168,19 +168,17 @@ public class DatabaseTest {
         add12Appointments();
         database.bookAppointment(AppointmentType.Dental, "MTLM191119", "MTLP2345");
         database.bookAppointment(AppointmentType.Dental, "MTLM191119", "MTLP2346");
-        assertEquals("Dental MTLM191119,", database.getAppointmentSchedule("MTLP2345"));
+        assertEquals(";Dental;MTLM191119", database.getAppointmentSchedule("MTLP2345"));
     }
 
     @Test
-    public void givenPatientHasBookedAppointmentsAcrossManyTypes_callingGetAppointmentSchedule_returnsAllThierAppointments()
+    public void givenPatientHasBookedAppointmentsAcrossManyTypes_callingGetAppointmentSchedule_returnsAllThierAppointmentsSorted()
     {
         add12Appointments();
         bookPatientAcross9Appointments("MTLP2345");
-        ArrayList<String> expectedItems = new ArrayList<>(Arrays.asList(
-                "Dental MTLM191119,","Dental MTLE151119," ,"Dental MTLM201119,",
-                "Physician MTLM191119,", "Physician MTLE151119,", "Physician MTLM201119",
-                "Surgeon MTLM191119", "Surgeon MTLE151119,", "Surgeon MTLM201119,"));
-        assertTrue(expectedItems.stream().allMatch(item -> database.getAppointmentSchedule("MTLP2345").contains(item)));
+        String expectedResult = ";Dental;MTLE151119;Dental;MTLM191119;Dental;MTLM201119;Physician;" +
+                "MTLE151119;Physician;MTLM191119;Physician;MTLM201119;Surgeon;MTLE151119;Surgeon;MTLM191119;Surgeon;MTLM201119";
+        assertEquals(expectedResult, database.getAppointmentSchedule("MTLP2345"));
     }
 
     //Cancel Appointment
@@ -214,7 +212,7 @@ public class DatabaseTest {
     {
         add12Appointments();
         database.bookAppointment(AppointmentType.Dental, "MTLM191119", "MTLP2345");
-        assertEquals("Dental MTLM191119,", database.getAppointmentSchedule("MTLP2345"));
+        assertEquals(";Dental;MTLM191119", database.getAppointmentSchedule("MTLP2345"));
         database.cancelAppointment("MTLP2345", "MTLM191119");
         assertEquals("", database.getAppointmentSchedule("MTLP2345"));
     }

@@ -80,7 +80,7 @@ public class ConcurrentUserTest {
 
         assertEquals("FAIL",CorbaTester.deliverArguments(swapAppointment, remotelyInvokableHospital));
 
-        assertEquals(";Dental SHEA111115", CorbaTester.deliverArguments(getAppointmentSchedule, remotelyInvokableHospital));
+        assertEquals(";Dental;SHEA111115", CorbaTester.deliverArguments(getAppointmentSchedule, remotelyInvokableHospital));
 
         CorbaTester.deliverArguments(removeAppointment, remotelyInvokableHospital);
     }
@@ -110,7 +110,7 @@ public class ConcurrentUserTest {
 
         assertEquals("SUCCESS",CorbaTester.deliverArguments(swapAppointment, remotelyInvokableHospital));
 
-        assertEquals(";Surgeon QUEA111115", CorbaTester.deliverArguments(getAppointmentSchedule, remotelyInvokableHospital));
+        assertEquals(";Surgeon;QUEA111115", CorbaTester.deliverArguments(getAppointmentSchedule, remotelyInvokableHospital));
 
         CorbaTester.deliverArguments(removeNewAppointment, remotelyInvokableHospital);
         setUser("SHEA1111");

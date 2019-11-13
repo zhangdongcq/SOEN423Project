@@ -164,18 +164,32 @@ public class Database  {
         if(!IdValidator.isPatientID(patientID))
             result = "FAIL";
         else {
-            StringBuilder stringBuilder = new StringBuilder();
-            database.values().forEach(typeMap ->
-                    typeMap.values().stream()
-                            .filter(appointmentDetails -> appointmentDetails.getPatientsBooked().contains(patientID))
-                            .forEach(appointmentDetails -> stringBuilder.append(
-                                    ";" + StringConversion.getAppointmentTypeString(appointmentDetails.getAppointmentType()) +
-                                            " " + appointmentDetails.getAppointmentID()))
-            );
-            result = stringBuilder.toString();
+            StringBuilder sb = new StringBuilder();
+
+            addAppointmentScheduleToStringBuilder(AppointmentType.Dental, sb, patientID);
+            addAppointmentScheduleToStringBuilder(AppointmentType.Physician, sb, patientID);
+            addAppointmentScheduleToStringBuilder(AppointmentType.Surgeon, sb, patientID);
+            result = sb.toString();
         }
         lock.unlock();
         return result;
+    }
+
+    private void addAppointmentScheduleToStringBuilder(AppointmentType appointmentType, StringBuilder stringBuilder, String patientID)
+    {
+        database.get(appointmentType).values().stream()
+                //All appointments from patient
+                .filter(appointmentDetails -> appointmentDetails.getPatientsBooked().contains(patientID))
+                //Go through patient appointments
+                .sorted()
+                .forEach(appointmentDetails ->
+                        stringBuilder.append(
+                                ";" +
+                                        StringConversion.getAppointmentTypeString(appointmentDetails.getAppointmentType()) +
+                                        ";" +
+                                        appointmentDetails.getAppointmentID()
+                        )
+                );
     }
 
     public String cancelAppointment(String patientID, String appointmentID)

@@ -210,7 +210,7 @@ public class Assignment1Tests {
 
         List<String> listSchedule = Arrays.asList("getAppointmentSchedule", "MTLP1234");
         String result = CorbaTester.deliverArguments(listSchedule, remotelyInvokableHospital);
-        assertEquals(";Dental MTLE121236;Physician MTLE121236;Surgeon MTLE121236;Dental SHEA121237", result);
+        assertEquals(";Dental;MTLE121236;Dental;SHEA121237;Physician;MTLE121236;Surgeon;MTLE121236", result);
 
         CorbaTester.deliverArguments(removeAppointment, remotelyInvokableHospital);
         CorbaTester.deliverArguments(removeAppointment3, remotelyInvokableHospital);
@@ -307,18 +307,18 @@ public class Assignment1Tests {
         List<String> showAppointmentSchedule2 = Arrays.asList("getAppointmentSchedule", "MTLP1234");
 
         String result = CorbaTester.deliverArguments(showAppointmentSchedule, remotelyInvokableHospital);
-        assertEquals(";Dental SHEA101236", result);
+        assertEquals(";Dental;SHEA101236", result);
         result = CorbaTester.deliverArguments(showAppointmentSchedule2, remotelyInvokableHospital);
-        assertEquals(";Dental SHEA101236", result);
+        assertEquals(";Dental;SHEA101236", result);
 
         result = CorbaTester.deliverArguments(removeAppointment, remotelyInvokableHospital);
         assertEquals("SUCCESS", result);
 
         result = CorbaTester.deliverArguments(showAppointmentSchedule, remotelyInvokableHospital);
-        assertEquals(";Dental SHEA121237", result);
+        assertEquals(";Dental;SHEA121237", result);
 
         result = CorbaTester.deliverArguments(showAppointmentSchedule2, remotelyInvokableHospital);
-        assertEquals(";Dental SHEA121237", result);
+        assertEquals(";Dental;SHEA121237", result);
 
         CorbaTester.deliverArguments(removeAppointment, remotelyInvokableHospital);
         CorbaTester.deliverArguments(removeAppointment2, remotelyInvokableHospital);

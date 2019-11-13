@@ -4,7 +4,10 @@ import RemotelyInvokableHospitalApp.RemotelyInvokableHospitalPOA;
 import RemotelyInvokableHospitalApp.RemotelyInvokableHospitalPackage.AppointmentType;
 import hospital.database.AppointmentDetails;
 import hospital.database.Database;
+import javafx.util.Pair;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import logging.Logger;
+import one.util.streamex.StreamEx;
 import org.apache.commons.lang3.math.NumberUtils;
 import udp.UDPClient;
 import utility.StringConversion;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RemotelyInvokableHospitalImpl extends RemotelyInvokableHospitalPOA
 {
@@ -123,7 +127,7 @@ public class RemotelyInvokableHospitalImpl extends RemotelyInvokableHospitalPOA
         String thirdServer = udpClient.sendRequest(udpString, getOtherServerIDs().get(1));
         outcome =  thisServer + secondServer + thirdServer;
         Logger.saveLog(requestLog, outcome, hospitalID);
-        return outcome;
+        return sortAppointmentSchedule(outcome);
     }
 
     @Override
@@ -276,31 +280,45 @@ public class RemotelyInvokableHospitalImpl extends RemotelyInvokableHospitalPOA
         database.addAppointment(new AppointmentDetails(3,hospitalID + "A101111", AppointmentType.Dental));
     }
 
-    private String sortAppointmentSchedule(String appointmentSchedule)
+    public static String sortAppointmentSchedule(String appointmentSchedule)
     {
-        List<String> dental = new ArrayList<>();
-        List<String> physician = new ArrayList<>();
-        List<String> surgeon = new ArrayList<>();
-        Arrays.stream(appointmentSchedule.split(";"))
+        ArrayList<String> appointments = new ArrayList<>(Arrays.asList(appointmentSchedule.split(";")));
+        appointments.remove(0);
+        List<Pair<String,String>> aptPairs = StreamEx.of(appointments)
+                .pairMap((a,b) -> new Pair<String,String>(a, b))
+                .filter(item -> item.getKey().matches("(Surgeon|Physician|Dental)"))
+                .collect(Collectors.toList());
+
+        List<Pair<String,String>> dental = new ArrayList<>();
+        List<Pair<String,String>>  physician = new ArrayList<>();
+        List<Pair<String,String>>  surgeon = new ArrayList<>();
+
+        aptPairs.stream()
                 .forEach(item -> {
-                    if(item.contains("Dental"))
-                        dental.add(item.substring(7));
-                    if(item.contains("Surgeon"))
-                        surgeon.add(item.substring(8));
-                    if(item.contains("Physician"))
-                        physician.add(item.substring(10));
+                    if(item.getKey().equals("Dental"))
+                        dental.add(item);
+                    if(item.getKey().equals("Surgeon"))
+                        surgeon.add(item);
+                    if(item.getKey().equals("Physician"))
+                        physician.add(item);
                 });
-        Collections.sort(dental);
-        Collections.sort(physician);
-        Collections.sort(surgeon);
+
+        String dentalString = getStringifiedSortedAppointments(AppointmentType.Dental, dental);
+        String physicianString = getStringifiedSortedAppointments(AppointmentType.Physician, physician);
+        String surgeonString = getStringifiedSortedAppointments(AppointmentType.Surgeon, surgeon);
+
         StringBuilder sb = new StringBuilder();
-        sb.append(";Dental");
-        dental.forEach(item -> {sb.append(";"); sb.append(item);});
-        sb.append(";Physician");
-        physician.forEach(item -> {sb.append(";"); sb.append(item);});
-        sb.append(";Surgeon");
-        surgeon.forEach(item -> {sb.append(";"); sb.append(item);});
+        sb.append(dentalString).append(physicianString).append(surgeonString);
         return sb.toString();
+    }
+
+    private static String getStringifiedSortedAppointments(AppointmentType appointmentType, List<Pair<String,String>> aptList)
+    {
+        return aptList.stream()
+                .map(item -> new AppointmentDetails(0,item.getValue(), appointmentType))
+                .sorted()
+                .map(item -> ";"+StringConversion.getAppointmentTypeString(appointmentType)+";" + item.getAppointmentID())
+                .reduce("", (item1, item2) -> item1+item2);
     }
 
 }

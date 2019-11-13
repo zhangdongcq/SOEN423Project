@@ -16,14 +16,20 @@ public class AppointmentDetails implements Comparable<AppointmentDetails> {
 
     @Override
     public int compareTo(AppointmentDetails other) {
-        if(this.getAppointmentDate().equals(other.getAppointmentDate()) &&
-                this.getAppointmentDaySlotNumber() == other.getAppointmentDaySlotNumber())
+        boolean datesAreEqual = this.getAppointmentDate().equals(other.getAppointmentDate());
+        boolean daysAreEqual = this.getAppointmentDaySlotNumber() == other.getAppointmentDaySlotNumber();
+        boolean otherDayIsSmaller = this.getAppointmentDaySlotNumber() > other.getAppointmentDaySlotNumber();
+        boolean otherDayIsLarger = this.getAppointmentDaySlotNumber() < other.getAppointmentDaySlotNumber();
+        int locationComparison = this.getAppointmentID().substring(0,1).compareTo(other.getAppointmentID().substring(0,1));
+        boolean otherLocationLarger = locationComparison < 0;
+        boolean otherLocationSmaller = locationComparison > 0;
+        boolean locationsAreEqual = locationComparison == 0;
+
+        if(datesAreEqual && daysAreEqual && locationsAreEqual)
             return 0;
-        if(this.getAppointmentDate().equals(other.getAppointmentDate()) &&
-                this.getAppointmentDaySlotNumber() > other.getAppointmentDaySlotNumber())
+        if((datesAreEqual && otherDayIsSmaller) || (datesAreEqual && daysAreEqual && otherLocationSmaller))
             return 1;
-        if(this.getAppointmentDate().equals(other.getAppointmentDate()) &&
-                this.getAppointmentDaySlotNumber() < other.getAppointmentDaySlotNumber())
+        if((datesAreEqual && otherDayIsLarger) || (datesAreEqual && daysAreEqual && otherLocationLarger))
             return -1;
         return this.getAppointmentDate().compareTo(other.getAppointmentDate());
     }
