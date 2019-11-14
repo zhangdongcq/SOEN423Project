@@ -12,10 +12,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import udp.UDPClient;
 import utility.StringConversion;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class RemotelyInvokableHospitalImpl extends RemotelyInvokableHospitalPOA
@@ -27,7 +24,7 @@ public class RemotelyInvokableHospitalImpl extends RemotelyInvokableHospitalPOA
     public RemotelyInvokableHospitalImpl ()
     {
         super();
-        fillDatabaseWithRecords();
+        //fillDatabaseWithRecords();
     }
 
     @Override
@@ -70,7 +67,7 @@ public class RemotelyInvokableHospitalImpl extends RemotelyInvokableHospitalPOA
         String thirdServer = udpClient.sendRequest(udpString, getOtherServerIDs().get(1));
         String outcome = thisServer + secondServer + thirdServer;
         Logger.saveLog(requestLog, outcome, hospitalID);
-        return outcome;
+        return sortListAvailability(outcome);
     }
 
     @Override
@@ -278,6 +275,18 @@ public class RemotelyInvokableHospitalImpl extends RemotelyInvokableHospitalPOA
         database.addAppointment(new AppointmentDetails(3,hospitalID + "M111111", AppointmentType.Dental));
         database.addAppointment(new AppointmentDetails(3,hospitalID + "A111111", AppointmentType.Dental));
         database.addAppointment(new AppointmentDetails(3,hospitalID + "A101111", AppointmentType.Dental));
+    }
+
+    public static String sortListAvailability(String appointmentAvailability)
+    {
+        ArrayList<String> availabilityList = new ArrayList<>(Arrays.asList(appointmentAvailability.split(";")));
+        availabilityList.remove(0);
+        Collections.sort(availabilityList);
+        return availabilityList.stream().reduce(";", (item1, item2) -> {
+            if(item1.equals(";"))
+                return ";" + item2;
+            return item1 + ";" + item2;
+        });
     }
 
     public static String sortAppointmentSchedule(String appointmentSchedule)

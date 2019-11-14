@@ -16,4 +16,31 @@ public class RemotelyInvokableHospitalImplTest {
         String result = RemotelyInvokableHospitalImpl.sortAppointmentSchedule(inputString);
         assertEquals(expectedString, result);
     }
+
+    @Test
+    public void givenSingleItem_callingSortListAvailability_correctlyFormatsOutput()
+    {
+        String inputString = ";QUEE110619 1";
+        String expectedString = ";QUEE110619 1";
+        String result = RemotelyInvokableHospitalImpl.sortListAvailability(inputString);
+        assertEquals(expectedString, result);
+    }
+
+    @Test
+    public void givenTwoItems_callingSortListAvailability_correctlyFormatsOutput()
+    {
+        String inputString = ";QUEE110619 1;MTLA111111 3";
+        String expectedString = ";MTLA111111 3;QUEE110619 1";
+        String result = RemotelyInvokableHospitalImpl.sortListAvailability(inputString);
+        assertEquals(expectedString, result);
+    }
+
+    @Test
+    public void given5Items_callingSortListAvailability_correctlyFormatsOutput()
+    {
+        String inputString = ";SHEA111111 4;MTLA12111111 2;SHEM111111 3;QUEE110619 1;MTLA111111 3";
+        String expectedString = ";MTLA111111 3;MTLA12111111 2;QUEE110619 1;SHEA111111 4;SHEM111111 3";
+        String result = RemotelyInvokableHospitalImpl.sortListAvailability(inputString);
+        assertEquals(expectedString, result);
+    }
 }
