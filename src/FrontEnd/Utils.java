@@ -62,4 +62,25 @@ public class Utils {
               || input.equalsIgnoreCase(QUE)
               || input.equalsIgnoreCase(SHE);
    }
+
+   public static String getMajority(String [] responseList)
+    {
+        int majority;
+        if(responseList.length%2 ==0)
+            majority = responseList.length/2;
+        else
+            majority = responseList.length/2 +1;
+        for(int i=1; i<responseList.length; i++)
+        {
+            int numberTheSame = 1;
+            for(int j=i+1; j<responseList.length; j++)
+            {
+                if(responseList[i].equals(responseList[j]))
+                    numberTheSame++;
+                if(numberTheSame == majority)
+                    return responseList[i];
+            }
+        }
+        return "FAIL";
+    }
 }
