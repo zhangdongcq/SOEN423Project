@@ -33,22 +33,24 @@ public class Sequencer {
             // Server waits for the request to come, block until a msg is in
             sequencerServerSocket.receive(request);// request received
             String msgFromFrontEnd = new String(buffer, 0, request.getLength());
-            String feAddress = request.getAddress().getHostAddress();
-            int fePort = request.getPort();
-            String msgToRMs = encapsulateRequest(msgFromFrontEnd, feAddress, fePort);
-            msgBackup.put(globalSequenceCounter, msgToRMs);
-            allMsgs.offer(msgToRMs);
+            //TODO: Only multicast to Replica Managers if msg is new one
+            if(!msgFromFrontEnd.contains(";RESEND")) {
+               String feAddress = request.getAddress().getHostAddress();
+               int fePort = request.getPort();
+               // Global Counter ++ after encapsulation
+               String msgToRMs = encapsulateRequest(msgFromFrontEnd, feAddress, fePort);
+               msgBackup.put(globalSequenceCounter-1, msgToRMs);
+               allMsgs.offer(msgToRMs);
+               logger.log(Level.INFO, "Request received from client: " + msgFromFrontEnd);
+               System.out.println("Msg sent to RMs is: " + msgToRMs);
 
-            logger.log(Level.INFO, "Request received from client: " + msgFromFrontEnd);
-            System.out.println("Msg sent to RMs is: " + msgToRMs);
+               MultiCaster(multicastPort, multicastAddress, allMsgs);
+               logger.log(Level.INFO, "Message sent to replica managers through Multicaster");
+            }
 
-            //TODO: Multicast to Replica Managers
-
-            MultiCaster(multicastPort, multicastAddress, allMsgs);
-            logger.log(Level.INFO, "Message sent to replica managers through Multicaster");
-
-            //TODO: Send FE the client msg arrived successfully
-            DatagramPacket reply = new DatagramPacket(request.getData(), request.getLength(), request.getAddress(),
+            //TODO: Send acknowledge to FE
+            byte[] sequencer_ack_msg = ("SEQUENCER_ACK|" + (globalSequenceCounter-1)).getBytes();
+            DatagramPacket reply = new DatagramPacket(sequencer_ack_msg, sequencer_ack_msg.length, request.getAddress(),
                     request.getPort());// reply packet ready
             sequencerServerSocket.send(reply);// reply sent
          }

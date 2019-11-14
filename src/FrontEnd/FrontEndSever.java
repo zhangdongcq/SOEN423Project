@@ -29,6 +29,7 @@ public class FrontEndSever {
 
    public static void main(String[] args) {
       try {
+         //TODO: Get requests from client
          //Get user input and Register frontend name
          InputStreamReader is = new InputStreamReader(System.in);
          BufferedReader br = new BufferedReader(is);
@@ -43,9 +44,9 @@ public class FrontEndSever {
          //Get front end ip address
          String ipAddress = InetAddress.getLocalHost().getHostAddress();
 
-         /**
-          * Starts Corba Services
-          */
+
+          //TODO: Starts Corba Services
+
          //Generate and initiate the ORB
          Properties props = new Properties();
          //Initiate the port
@@ -57,23 +58,17 @@ public class FrontEndSever {
          //Get rootPOA reference and activate POA Manager
          POA poa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
          poa.the_POAManager().activate();
-         //Initiated a ServerImpl instance
+         //TODO: Initiated a ServerImpl instance
          FrontEndServerImpl server = new FrontEndServerImpl(frontEndName);
          org.omg.CORBA.Object ref = poa.servant_to_reference(server);
          IFrontEndServer href = IFrontEndServerHelper.narrow(ref);
-         // Get naming context
+         // TODO: Get naming context
          org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
          NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-         //Publish the frontend with specified name into naming service
-         NameComponent[] nc = ncRef.to_name(frontEndName);
+         //TODO: Publish the frontend with specified name into naming service
+         NameComponent[] nc = ncRef.to_name(frontEndName+"_fe");
          ncRef.rebind(nc, href);
-         System.out.println(frontEndName + " Front End server is ready and waiting......");
-
-         /**
-          * Start RMs Listener UDP
-          */
-//         UdpListenerOnRMs listenerOnRMs = new UdpListenerOnRMs(server);
-//         listenerOnRMs.start();
+         System.out.println(frontEndName + "_fe Front End server is ready and waiting......");
 
          //Block until orb closes
          logger.log(Level.INFO, "FrontEnd server is ready.");

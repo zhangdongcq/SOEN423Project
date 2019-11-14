@@ -79,7 +79,7 @@ public class Client {
          NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 
          // Get object reference through naming server
-         IFrontEndServer frontEndServer = IFrontEndServerHelper.narrow(ncRef.resolve_str(frontEndServerName));
+         IFrontEndServer frontEndServer = IFrontEndServerHelper.narrow(ncRef.resolve_str(frontEndServerName+"_fe"));
          loggerClient.log(Level.INFO, "Lookup completed.");
 
          userType = Utils.getUserType(userID);

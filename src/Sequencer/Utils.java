@@ -16,14 +16,14 @@ public class Utils {
          multicastSocket.setLoopbackMode(false);//Do not send to itself
          multicastSocket.joinGroup(group);
 
-         System.out.println("准备发送给 RM");
+         System.out.println("Ready to send to RM");
 
          if (!allMsgs.isEmpty()) {
             String msgToMulticast = allMsgs.poll();
             byte[] msgBuffer = msgToMulticast.getBytes();
             DatagramPacket packetToSend = new DatagramPacket(msgBuffer, msgBuffer.length, group, 9003);
             multicastSocket.send(packetToSend);
-            System.out.println("发送给了 RM: " + msgToMulticast);
+            System.out.println("Done! Sent to RM: " + msgToMulticast);
          }
       } catch (UnknownHostException | SocketException e) {
          e.printStackTrace();
