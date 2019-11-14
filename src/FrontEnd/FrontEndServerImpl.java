@@ -1,5 +1,7 @@
 package FrontEnd;
 
+import static FrontEnd.Utils.getMajority;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -97,11 +99,12 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
 
       //4: Clean data to detect replica failures, make sure keep only one response in List
       //TODO: call cleanData()
+      String cleanResponse = Utils.getMajority(allRequestRecords.get(currentSequenceId));
 
       //5: Return result
       //TODO: Return clean msg to client stub which shows the msg in client console
-//      return allRequestRecords.get(currentSequenceId).get(0);
-      return "So far so good! ------ " + msgToSend;
+      if(cleanResponse.equals("NO_MAJORITY")) return "No majority found, not able to tell you the result.";
+      return cleanResponse;
    }
 
    private String cleanData(String response) {

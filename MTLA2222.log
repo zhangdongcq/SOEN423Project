@@ -2,14 +2,14 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2019-11-02T16:08:08</date>
-  <millis>1572725288541</millis>
+  <date>2019-11-12T22:25:56</date>
+  <millis>1573615556720</millis>
   <sequence>4</sequence>
   <logger>user</logger>
   <level>INFO</level>
   <class>Client.Client</class>
   <method>main</method>
   <thread>1</thread>
-  <message>So far so good! ------ MTLA2222|getAppointmentSchedule|MTLP2222</message>
+  <message>So far so good! ------ MTLA2222;getAppointmentSchedule;MTLP2222</message>
 </record>
 </log>

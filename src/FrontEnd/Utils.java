@@ -81,6 +81,6 @@ public class Utils {
                     return responseList[i];
             }
         }
-        return "FAIL";
+        return "NO_MAJORITY";
     }
 }
