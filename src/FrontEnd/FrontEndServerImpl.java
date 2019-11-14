@@ -1,16 +1,12 @@
 package FrontEnd;
 
-import static FrontEnd.Utils.getMajority;
-
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 import corbasystem.IFrontEndServerPOA;
 
@@ -33,9 +29,9 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
 
    @Override
    public String requestHandler(String userId, String command, String parameters) {
-      //TODO: Retrieve the clean response and route back to client
-      //1: Gets client commands -- Done!
-      //2: Send the msg to sequencer and thread is blocked until received response from RM or sequencer.
+      //TODO: Gets client commands -- Done in client Stub!
+      //TODO: Send the msg to sequencer and thread is blocked until received all responses from RM or sequencer
+      // or might send failure notice if not all msg coming within given duration.
       String msgToSend = String.join(";", userId, command, parameters);
       try (DatagramSocket aSocket = new DatagramSocket()) {//reference of the original socket
          System.out.println("FE SENDER Started........");
@@ -44,8 +40,8 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
          InetAddress aHost = InetAddress.getByName("localhost"); //Host name is specified and the IP address of server host is calculated using DNS.
          int serverPort = 6789;//agreed upon port of SEQUENCER
          DatagramPacket request = new DatagramPacket(message, msgToSend.length(), aHost, serverPort);//request packet ready
-         long startTime = System.currentTimeMillis();//Timer starts
          aSocket.send(request);//request sent to SEQUENCER
+         long startTime = System.currentTimeMillis();//Timer starts
          System.out.println("Request message from the client is : " + new String(request.getData()));
 
 
@@ -53,7 +49,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
          byte[] buffer = new byte[1024];//to store the received data, it will be populated by what receive method returns
          DatagramPacket reply = new DatagramPacket(buffer, buffer.length);//reply packet ready but not populated.
          long endTime = System.currentTimeMillis();
-         //Ensure always a message back
+         //Ensure always a message back, if more than 200ms, no need to wait longer
          if (endTime - startTime > 200) return "System idle or failure, as no response received within 200ms";
          aSocket.receive(reply);
 
@@ -62,7 +58,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
          if (endTime - startTime > 20 && !response.startsWith("SEQUENCER_ACK")) {
             System.out.println("No acknowledge sent from sequencer, FE sent the request to SE a second time....");
             request = new DatagramPacket((msgToSend + ";RESEND").getBytes(), (msgToSend + ";RESEND").length(), aHost, serverPort);
-            aSocket.send(request); // No ack from sequencer, send again
+            aSocket.send(request); // No ack from sequencer, send again but no expectation of ack msg
          }
 
          //TODO: Receive MSG from RMs and SE
@@ -81,13 +77,21 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
                String returnMsg = response.substring(sequenceId.length() + replicaManagerId.length() + 2); // SUCCESS
                allRequestRecords.get(sequenceId)[Integer.parseInt(replicaManagerId)] = returnMsg; // RM#;response -> 3;SUCCESS
             }
-
-            if(Arrays.stream(allRequestRecords.get(currentSequenceId)).allMatch(Objects::nonNull)) {
+            boolean getAllResponsesFromFourRMs = Utils.isAllPopulated(allRequestRecords.get(currentSequenceId));
+            if(getAllResponsesFromFourRMs) {
+               finalResult = true;
+               break;
+            }
+            //TODO: Find failure machine and send failure notices
+            if(endTime - startTime > 800){
+               int failureRMId = Utils.findFailureMachine(allRequestRecords.get(currentSequenceId));
+               Utils.notifyOtherRMsTheFaiure(failureRMId + "FAILURE_MSG", "machineAddressHere", 9999);
                finalResult = true;
                break;
             }
             aSocket.receive(reply);
             response = new String(buffer, 0, reply.getLength());
+            startTime = System.currentTimeMillis();
          }
       } catch (SocketException e) {
          System.out.println("Socket: " + e.getMessage());
@@ -103,13 +107,11 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
 
       //5: Return result
       //TODO: Return clean msg to client stub which shows the msg in client console
-      if(cleanResponse.equals("NO_MAJORITY")) return "No majority found, not able to tell you the result.";
-      return cleanResponse;
+      switch (cleanResponse){
+         case "NO_MAJORITY": return "No majority found, not able to tell you the result.";
+         case "FAIL": return "The operation could not be completed, the server refused to execute the request.";
+         case "SUCCESS": return "The operation is completed successfully.";
+         default: return cleanResponse;
+      }
    }
-
-   private String cleanData(String response) {
-      //TODO: check the quality of response msg, notify RMs the failure if any
-      return null;
-   }
-
 }

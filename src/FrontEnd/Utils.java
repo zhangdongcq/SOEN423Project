@@ -6,6 +6,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class Utils {
    public static final String MTL = "MTL";
@@ -83,4 +85,34 @@ public class Utils {
         }
         return "NO_MAJORITY";
     }
+
+    public static boolean isAllPopulated(String[] responseList){
+       return Arrays.stream(responseList).allMatch(Objects::nonNull);
+    }
+
+    public static int findFailureMachine(String[] responseList){
+       for(int i = 0; i < responseList.length; ++i) {
+          if(responseList[i] == null) return i;
+       }
+       return -1;
+    }
+
+   public static void notifyOtherRMsTheFaiure(String message, String machineAddress, int udpPort) throws IOException {
+      try (DatagramSocket clientSocket = new DatagramSocket()) {
+         byte[] toSend = message.getBytes();
+
+         //Send
+         int serverPort = udpPort;
+         InetAddress serverName2 = InetAddress.getByName(machineAddress);
+         DatagramPacket requestTarget =
+                 new DatagramPacket(toSend, toSend.length, serverName2, serverPort);
+         clientSocket.send(requestTarget);
+
+//         //Receive1
+//         byte[] repliedData = new byte[1024];
+//         DatagramPacket reply = new DatagramPacket(repliedData, repliedData.length);
+//         clientSocket.receive(reply);
+//         return new String(repliedData, 0, reply.getLength());
+      }
+   }
 }

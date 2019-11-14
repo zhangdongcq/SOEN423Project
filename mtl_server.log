@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2019-11-14T12:39:43</date>
+  <millis>1573753183908</millis>
+  <sequence>1</sequence>
+  <logger>ReplicaManagers/Dong/server</logger>
+  <level>INFO</level>
+  <class>ReplicaManagers.Dong.server.Server</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>UDP ReplicaManagers.Dong.server mtl ReplicaManagers.Dong.server is ready.</message>
+</record>
+</log>

@@ -2,15 +2,15 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2019-11-14T12:40:03</date>
-  <millis>1573753203058</millis>
+  <date>2019-11-14T12:40:23</date>
+  <millis>1573753223519</millis>
   <sequence>3</sequence>
   <logger>user</logger>
   <level>INFO</level>
   <class>ReplicaManagers.Dong.client.Client</class>
   <method>main</method>
   <thread>1</thread>
-  <message>Hello, this is ReplicaManagers.Dong.server MTL, I have completed ReplicaManagers.Dong.server initiation.
+  <message>Hello, this is ReplicaManagers.Dong.server SHE, I have completed ReplicaManagers.Dong.server initiation.
 </message>
 </record>
 </log>
