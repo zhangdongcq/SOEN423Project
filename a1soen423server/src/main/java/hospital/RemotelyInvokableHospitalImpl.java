@@ -324,9 +324,8 @@ public class RemotelyInvokableHospitalImpl extends RemotelyInvokableHospitalPOA
     private static String getStringifiedSortedAppointments(AppointmentType appointmentType, List<Pair<String,String>> aptList)
     {
         return aptList.stream()
-                .map(item -> new AppointmentDetails(0,item.getValue(), appointmentType))
-                .sorted()
-                .map(item -> ";"+StringConversion.getAppointmentTypeString(appointmentType)+";" + item.getAppointmentID())
+                .sorted(Comparator.comparing(Pair::getValue))
+                .map(item -> ";"+StringConversion.getAppointmentTypeString(appointmentType)+";" + item.getValue())
                 .reduce("", (item1, item2) -> item1+item2);
     }
 

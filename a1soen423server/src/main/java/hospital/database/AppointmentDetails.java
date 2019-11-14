@@ -20,16 +20,12 @@ public class AppointmentDetails implements Comparable<AppointmentDetails> {
         boolean daysAreEqual = this.getAppointmentDaySlotNumber() == other.getAppointmentDaySlotNumber();
         boolean otherDayIsSmaller = this.getAppointmentDaySlotNumber() > other.getAppointmentDaySlotNumber();
         boolean otherDayIsLarger = this.getAppointmentDaySlotNumber() < other.getAppointmentDaySlotNumber();
-        int locationComparison = this.getAppointmentID().substring(0,1).compareTo(other.getAppointmentID().substring(0,1));
-        boolean otherLocationLarger = locationComparison < 0;
-        boolean otherLocationSmaller = locationComparison > 0;
-        boolean locationsAreEqual = locationComparison == 0;
 
-        if(datesAreEqual && daysAreEqual && locationsAreEqual)
+        if(datesAreEqual && daysAreEqual)
             return 0;
-        if((datesAreEqual && otherDayIsSmaller) || (datesAreEqual && daysAreEqual && otherLocationSmaller))
+        if((datesAreEqual && otherDayIsSmaller))
             return 1;
-        if((datesAreEqual && otherDayIsLarger) || (datesAreEqual && daysAreEqual && otherLocationLarger))
+        if((datesAreEqual && otherDayIsLarger))
             return -1;
         return this.getAppointmentDate().compareTo(other.getAppointmentDate());
     }
