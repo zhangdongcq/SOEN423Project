@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class PatientRM extends RM implements Runnable{
 	static Map<Integer, String> patientMap = new HashMap<>();
 	String result="";
+	String messageToFE="";
 	public PatientRM()
 	{
 		patientMap.put(1,"MTLP0001");patientMap.put(2,"MTLP0002");patientMap.put(3,"MTLP0003");patientMap.put(4,"MTLP0004");patientMap.put(5,"MTLP0005");	
@@ -49,14 +50,16 @@ public class PatientRM extends RM implements Runnable{
 				appointmentID=patitions[3];
 				appointmentType=patitions[4];
 				result=MTLobj.bookAppointment(clientID,patientID, appointmentID, appointmentType);
-				String resultStr=(result.equalsIgnoreCase("true"))?"Success":"Failed";
+				String resultStr=(result.equalsIgnoreCase("true"))?"SUCCESS":"FAIL";
+				messageToFE=sequencerID+";"+"4"+resultStr;
 				MTLobj.writeTxtClient(clientID,"book Appointment", resultStr);
 				MTLobj.writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"book Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("get Appointment Schedule")) {
 				patientID=patitions[1];
 				result=MTLobj.getAppointmentSchedule(patientID);
-				String resultStr=(result.equalsIgnoreCase("true"))?"Success":"Failed";
-				System.out.println("Successfully get the appointment for "+patientID);
+				String resultStr=(!result.isEmpty())?"SUCCESS":"FAIL";
+				messageToFE=sequencerID+";"+"4"+result;
+				//System.out.println("Successfully get the appointment for "+patientID);
 				MTLobj.writeTxtClient(clientID,"get Appointment Schedule", resultStr);
 				MTLobj.writeTxtServerMTL(clientID,patientID,"-","-","get Appointment Schedule", resultStr);
 			}else if(functionName.equalsIgnoreCase("cancel Appointment")) {
@@ -64,8 +67,9 @@ public class PatientRM extends RM implements Runnable{
 				appointmentID=patitions[3];
 				appointmentType=patitions[4];
 				result=MTLobj.cancelAppointment(clientID, patientID,appointmentID, appointmentType);
-				String resultStr=(result.equalsIgnoreCase("Successfully cancelled"))?"Success":"Failed";
-				System.out.println(result);
+				String resultStr=(result.equalsIgnoreCase("Successfully cancelled"))?"SUCCESS":"FAIL";
+				messageToFE=sequencerID+";"+"4"+resultStr;
+				//System.out.println(result);
 				MTLobj.writeTxtClient(clientID,"cancel Appointment", resultStr);
 				MTLobj.writeTxtServerMTL(clientID,patientID,"-","-","cancel Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("swap Appointment")) {
@@ -75,8 +79,9 @@ public class PatientRM extends RM implements Runnable{
 				newAppointmentID=patitions[5];
 				newAppointmentType=patitions[6];
 				result=MTLobj.swapAppointment(clientID, patientID,oldAppointmentID, oldAppointmentType,newAppointmentID, newAppointmentType);
-				String resultStr=(result.equalsIgnoreCase("Successfully swapped"))?"Success":"Failed";
-				System.out.println(result);
+				String resultStr=(result.equalsIgnoreCase("Successfully swapped"))?"SUCCESS":"FAIL";
+				messageToFE=sequencerID+";"+"4"+resultStr;
+				//System.out.println(result);
 				MTLobj.writeTxtClient(clientID,"swap Appointment", resultStr);
 				MTLobj.writeTxtServerMTL(clientID,patientID,"-","-","swap Appointment", resultStr);
 			}
@@ -88,14 +93,16 @@ public class PatientRM extends RM implements Runnable{
 				appointmentID=patitions[3];
 				appointmentType=patitions[4];
 				result=QUEobj.bookAppointment(clientID,patientID, appointmentID, appointmentType);
-				String resultStr=(result.equalsIgnoreCase("true"))?"Success":"Failed";
+				String resultStr=(result.equalsIgnoreCase("true"))?"SUCCESS":"FAIL";
+				messageToFE=sequencerID+";"+"4"+resultStr;
 				QUEobj.writeTxtClient(clientID,"book Appointment", resultStr);
 				QUEobj.writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"book Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("get Appointment Schedule")) {
 				patientID=patitions[1];
 				result=QUEobj.getAppointmentSchedule(patientID);
-				String resultStr=(result.equalsIgnoreCase("true"))?"Success":"Failed";
-				System.out.println("Successfully get the appointment for "+patientID);
+				String resultStr=(!result.isEmpty())?"SUCCESS":"FAIL";
+				messageToFE=sequencerID+";"+"4"+result;
+				//System.out.println("Successfully get the appointment for "+patientID);
 				QUEobj.writeTxtClient(clientID,"get Appointment Schedule", resultStr);
 				QUEobj.writeTxtServerMTL(clientID,patientID,"-","-","get Appointment Schedule", resultStr);
 			}else if(functionName.equalsIgnoreCase("cancel Appointment")) {
@@ -103,8 +110,9 @@ public class PatientRM extends RM implements Runnable{
 				appointmentID=patitions[3];
 				appointmentType=patitions[4];
 				result=QUEobj.cancelAppointment(clientID, patientID,appointmentID, appointmentType);
-				String resultStr=(result.equalsIgnoreCase("Successfully cancelled"))?"Success":"Failed";
-				System.out.println(result);
+				String resultStr=(result.equalsIgnoreCase("Successfully cancelled"))?"SUCCESS":"FAIL";
+				messageToFE=sequencerID+";"+"4"+resultStr;
+				//System.out.println(result);
 				QUEobj.writeTxtClient(clientID,"cancel Appointment", resultStr);
 				QUEobj.writeTxtServerMTL(clientID,patientID,"-","-","cancel Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("swap Appointment")) {
@@ -114,8 +122,9 @@ public class PatientRM extends RM implements Runnable{
 				newAppointmentID=patitions[5];
 				newAppointmentType=patitions[6];
 				result=QUEobj.swapAppointment(clientID, patientID,oldAppointmentID, oldAppointmentType,newAppointmentID, newAppointmentType);
-				String resultStr=(result.equalsIgnoreCase("Successfully swapped"))?"Success":"Failed";
-				System.out.println(result);
+				String resultStr=(result.equalsIgnoreCase("Successfully swapped"))?"SUCCESS":"FAIL";
+				messageToFE=sequencerID+";"+"4"+resultStr;
+				//System.out.println(result);
 				QUEobj.writeTxtClient(clientID,"swap Appointment", resultStr);
 				QUEobj.writeTxtServerMTL(clientID,patientID,"-","-","swap Appointment", resultStr);
 			}
@@ -127,14 +136,16 @@ public class PatientRM extends RM implements Runnable{
 				appointmentID=patitions[3];
 				appointmentType=patitions[4];
 				result=SHEobj.bookAppointment(clientID,patientID, appointmentID, appointmentType);
-				String resultStr=(result.equalsIgnoreCase("true"))?"Success":"Failed";
+				String resultStr=(result.equalsIgnoreCase("true"))?"SUCCESS":"FAIL";
+				messageToFE=sequencerID+";"+"4"+resultStr;
 				SHEobj.writeTxtClient(clientID,"book Appointment", resultStr);
 				SHEobj.writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"book Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("get Appointment Schedule")) {
 				patientID=patitions[1];
 				result=SHEobj.getAppointmentSchedule(patientID);
-				String resultStr=(result.equalsIgnoreCase("true"))?"Success":"Failed";
-				System.out.println("Successfully get the appointment for "+patientID);
+				String resultStr=(!result.isEmpty())?"SUCCESS":"FAIL";
+				messageToFE=sequencerID+";"+"4"+result;
+				//System.out.println("Successfully get the appointment for "+patientID);
 				SHEobj.writeTxtClient(clientID,"get Appointment Schedule", resultStr);
 				SHEobj.writeTxtServerMTL(clientID,patientID,"-","-","get Appointment Schedule", resultStr);
 			}else if(functionName.equalsIgnoreCase("cancel Appointment")) {
@@ -142,8 +153,9 @@ public class PatientRM extends RM implements Runnable{
 				appointmentID=patitions[3];
 				appointmentType=patitions[4];
 				result=SHEobj.cancelAppointment(clientID, patientID,appointmentID, appointmentType);
-				String resultStr=(result.equalsIgnoreCase("Successfully cancelled"))?"Success":"Failed";
-				System.out.println(result);
+				String resultStr=(result.equalsIgnoreCase("Successfully cancelled"))?"SUCCESS":"FAIL";
+				messageToFE=sequencerID+";"+"4"+resultStr;
+				//System.out.println(result);
 				SHEobj.writeTxtClient(clientID,"cancel Appointment", resultStr);
 				SHEobj.writeTxtServerMTL(clientID,patientID,"-","-","cancel Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("swap Appointment")) {
@@ -153,13 +165,14 @@ public class PatientRM extends RM implements Runnable{
 				newAppointmentID=patitions[5];
 				newAppointmentType=patitions[6];
 				result=SHEobj.swapAppointment(clientID, patientID,oldAppointmentID, oldAppointmentType,newAppointmentID, newAppointmentType);
-				String resultStr=(result.equalsIgnoreCase("Successfully swapped"))?"Success":"Failed";
-				System.out.println(result);
+				String resultStr=(result.equalsIgnoreCase("Successfully swapped"))?"SUCCESS":"FAIL";
+				messageToFE=sequencerID+";"+"4"+resultStr;
+				//System.out.println(result);
 				SHEobj.writeTxtClient(clientID,"swap Appointment", resultStr);
 				SHEobj.writeTxtServerMTL(clientID,patientID,"-","-","swap Appointment", resultStr);
 			}
 		}
-		return result;
+		return messageToFE;
 	}
 	
 	public void outputClientInfo()
