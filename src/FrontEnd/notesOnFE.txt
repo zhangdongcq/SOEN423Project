@@ -1,0 +1,8 @@
+FrontEndServer
+1. FE does not need a name since only one exists
+2. Args can be null
+3. ipAddress is not used
+
+FrontEndServerImpl
+1. initiateServer method is unused
+2. finalResult boolean should bre reset after responses received,  to false

@@ -43,38 +43,42 @@ public class FrontEndSever {
          }
          //Get front end ip address
          String ipAddress = InetAddress.getLocalHost().getHostAddress();
+         startCorbaServices(args, frontEndName);
 
-
-          //TODO: Starts Corba Services
-
-         //Generate and initiate the ORB
-         Properties props = new Properties();
-         //Initiate the port
-         props.put("org.omg.CORBA.ORBInitialPort", "1050");
-         //Bind the server
-         props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
-         //Initiate ORB
-         ORB orb = ORB.init(args, props);
-         //Get rootPOA reference and activate POA Manager
-         POA poa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
-         poa.the_POAManager().activate();
-         //TODO: Initiated a ServerImpl instance
-         FrontEndServerImpl server = new FrontEndServerImpl(frontEndName);
-         org.omg.CORBA.Object ref = poa.servant_to_reference(server);
-         IFrontEndServer href = IFrontEndServerHelper.narrow(ref);
-         // TODO: Get naming context
-         org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
-         NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-         //TODO: Publish the frontend with specified name into naming service
-         NameComponent[] nc = ncRef.to_name(frontEndName+"_fe");
-         ncRef.rebind(nc, href);
-         System.out.println(frontEndName + "_fe Front End server is ready and waiting......");
-
-         //Block until orb closes
-         logger.log(Level.INFO, "FrontEnd server is ready.");
-         orb.run();
       } catch (ServantNotActive | WrongPolicy | InvalidName | org.omg.CORBA.ORBPackage.InvalidName | CannotProceed | NotFound | AdapterInactive | IOException servantNotActive) {
          servantNotActive.printStackTrace();
       }
    } // end main
+
+   public static void startCorbaServices(String[] args, String frontEndName) throws ServantNotActive, WrongPolicy,  InvalidName,
+           org.omg.CORBA.ORBPackage.InvalidName,  CannotProceed,  NotFound,  AdapterInactive,  IOException
+   {
+      //TODO: Starts Corba Services
+      //Generate and initiate the ORB
+      Properties props = new Properties();
+      //Initiate the port
+      props.put("org.omg.CORBA.ORBInitialPort", "1050");
+      //Bind the server
+      props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
+      //Initiate ORB
+      ORB orb = ORB.init(args, props);
+      //Get rootPOA reference and activate POA Manager
+      POA poa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+      poa.the_POAManager().activate();
+      //TODO: Initiated a ServerImpl instance
+      FrontEndServerImpl server = new FrontEndServerImpl(frontEndName);
+      org.omg.CORBA.Object ref = poa.servant_to_reference(server);
+      IFrontEndServer href = IFrontEndServerHelper.narrow(ref);
+      // TODO: Get naming context
+      org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
+      NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+      //TODO: Publish the frontend with specified name into naming service
+      NameComponent[] nc = ncRef.to_name(frontEndName+"_fe");
+      ncRef.rebind(nc, href);
+      System.out.println(frontEndName + "_fe Front End server is ready and waiting......");
+
+      //Block until orb closes
+      logger.log(Level.INFO, "FrontEnd server is ready.");
+      orb.run();
+   }
 }
