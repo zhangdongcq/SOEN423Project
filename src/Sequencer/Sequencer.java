@@ -34,12 +34,12 @@ public class Sequencer {
             sequencerServerSocket.receive(request);// request received
             String msgFromFrontEnd = new String(buffer, 0, request.getLength());
             //TODO: Only multicast to Replica Managers if msg is new one
-            if(!msgFromFrontEnd.contains(";RESEND")) {
+            if (!msgFromFrontEnd.contains(";RESEND")) {
                String feAddress = request.getAddress().getHostAddress();
                int fePort = 7789;
                // Global Counter ++ after encapsulation
                String msgToRMs = encapsulateRequest(msgFromFrontEnd, feAddress, fePort);
-               msgBackup.put(globalSequenceCounter-1, msgToRMs);
+               msgBackup.put(globalSequenceCounter - 1, msgToRMs);
                allMsgs.offer(msgToRMs);
                logger.log(Level.INFO, "Request received from client: " + msgFromFrontEnd);
                System.out.println("Msg sent to RMs is: " + msgToRMs);
@@ -49,7 +49,8 @@ public class Sequencer {
             }
 
             //TODO: Send acknowledge to FE
-            byte[] sequencer_ack_msg = ("SEQUENCER_ACK|" + (globalSequenceCounter-1)).getBytes();
+            String ack = msgFromFrontEnd.contains("FAILURE_NOTICE") ? "FAILURE_NOTICE_ACK" : "SEQUENCER_ACK|" + (globalSequenceCounter - 1);
+            byte[] sequencer_ack_msg = ack.getBytes();
             DatagramPacket reply = new DatagramPacket(sequencer_ack_msg, sequencer_ack_msg.length, request.getAddress(),
                     request.getPort());// reply packet ready
             sequencerServerSocket.send(reply);// reply sent

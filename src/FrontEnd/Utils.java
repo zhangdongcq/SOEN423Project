@@ -87,7 +87,7 @@ public class Utils {
     }
 
     public static boolean isAllPopulated(String[] responseList){
-       return Arrays.stream(responseList).allMatch(Objects::nonNull);
+       return responseList != null && Arrays.stream(responseList).allMatch(Objects::nonNull);
     }
 
     public static int findFailureMachine(String[] responseList){

@@ -6,7 +6,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -21,6 +20,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    private String currentSequenceId;
    //0: Sequencer. 1: RM1. 2: RM2. 3: RM3. 4: RM4.
    private boolean finalResult = false;
+   private boolean isAllReady = false;
 
    FrontEndServerImpl(String frontEndName) {
       this.frontEndName = frontEndName;
@@ -34,9 +34,8 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    @Override
    public String requestHandler(String userId, String command, String parameters) {
       //TODO: Gets client commands -- Done in client Stub!
-      //TODO: Send the msg to sequencer and thread is blocked until received all responses from RM or sequencer
-      // or might send failure notice if not all msg coming within given duration.
-      String msgToSend = String.join(";", "RECEIVING_PORT:7789", userId, command, parameters);
+
+      String msgToSend = String.join(";", userId, command, parameters);
       System.out.println("FE Started........");
 
       //TODO: send to Sequencer and get ACK msg (thread)
@@ -47,40 +46,51 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
 
       //TODO: Receive MSG from RMs and SE
       DatagramSocket aSocket = null;
-      while (!finalResult){
+      try {
+         aSocket = new DatagramSocket(7789);
+      } catch (SocketException e) {
+         e.printStackTrace();
+         return "UDP Socket Problem in FE";
+      }
+      while (!finalResult) {
          try {
-            aSocket = new DatagramSocket(7789);
             //TODO: prepare to receive Replica Manager msg. Receiving port: 7789
-            aSocket.setSoTimeout(200);
             byte[] buffer = new byte[1024];//to store the received data, it will be populated by what receive method returns
             DatagramPacket reply = new DatagramPacket(buffer, buffer.length);//reply packet ready but not populated.
-
+            aSocket.setSoTimeout(200);
             aSocket.receive(reply);
             String response = new String(buffer, 0, reply.getLength());
             String[] detailedResponse = response.split(";");
             String sequenceId = detailedResponse[0];
+            currentSequenceId = sequenceId;
             String replicaMachineId = detailedResponse[1];
             String rmMsg = detailedResponse[2];
-//            allRequestRecords.put(sequenceId, )
-            aSocket.setSoTimeout(200);
-
+            if (allRequestRecords.get(sequenceId) == null) {
+               String[] records = new String[5];
+               records[Integer.parseInt(replicaMachineId)] = rmMsg;
+               allRequestRecords.put(sequenceId, records);
+            } else {
+               allRequestRecords.get(sequenceId)[Integer.parseInt(replicaMachineId)] = rmMsg;
+            }
+            isAllReady = Utils.isAllPopulated(allRequestRecords.get(currentSequenceId));
+            if (isAllReady) break;
          } catch (SocketTimeoutException e) {
             finalResult = true;
-
-
-
-
          } catch (SocketException e) {
             System.out.println("Socket: " + e.getMessage());
          } catch (IOException e) {
             e.printStackTrace();
             System.out.println("IO: " + e.getMessage());
+         } finally {
+            if (aSocket != null) aSocket.close();
          }
       }
 
-
-
-
+      if (!isAllReady) {
+         int failureMachineId = Utils.findFailureMachine(allRequestRecords.get(currentSequenceId));
+         UdpServer failureNoticeUdpThread = new UdpServer(6789, "localhost", failureMachineId + "_FAILURE_NOTICE", allRequestRecords, 20);
+         failureNoticeUdpThread.start();
+      }
 
       //4: Clean data to detect replica failures, make sure keep only one response in List
       //TODO: call cleanData()
@@ -128,10 +138,10 @@ class UdpServer extends Thread {
    public void run() {
       while (counter-- > 0) {
          System.out.println("Request message from the client is : " + msgToSend);
-         if(resend) msgToSend += ";RESEND";
+         if (resend) msgToSend += ";RESEND";
          DatagramSocket clientSocket = null;
          DatagramPacket requestTarget = null;
-         try{
+         try {
             clientSocket = new DatagramSocket();
             clientSocket.setSoTimeout(timeOut);
             byte[] toSend = msgToSend.getBytes();
@@ -148,12 +158,18 @@ class UdpServer extends Thread {
             DatagramPacket reply = new DatagramPacket(repliedData, repliedData.length);
             clientSocket.receive(reply);
             String response = new String(receivedMsgBuffer, 0, reply.getLength());
-            String sequenceId = response.split("|")[1];
-            String msg = response.split("|")[0];
-            String[] eachResponse = new String[5]; // slot 0 : SEQUENCER. slot 1 : RM1. slot 2 : RM2...
-            eachResponse[0] = msg;
-            allRequestRecords.put(sequenceId, eachResponse);
-         } catch (SocketTimeoutException e){
+            if (!response.equals("FAILURE_NOTICE_ACK")) {
+               String sequenceId = response.split("|")[1];
+               String msg = response.split("|")[0];
+               String[] eachResponse = new String[5]; // slot 0 : SEQUENCER. slot 1 : RM1. slot 2 : RM2...
+               eachResponse[0] = msg;
+               if (allRequestRecords.get(sequenceId) == null) {
+                  allRequestRecords.put(sequenceId, eachResponse);
+               } else {
+                  allRequestRecords.get(sequenceId)[0] = msg;
+               }
+            }
+         } catch (SocketTimeoutException e) {
             counter++;
             resend = true;
          } catch (SocketException e) {
