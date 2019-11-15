@@ -1,6 +1,6 @@
 package Sequencer;
 
-import static Sequencer.Utils.MultiCaster;
+import static Sequencer.Utils.UDPMulticastServer_SendMsg;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -63,7 +63,12 @@ public class Sequencer {
       logger.log(Level.INFO, "Request received from client: " + msgFromFrontEnd);
       System.out.println("Msg sent to RMs is: " + msgToRMs);
 
-      MultiCaster(multicastPort, multicastAddress, allMsgs);
+      try {
+         UDPMulticastServer_SendMsg(multicastPort, multicastAddress, allMsgs);
+      } catch (IOException e) {
+         e.printStackTrace();
+         logger.log(Level.WARNING, "Failed to multicast to rms, problem is in sequencer.");
+      }
       logger.log(Level.INFO, "Message sent to replica managers through Multicaster");
    }
 
