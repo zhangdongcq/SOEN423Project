@@ -50,9 +50,10 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
             e.printStackTrace();
             return "UDP Socket Problem in FE";
         }
-        getAllResponseMessagesFromRMs(aSocket);
-        if (allRequestRecords.get(currentSequenceId) == null) return "No any response for your request.";
+        byte[] buffer = new byte[1024];//to store the received data, it will be populated by what receive method returns
+        getAllResponseMessagesFromRMs(aSocket, buffer);
         if (!allResponsesReceived) {
+            if (allRequestRecords.get(currentSequenceId) == null) return "No any response for your request.";
             sendFailureMessage();
         }
 
@@ -71,10 +72,10 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
         frontEndToSequencerThread.start();
     }
 
-    private void getAllResponseMessagesFromRMs(DatagramSocket aSocket) {
+    private void getAllResponseMessagesFromRMs(DatagramSocket aSocket, byte[] buffer) {
         while (!finalResult) {
             try {
-                String response = getResponseFromRM(aSocket);
+                String response = getResponseFromRM(aSocket, buffer);
                 String[] detailedResponse = response.split(";");
                 currentSequenceId = detailedResponse[0];
                 addMessageToRecords(detailedResponse);
@@ -112,10 +113,10 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
       }
    }
 
-   private String getResponseFromRM(DatagramSocket aSocket) throws SocketException, IOException
+   private String getResponseFromRM(DatagramSocket aSocket, byte[] buffer) throws SocketException, IOException
    {
       //TODO: prepare to receive Replica Manager msg. Receiving port: 7789
-      byte[] buffer = new byte[1024];//to store the received data, it will be populated by what receive method returns
+
       DatagramPacket reply = new DatagramPacket(buffer, buffer.length);//reply packet ready but not populated.
        aSocket.setSoTimeout(200);
        aSocket.receive(reply);
