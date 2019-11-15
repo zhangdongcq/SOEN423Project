@@ -52,11 +52,11 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
          e.printStackTrace();
          return "UDP Socket Problem in FE";
       }
+      byte[] buffer = new byte[1024];//to store the received data, it will be populated by what receive method returns
+      DatagramPacket reply = new DatagramPacket(buffer, buffer.length);//reply packet ready but not populated.
       while (!finalResult) {
          try {
             //TODO: prepare to receive Replica Manager msg. Receiving port: 7789
-            byte[] buffer = new byte[1024];//to store the received data, it will be populated by what receive method returns
-            DatagramPacket reply = new DatagramPacket(buffer, buffer.length);//reply packet ready but not populated.
             aSocket.setSoTimeout(200);
             aSocket.receive(reply);
             String response = new String(buffer, 0, reply.getLength());
@@ -87,6 +87,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
       }
 
       if (!isAllReady) {
+         if(allRequestRecords.get(currentSequenceId) == null) return "No any response for your request.";
          int failureMachineId = Utils.findFailureMachine(allRequestRecords.get(currentSequenceId));
          UdpServer failureNoticeUdpThread = new UdpServer(6789, "localhost", failureMachineId + "_FAILURE_NOTICE", allRequestRecords, 20);
          failureNoticeUdpThread.start();
