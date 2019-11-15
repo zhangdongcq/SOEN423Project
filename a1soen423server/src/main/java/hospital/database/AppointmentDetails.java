@@ -144,7 +144,11 @@ public class AppointmentDetails implements Comparable<AppointmentDetails> {
         LocalDate start = LocalDate.of(2000, 1,1);
         long months = ChronoUnit.MONTHS.between(start.withDayOfMonth(1), givenDate.withDayOfMonth(1));
         long days = givenDate.getDayOfMonth();
-        long week = 1 + days/7; //this should give an int between 0 and 4
+        long week;
+        if(days%7 == 0)
+            week =  days/7;
+        else
+            week = 1 + days/7; //this should give an int between 0 and 4
         if(week == 5) // we want week 22-28 to be the same as days 28-31
             week = 4;
         return week + (months*4);
