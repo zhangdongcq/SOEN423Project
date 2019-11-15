@@ -388,8 +388,9 @@ public class QUEServer extends OperationsPOA{
 	}
 	public String listAppointmentAvailability(String appointmentType)
 	{
+		String listAppointmentAvailability="";
 		try {
-			obj.createAndListenSocketCli(appointmentType,"-","listAppointmentAvailability","-","-","-","-");
+			listAppointmentAvailability=obj.createAndListenSocketCli(appointmentType,"-","listAppointmentAvailability","-","-","-","-");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -397,7 +398,7 @@ public class QUEServer extends OperationsPOA{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "Successfully list for "+appointmentType;
+		return listAppointmentAvailability;
 	}
 	public synchronized String bookAppointment(String clientID,String patientID, String appointmentID, String appointmentType)
 	{
@@ -415,8 +416,9 @@ public class QUEServer extends OperationsPOA{
 	}
 	public String getAppointmentSchedule(String patientID)
 	{
+		String getAppointmentSchedule="";
 		try {
-			obj.createAndListenSocketCli("-",patientID,"getAppointmentSchedule","-","-","-","-");
+			getAppointmentSchedule=obj.createAndListenSocketCli("-",patientID,"getAppointmentSchedule","-","-","-","-");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -424,7 +426,7 @@ public class QUEServer extends OperationsPOA{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return "true";
+		return getAppointmentSchedule;
 	}
 	public synchronized String cancelAppointment(String clientID,String patientID, String appointmentID,String appointmentType)
 	{
@@ -471,26 +473,24 @@ public class QUEServer extends OperationsPOA{
 			}
 		}
 	}
-	public void printAppointmentByType(Map<String, Map<String,ArrayList<String>>> map, String type) {
+	public String printAppointmentByType(Map<String, Map<String,ArrayList<String>>> map, String type) {
+		String printAppointmentByType="";
 		for(Map.Entry<String, Map<String,ArrayList<String>>> mtl:map.entrySet())
 		{
 			String appointmentType=mtl.getKey();
 			if(appointmentType.equalsIgnoreCase(type)) {
-				System.out.print(appointmentType+"  ");
 				for(Map.Entry<String, ArrayList<String>> nestedMap:mtl.getValue().entrySet())
 				{
-					System.out.print("    "+nestedMap.getKey()+" ");
-					for(String op:nestedMap.getValue()) {
-						System.out.print(op+"  ");
-					}
-					System.out.println("");
+					printAppointmentByType +=nestedMap.getKey()+" ";					
+					printAppointmentByType +=nestedMap.getValue().get(0)+";";
 				}
-				System.out.println("");
 			}
 			
 		}
+		return printAppointmentByType;
 	}
-	public void printAppointmentBySchedule(Map<String, Map<String,ArrayList<String>>> map,String clientID){
+	public String printAppointmentBySchedule(Map<String, Map<String,ArrayList<String>>> map,String clientID){
+		String printAppointmentBySchedule="";
 		for(Map.Entry<String, Map<String,ArrayList<String>>> mtl:map.entrySet())
 		{
 			String appointmentType=mtl.getKey();			
@@ -498,15 +498,17 @@ public class QUEServer extends OperationsPOA{
 			{
 				for(int i=0;i<nestedMap.getValue().size();i++)
 				{
-					if(nestedMap.getValue().get(i).equalsIgnoreCase(clientID)) 
-						System.out.println(appointmentType+" "+nestedMap.getKey()+"  "+nestedMap.getValue().get(i));
+					if(nestedMap.getValue().get(i).equalsIgnoreCase(clientID)) 						
+						printAppointmentBySchedule+=appointmentType+";"+nestedMap.getKey()+";";
 				}
-			}	
-			System.out.println("");
+			}
 		}
+		return printAppointmentBySchedule;
 	}
 	public String createAndListenSocketCli(String appointmentType,String patientID,String task, String appointmentID,String clientID,
 			String newAppointmentID, String newAppointmentType) throws ClassNotFoundException, IOException {
+		String listAppointmentByType="";
+		String listAppointmentBySchedule="";
 		try {
 			Message msg=null;
 			if(accessCount1==0) {
@@ -537,7 +539,8 @@ public class QUEServer extends OperationsPOA{
 				accessCount1=1;
 				//SocketCli.close();
 			}
-			System.out.println("*** Appointments Summary (MTL) ***");
+			
+			//System.out.println("*** Appointments Summary (MTL) ***");
 			if(task.equalsIgnoreCase("listAppointmentAvailability")) {
 				printAppointmentByType(otherMap1,appointmentType);
 				writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"list Appointment Availability", "Success");
@@ -597,7 +600,8 @@ public class QUEServer extends OperationsPOA{
 				accessCount2=1;
 				//SocketCli2.close();
 			}
-			System.out.println("*** Appointments Summary (SHE) ***");
+
+			//System.out.println("*** Appointments Summary (SHE) ***");
 			if(task.equalsIgnoreCase("listAppointmentAvailability")) {
 				printAppointmentByType(otherMap2,appointmentType);
 				writeTxtServerSHE(clientID,patientID,appointmentType,appointmentID,"list Appointment Availability", "Success");
@@ -627,7 +631,8 @@ public class QUEServer extends OperationsPOA{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		System.out.println("*** Appointments Summary (QUE) ***");
+	
+		//System.out.println("*** Appointments Summary (QUE) ***");
 		if(task.equalsIgnoreCase("listAppointmentAvailability")) {
 			printAppointmentByType(QUEMap,appointmentType);
 			writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"list Appointment Availability", "Success");
@@ -646,8 +651,11 @@ public class QUEServer extends OperationsPOA{
 		{
 			printAppointment(QUEMap);
 			writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"swapAppointment", "accessed");
-		}				
-        if(task.equalsIgnoreCase("bookAppointment")) {
+		}if(task.equalsIgnoreCase("listAppointmentAvailability")) {
+			return listAppointmentByType;
+		}else if(task.equalsIgnoreCase("getAppointmentSchedule")) {
+			return listAppointmentBySchedule;
+		}else if(task.equalsIgnoreCase("bookAppointment")) {
         	String success=bookOperation(appointmentType,patientID,task, appointmentID,clientID);
         	if(success.equalsIgnoreCase("true"))      		
         		return "           Congratulations ! New appointment was booked.";
