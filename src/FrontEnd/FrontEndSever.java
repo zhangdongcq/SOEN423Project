@@ -3,7 +3,6 @@ package FrontEnd;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.InetAddress;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,22 +28,8 @@ public class FrontEndSever {
 
    public static void main(String[] args) {
       try {
-         //TODO: Get requests from client
-         //Get user input and Register frontend name
-         InputStreamReader is = new InputStreamReader(System.in);
-         BufferedReader br = new BufferedReader(is);
-         String frontEndName;
-         // Register FrontEnd name
-         logger.log(Level.INFO, "Enter the city:");
-         frontEndName = (br.readLine()).trim().toLowerCase();
-         while (!Utils.isValidCityInput(frontEndName)) {
-            logger.log(Level.WARNING, "Invalid city! mtl, que, she are options. Input another one.");
-            frontEndName = (br.readLine()).trim().toLowerCase();
-         }
-         //Get front end ip address
-         String ipAddress = InetAddress.getLocalHost().getHostAddress();
+         String frontEndName = getClientRequest();
          startCorbaServices(args, frontEndName);
-
       } catch (ServantNotActive | WrongPolicy | InvalidName | org.omg.CORBA.ORBPackage.InvalidName | CannotProceed | NotFound | AdapterInactive | IOException servantNotActive) {
          servantNotActive.printStackTrace();
       }
@@ -80,5 +65,19 @@ public class FrontEndSever {
       //Block until orb closes
       logger.log(Level.INFO, "FrontEnd server is ready.");
       orb.run();
+   }
+
+   public static String getClientRequest() throws IOException {
+      //Get user input and Register frontend name
+      InputStreamReader is = new InputStreamReader(System.in);
+      BufferedReader br = new BufferedReader(is);
+      String frontEndName;
+      logger.log(Level.INFO, "Enter the city:");
+      frontEndName = (br.readLine()).trim().toLowerCase();
+      while (!Utils.isValidCityInput(frontEndName)) {
+         logger.log(Level.WARNING, "Invalid city! mtl, que, she are options. Input another one.");
+         frontEndName = (br.readLine()).trim().toLowerCase();
+      }
+      return frontEndName;
    }
 }

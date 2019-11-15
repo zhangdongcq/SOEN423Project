@@ -56,14 +56,13 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
             if (allRequestRecords.get(currentSequenceId) == null) return "No any response for your request.";
             sendFailureMessage();
         }
-
         return getCleanResponse();
     }
 
     private void sendFailureMessage()
     {
         int failureMachineId = Utils.findFailureMachine(allRequestRecords.get(currentSequenceId));
-        UdpServer failureNoticeUdpThread = new UdpServer(6789, "localhost", failureMachineId + "_FAILURE_NOTICE", allRequestRecords, 20);
+        UdpServer failureNoticeUdpThread = new UdpServer(6789, "localhost", failureMachineId + ";FAIL", allRequestRecords, 20);
         failureNoticeUdpThread.start();
     }
 
@@ -93,6 +92,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
                 if (aSocket != null) aSocket.close();
             }
         }
+        finalResult = false;
     }
 
    private void addMessageToRecords(String[] detailedResponse)
