@@ -36,7 +36,7 @@ public class Sequencer {
             //TODO: Only multicast to Replica Managers if msg is new one
             if(!msgFromFrontEnd.contains(";RESEND")) {
                String feAddress = request.getAddress().getHostAddress();
-               int fePort = request.getPort();
+               int fePort = 7789;
                // Global Counter ++ after encapsulation
                String msgToRMs = encapsulateRequest(msgFromFrontEnd, feAddress, fePort);
                msgBackup.put(globalSequenceCounter-1, msgToRMs);

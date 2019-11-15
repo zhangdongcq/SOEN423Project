@@ -24,6 +24,8 @@ public class ServerImpl extends IServerPOA {
    private List<String> adminRecords = new ArrayList<>();
    private boolean sysLock = false;
    private static final Logger logger = Logger.getLogger("ReplicaManagers/Dong/server");
+   private static final String FAIL = "FAIL";
+   private static final String SUCCESS = "SUCCESS";
 
    @Override
    public synchronized String initiateServer(String city) {
@@ -45,7 +47,8 @@ public class ServerImpl extends IServerPOA {
          return String.format("You have successfully added an appointment ID %s under appointment type %s!", appointmentID, appointmentType);
       }
       if (cityRecords.get(appointmentType).containsKey(appointmentID)) {
-         return String.format("The given appointment ID %s is already exist in appointment type %s!", appointmentID, appointmentType);
+         return FAIL;
+//         return String.format("The given appointment ID %s is already exist in appointment type %s!", appointmentID, appointmentType);
       }
       cityRecords.get(appointmentType).put(appointmentID, appDetail);
       return String.format("You have successfully added an appointment ID %s under appointment type %s!", appointmentID, appointmentType);
@@ -54,17 +57,21 @@ public class ServerImpl extends IServerPOA {
    @Override
    public synchronized String removeAppointment(String appointmentID, String appointmentType) {
       if (appointmentID == null || appointmentType == null || appointmentID.isEmpty() || appointmentType.isEmpty()) {
-         return "Illegal parameter(s), is null or missing!";
+         return FAIL;
+//         return "Illegal parameter(s), is null or missing!";
       }
       if (!cityRecords.containsKey(appointmentType)) {
-         return "No such an appointment type in record!";
+         return FAIL;
+//         return "No such an appointment type in record!";
       }
       if (!cityRecords.get(appointmentType).containsKey(appointmentID)) {
-         return String.format("No such an appointment ID %s under given appointment type %s", appointmentID, appointmentType);
+         return FAIL;
+//         return String.format("No such an appointment ID %s under given appointment type %s", appointmentID, appointmentType);
       }
       if (cityRecords.get(appointmentType).get(appointmentID).size() == 1) {
          cityRecords.get(appointmentType).remove(appointmentID);
          return String.format("The appointment id %s has been removed from appointment type %s.", appointmentID, appointmentType);
+//         return String.format("The appointment id %s has been removed from appointment type %s.", appointmentID, appointmentType);
       }
       if (cityRecords.get(appointmentType).get(appointmentID).size() > 1) {
          return "Not able to remove the appointment, as there are patients inside, please contact the patients to make another appoint.";
@@ -75,7 +82,8 @@ public class ServerImpl extends IServerPOA {
    @Override
    public synchronized String bookAppointment(String patientID, String appointmentID, String appointmentType) {
       if (patientID.isEmpty() || appointmentID.isEmpty() || appointmentType.isEmpty()) {
-         return "Missing Parameters!";
+         return FAIL;
+//         return "Missing Parameters!";
       }
       String numberType = appointmentType;
       appointmentType = Utils.getRealAppType(appointmentType);
@@ -84,15 +92,18 @@ public class ServerImpl extends IServerPOA {
             return Utils.getRemoteServerQueryResult(Utils.BOOK_REMOTE_APP, String.join(".", patientID.toUpperCase(), appointmentID, numberType), getCityFromAppointmentID(appointmentID).toLowerCase());
          } else {
             if (!cityRecords.containsKey(appointmentType)) {
-               return String.format("No local record for appointment type %s in ReplicaManagers.Dong.server %s yet.", appointmentType, this.getServerName());
+               return FAIL;
+//               return String.format("No local record for appointment type %s in ReplicaManagers.Dong.server %s yet.", appointmentType, this.getServerName());
             }
             if (!cityRecords.get(appointmentType).containsKey(appointmentID)) {
-               return String.format("No local record for appointment id %s in ReplicaManagers.Dong.server %s yet.", appointmentID, this.getServerName());
+               return FAIL;
+//               return String.format("No local record for appointment id %s in ReplicaManagers.Dong.server %s yet.", appointmentID, this.getServerName());
             }
             List<String> appDetail = cityRecords.get(appointmentType).get(appointmentID);
 
             if (Integer.parseInt(appDetail.get(0)) == 0) {
-               return String.format("No more available place to register under this appointment id %s in ReplicaManagers.Dong.server %s", appointmentID, this.getServerName());
+               return FAIL;
+//               return String.format("No more available place to register under this appointment id %s in ReplicaManagers.Dong.server %s", appointmentID, this.getServerName());
             }
             appDetail.set(0, String.valueOf(Integer.parseInt(appDetail.get(0)) - 1));
             appDetail.add(patientID.toUpperCase());
@@ -109,16 +120,19 @@ public class ServerImpl extends IServerPOA {
    @Override
    public synchronized String cancelAppointment(String patientID, String appointmentID) {
       if (patientID.isEmpty() || appointmentID.isEmpty()) {
-         return "No, missing Parameters!";
+         return FAIL;
+//         return "No, missing Parameters!";
       }
       if (cityRecords.size() == 0) {
-         return "No record in system which might be not initiated yet!";
+         return FAIL;
+//         return "No record in system which might be not initiated yet!";
       }
       // Validate the appointment id
       boolean doesAppointmentIdExist =
               cityRecords.entrySet().stream().anyMatch(entry -> entry.getValue().get(appointmentID) != null);
       if (!doesAppointmentIdExist) {
-         return String.format("No, the appointment id %s does not exist in system of city %s.", appointmentID, this.getServerName());
+         return FAIL;
+//         return String.format("No, the appointment id %s does not exist in system of city %s.", appointmentID, this.getServerName());
       }
 
       // Validate the patient id
