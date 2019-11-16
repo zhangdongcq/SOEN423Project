@@ -1,3 +1,5 @@
+package FrontEnd;
+
 import static org.junit.Assert.assertEquals;
 
  import FrontEnd.Utils;
@@ -9,7 +11,7 @@ import static org.junit.Assert.assertEquals;
      public void givenEmptyArray_callingGetMajority_returnsFAIL()
      {
          String [] input = {"ACK"};
-         String expectedResult = "FAIL";
+         String expectedResult = "NO_MAJORITY";
          assertEquals(expectedResult, Utils.getMajority(input));
      }
 
@@ -17,7 +19,7 @@ import static org.junit.Assert.assertEquals;
      public void givenArrayWithOneElement_callingGetMajority_returnsFAIL()
      {
          String [] input = {"ACK", "something"};
-         String expectedResult = "FAIL";
+         String expectedResult = "NO_MAJORITY";
          assertEquals(expectedResult, Utils.getMajority(input));
      }
 
@@ -25,7 +27,7 @@ import static org.junit.Assert.assertEquals;
      public void givenArrayWithTwoUnequalElements_callingGetMajority_returnsFAIL()
      {
          String [] input = {"ACK", "something", "somethingElse"};
-         String expectedResult = "FAIL";
+         String expectedResult = "NO_MAJORITY";
          assertEquals(expectedResult, Utils.getMajority(input));
      }
 
@@ -57,7 +59,7 @@ import static org.junit.Assert.assertEquals;
      public void givenArrayWithThreeElementsWithoutMajority_callingGetMajority_returnsFAIL()
      {
          String [] input = {"ACK", "something", "somethingElse", "somethingElse2"};
-         String expectedResult = "FAIL";
+         String expectedResult = "NO_MAJORITY";
          assertEquals(expectedResult, Utils.getMajority(input));
      }
 
@@ -65,7 +67,7 @@ import static org.junit.Assert.assertEquals;
      public void givenArrayWithFourElementsWithoutMajority_callingGetMajority_returnsFAIL()
      {
          String [] input = {"ACK", "something","something", "somethingElse", "somethingElse"};
-         String expectedResult = "FAIL";
+         String expectedResult = "NO_MAJORITY";
          assertEquals(expectedResult, Utils.getMajority(input));
      }
 

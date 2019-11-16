@@ -11,7 +11,8 @@ public class Utils {
    public static void UDPMulticastServer_SendMsg(int port, String ipAddress, Queue<String> allMsgs) throws IOException {
          DatagramSocket socket = new DatagramSocket();
          InetAddress group = InetAddress.getByName(ipAddress);
-         if(!allMsgs.isEmpty()){
+         boolean queueContainsMessage = !allMsgs.isEmpty();
+         if(queueContainsMessage){
             byte[] msg = allMsgs.poll().getBytes();
             DatagramPacket packet = new DatagramPacket(msg, msg.length,
                     group, port);
