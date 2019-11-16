@@ -14,7 +14,6 @@ public class MessageExecutor {
     private static Integer portNumber = 0;
     private static int sequencerID=0;
     private static int expectedID=0;
-    private static  String responseFromServers;
     private static ArrayList<List<String>> processBuffer=new ArrayList<>();
     private static int countFail = 0;
     private static String response = "";
@@ -35,7 +34,7 @@ public class MessageExecutor {
             }else if(sequencerID>expectedID) {
                 processBuffer.add(requestArguments);
             }else if(checkBufferSequencerID(expectedID)) {
-                responseFromServers=processInBuffer(expectedID, requestArguments, remotelyInvokableHospital);
+                response=processInBuffer(expectedID, requestArguments, remotelyInvokableHospital);
             }
         }else if(requestArguments.size()==2) {
             trackFailure(requestArguments);
@@ -51,7 +50,6 @@ public class MessageExecutor {
             bufferedRequest=processBuffer.get(i);
             if(Integer.parseInt(bufferedRequest.get(2))==expectedID) {
                 response = CorbaDelivery.deliverCorbaRequest(requestArguments ,remotelyInvokableHospital);
-                expectedID++;
                 expectedID++;
             }
         }
