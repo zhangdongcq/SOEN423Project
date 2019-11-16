@@ -1,0 +1,24 @@
+module DhmsApp {
+	
+	
+	
+	interface Dhms{
+	
+	string addAppointment(in string appointmentID, in string appointmentType, in long capacity);
+	string removeAppointment (in string appointmentID, in string appointmentType);
+	string listAppointmentAvailability (in string appointmentType);
+	string bookAppointment (in string patientID, in string appointmentID, in string appointmentType);
+	string getAppointmentSchedule (in string patientID);
+	string cancelAppointment (in string patientID, in string appointmentID);
+	string swapAppointment (in string patientID, in string oldAppointmentID, in string oldAppointmentType, in string newAppointmentID, in string newAppointmentType);
+	long loginAdmin(in string adminID);
+	long logoutAdmin(in string adminID);
+	long loginPatient(in string patientID);
+	long logoutPatient(in string patientID);
+	boolean validateAppointmentID(in string id);
+	boolean validateAppointmentType(in string type);
+	string showAppointment();
+	string showPatients();
+	
+	};
+};
