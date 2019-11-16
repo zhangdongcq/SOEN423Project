@@ -1,0 +1,1 @@
+2019-11-15 21:40:09: Replica Manager 2 is listening for requests from Sequencer:
