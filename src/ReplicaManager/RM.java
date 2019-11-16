@@ -82,30 +82,8 @@ public class RM {
 				DatagramPacket requestFromSequencer = new DatagramPacket(buffer, buffer.length);
 				aSocket.receive(requestFromSequencer);
 				
-				String sentenceStr = new String(requestFromSequencer.getData());
-				String[] patitions = sentenceStr.split(";");
-				if(patitions.length>2) {
-					FE_IP=patitions[0];
-					String FE_UPD_PortStr=patitions[1];
-					FE_UPD_Port=Integer.parseInt(FE_UPD_PortStr);
-					sequencerID=Integer.parseInt(patitions[2]);
-					
-					if(sequencerID==expectedID) {
-						if(patitions[0].charAt(3)=='A') {
-							
-							responseFromServers=admin.adminStart(patitions);
-						}else {
-							responseFromServers=patient.patientStart(patitions);
-						}
-						expectedID++;
-					}else if(sequencerID>expectedID) {
-						processBuffer.add(sentenceStr);
-					}else if(checkBufferSequencerID(expectedID)) {
-						responseFromServers=processInBuffer(expectedID);
-					}
-				}else if(patitions.length==2) {
-					trackFailure(patitions);
-				}								
+				String sentenceStr = new String(requestFromSequencer.getData());				
+				executeRequest(sentenceStr);								
 			}
 		} catch (SocketException e) {
 			System.out.println("Socket: " + e.getMessage());
@@ -154,6 +132,29 @@ public class RM {
 		} finally {
 			if (aSocket != null)
 				aSocket.close();
+		}
+	}
+	public static void executeRequest(String sentenceStr) throws Exception {
+		String[] patitions = sentenceStr.split(";");
+		if(patitions.length>2) {
+			FE_IP=patitions[0];
+			String FE_UPD_PortStr=patitions[1];
+			FE_UPD_Port=Integer.parseInt(FE_UPD_PortStr);
+			sequencerID=Integer.parseInt(patitions[2]);			
+			if(sequencerID==expectedID) {
+				if(patitions[0].charAt(3)=='A') {					
+					responseFromServers=admin.adminStart(patitions);
+				}else {
+					responseFromServers=patient.patientStart(patitions);
+				}
+				expectedID++;
+			}else if(sequencerID>expectedID) {
+				processBuffer.add(sentenceStr);
+			}else if(checkBufferSequencerID(expectedID)) {
+				responseFromServers=processInBuffer(expectedID);
+			}
+		}else if(patitions.length==2) {
+			trackFailure(patitions);
 		}
 	}
 	public static boolean checkBufferSequencerID(int expectedID) {
