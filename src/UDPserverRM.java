@@ -45,13 +45,25 @@ public class UDPserverRM extends Thread{
 						String command = parts[4];
 						String arguments = parts[5];
 						result = rm.digest(sequenceNum, userID, command, arguments);
+						//in case where the received request has a sequenceNum less than the expected, we start listening again
 						if(result.equals("dontsend")){
 							continue;
 						}
 						else{
-						reply = new DatagramPacket(result.getBytes(),result.length(), aHost, fePort);   					
-						aSocket.send(reply);
-						rm.logFile.writeLog("RM"+rm.getRmID()+" received "+command+" request from IP: "+parts[0]+" Port: "+parts[1]+" and sent back a reply:"+ result);
+							reply = new DatagramPacket(result.getBytes(),result.length(), aHost, fePort);   					
+							aSocket.send(reply);
+							rm.logFile.writeLog("RM"+rm.getRmID()+" received "+command+" request from IP: "+parts[0]+" Port: "+parts[1]+" and sent back a reply:"+ result);
+							
+							//after a reply is sent, currentSequenceNum is increased, so lets check the buffer for potential packets
+							result = rm.processBuffer();
+								//in case it didnt find a request to be processed
+								if(result.equals("dontsend"))
+									continue;
+								else{
+								reply = new DatagramPacket(result.getBytes(),result.length(), aHost, fePort);
+								aSocket.send(reply);
+								rm.logFile.writeLog("RM"+rm.getRmID()+" processed buffer and sent"+ result);
+								}
 						}
 					}
 				

@@ -35,6 +35,23 @@ public class ReplicaManager {
 		return rmID;
 	}
 	
+	public String processBuffer(){
+		if(!buffer.isEmpty()){
+			String result = currentSequenceNum+";"+rmID+";";
+			for(HashMap.Entry<Integer,String> entry : buffer.entrySet()){
+				if(entry.getKey()==currentSequenceNum){
+					String [] param = entry.getValue().split(";");
+					String id = param[0];
+					String com = param[1];
+					String ar = param[2];
+					result = result + digest(entry.getKey(), id, com, ar);
+				}
+			}
+			return result;
+		}else
+			return "dontsend";
+		
+	}
 	
 	public String digest(Integer sequenceNum, String userID, String command, String arguments){
 		
@@ -130,23 +147,9 @@ public class ReplicaManager {
 			String request = userID+";"+command+";"+arguments;
 			buffer.put(sequenceNum,request);
 			// check buffer for packets to be executed
-			if(!buffer.isEmpty()){
-				for(HashMap.Entry<Integer,String> entry : buffer.entrySet()){
-					if(entry.getKey()==currentSequenceNum){
-						String [] param = entry.getValue().split(";");
-						String id = param[0];
-						String com = param[1];
-						String ar = param[2];
-						digest(entry.getKey(), id, com, ar);
-						
-					}else {
-						// no packets were found in buffer for execution
-						return "dontsend";
-					}
-				}
-			}
+			
 		}
-		
+		currentSequenceNum++;
 		return result;
 	
 	
