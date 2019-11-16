@@ -161,7 +161,7 @@ public class Client {
       }
    }
 
-   public static String adminActions(String userId, BufferedReader br, String userSelection, IFrontEndServer frontEndServer, String targetCity) throws IOException {
+   private static String adminActions(String userId, BufferedReader br, String userSelection, IFrontEndServer frontEndServer, String targetCity) throws IOException {
       switch (userSelection) {
          case "1":
             appointmentId = getValidAppointmentId(br, Utils.APP_ID);
