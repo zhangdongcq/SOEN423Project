@@ -294,3 +294,23 @@
 2019-11-14 15:14:36: [MTL Server]: Received app availabilities for: (MTLP3333MTLM121212) request from SHE server and replied "SUCCESS"
 2019-11-14 15:14:49: getLocalSchedule: Patient MTLP3333:
 2019-11-14 15:14:49: [MTL Server]: Received app availabilities for: (MTLP3333) request from SHE server and replied ""
+2019-11-16 15:28:27: MTL UDP port: 2234
+2019-11-16 15:28:27: Appointment added: PHYSICIAN MTLE232323 5
+2019-11-16 15:28:27: Appointment added SURGEON MTLE343434 4
+2019-11-16 15:28:27: Appointment added DENTAL MTLM232323 3
+2019-11-16 15:28:27: Appointment added DENTAL MTLM121212 2
+2019-11-16 15:34:10: MTL UDP port: 2234
+2019-11-16 15:34:10: Appointment added: PHYSICIAN MTLE232323 5
+2019-11-16 15:34:10: Appointment added SURGEON MTLE343434 4
+2019-11-16 15:34:10: Appointment added DENTAL MTLM232323 3
+2019-11-16 15:34:10: Appointment added DENTAL MTLM121212 2
+2019-11-16 15:41:07: MTL UDP port: 2234
+2019-11-16 15:41:07: Appointment added: PHYSICIAN MTLE232323 5
+2019-11-16 15:41:07: Appointment added SURGEON MTLE343434 4
+2019-11-16 15:41:07: Appointment added DENTAL MTLM232323 3
+2019-11-16 15:41:07: Appointment added DENTAL MTLM121212 2
+2019-11-16 15:53:45: MTL UDP port: 2234
+2019-11-16 15:53:45: Appointment added: PHYSICIAN MTLE232323 5
+2019-11-16 15:53:45: Appointment added SURGEON MTLE343434 4
+2019-11-16 15:53:45: Appointment added DENTAL MTLM232323 3
+2019-11-16 15:53:45: Appointment added DENTAL MTLM121212 2

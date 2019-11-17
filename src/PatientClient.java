@@ -58,7 +58,8 @@ public class PatientClient extends Thread {
 			               
 			                case 1: {
 			                	System.out.println("Enter Appointment Type:");
-			                	String appointmentType = input.next().toUpperCase();
+			                	String appointmentType = input.next();
+			                	appointmentType = appointmentType.substring(0,1).toUpperCase() + appointmentType.substring(1).toLowerCase();
 			                	System.out.println(reference.listAppointmentAvailability(appointmentType));
 			                	System.out.println("Enter Appointment ID:");
 			                	String appointmentID = input.next();
@@ -77,21 +78,20 @@ public class PatientClient extends Thread {
 			                	showMenu(); 	
 			                }break;
 			                case 4:{
-			                	System.out.println(reference.getAppointmentSchedule(patientID));
-			                	System.out.println("Enter Appointment Type:");
-			                	String appointmentType = input.next().toUpperCase();
-			                	System.out.println(reference.listAppointmentAvailability(appointmentType));
+			                	System.out.println("Booked appointments: "+ reference.getAppointmentSchedule(patientID));
 			                	System.out.println("Enter old Appointent Type:");
-			                	String oldAppointmentType = input.next().toUpperCase();
+			                	String oldAppointmentType = input.next();
+			                	oldAppointmentType = oldAppointmentType.substring(0,1).toUpperCase() + oldAppointmentType.substring(1).toLowerCase();
 			                	System.out.println("Enter old Appointent ID:");
 			                	String oldAppointmentID = input.next();
 			                	System.out.println("Enter new Appointent Type:");
-			                	String newAppointmentType = input.next().toUpperCase();
+			                	String newAppointmentType = input.next();
+			                	newAppointmentType = newAppointmentType.substring(0,1).toUpperCase() + newAppointmentType.substring(1).toLowerCase();
+			                	System.out.println("Choose appointment: "+ reference.listAppointmentAvailability(newAppointmentType));
 			                	System.out.println("Enter new Appointent ID:");
 			                	String newAppointmentID = input.next();
 			                	System.out.println(logFileP.writeLog(reference.swapAppointment(patientID, oldAppointmentID, oldAppointmentType, newAppointmentID, newAppointmentType)));
 			                	showMenu();
-			                 	
 			                }break;
 			                case 5: {
 			                	reference.logoutPatient(patientID);

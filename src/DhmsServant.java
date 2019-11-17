@@ -8,13 +8,18 @@ import org.omg.CORBA.*;
 import org.omg.PortableServer.*;
 import org.omg.PortableServer.POA;
 import java.util.Properties;
+import java.util.TreeMap;
 
 import javax.swing.text.html.HTMLDocument.Iterator;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 public class DhmsServant extends DhmsPOA{
 	private ORB orb;
@@ -67,55 +72,6 @@ public class DhmsServant extends DhmsPOA{
 	
 
 	
-	public String showAppointment() {
-		if(!appointmentRecords.isEmpty())
-			return appointmentRecords.toString();
-		else 
-			return "Appointment records are empty";
-	}
-	
-	
-	public String showPatients() {
-		if(!patientRecords.isEmpty())
-			return patientRecords.toString();
-		else 
-			return "Patient records are empty";
-	}
-	
-
-	public boolean validateAppointmentID(String id){
-		if(!id.matches("^(MTL|QUE|SHE)(E|A|M)\\d{6}"))
-			return false;
-		else
-			return true;
-	}
-	
-	
-	public boolean validateAppointmentType(String type){
-		if(!type.matches("(SURGEON|DENTAL|PHYSICIAN)"))
-			return false;
-		else
-			return true;	
-	}
-	
-	
-	public boolean validatePatientID(String id){
-		if(!id.matches("^(MTL|QUE|SHE)(P)\\d{4}"))
-			return false;
-		else
-			return true;
-	}
-	
-	
-	public boolean validateAdminID(String id){
-		if(!id.matches("^(MTL|QUE|SHE)(A)\\d{4}"))
-			return false;
-		else
-			return true;
-	}
-
-	
-	
 	@Override
 	public String addAppointment(String appointmentID, String appointmentType, int capacity) {
 		
@@ -155,9 +111,6 @@ public class DhmsServant extends DhmsPOA{
 	
 	
 	
-	
-	
-	
 
 	@Override
 	public String removeAppointment(String appointmentID, String appointmentType) {
@@ -191,36 +144,7 @@ public class DhmsServant extends DhmsPOA{
 	
 	
 	
-	public String listLocalAppointments(String appointmentType){
-		
-			if(!appointmentRecords.isEmpty()){
-				String result = "";
-				for(HashMap.Entry<String, HashMap<String, Integer>> entry1 : appointmentRecords.entrySet()){
-					for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
-						if(entry1.getKey().equals(appointmentType) && entry2.getValue()>0){
-							
-							result = result+entry2.getKey().toString()+" "+entry2.getValue().toString()+" ";
-						}
-					}
-				}
-			logFile.writeLog("listLocalAppointments: "+ result);
-			return result;
-			
-			}else{
-				logFile.writeLog("Attempting to list appointmets when records are empty.");
-				return "";
-			}
-		
-//		logFile.writeLog("Listing appointments was not successful");	
-//		return "FAIL";
-	}
-	
-	
 
-	
-	
-	
-	
 	@Override
 	public String listAppointmentAvailability(String appointmentType) {
 		
@@ -260,7 +184,8 @@ public class DhmsServant extends DhmsPOA{
 		            logFile.writeLog("["+serverLocation+" Server]: Got the reply of listAppointmentAvailability("+appointmentType+") request from "+th2.remoteServer+" server. \""+th2.replyFromServer+"\"");
 	
 		            //create return message
-		            resultStr = String.valueOf(listLocalAppointments(appointmentType))+" "+th1.replyFromServer+" "+th2.replyFromServer;
+		            //resultStr = String.valueOf(listLocalAppointments(appointmentType))+ th1.replyFromServer + th2.replyFromServer;
+		            resultStr = removeLastChar(sortListAvailability(String.valueOf(listLocalAppointments(appointmentType))+ th1.replyFromServer + th2.replyFromServer));
 	
 		            //release thread object
 		            th1 = null;
@@ -279,89 +204,6 @@ public class DhmsServant extends DhmsPOA{
 		}
 	}
 
-	
-	
-	
-	
-	
-	
-	public String bookLocalAppointment(String patientID, String appointmentID, String appointmentType) {
-		
-		if(!appointmentRecords.isEmpty()){
-			for(HashMap.Entry<String, HashMap<String, Integer>> entry1 : appointmentRecords.entrySet()){
-				for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
-						//first check if appointment is available
-						if(entry1.getKey().equals(appointmentType) && entry2.getKey().equals(appointmentID) && entry2.getValue()>0){
-								int capacity = entry2.getValue();
-								if(!patientRecords.isEmpty()){
-									for(HashMap.Entry<String, HashMap<String, ArrayList<String>>> entryPatient: patientRecords.entrySet()){
-										for(HashMap.Entry<String, ArrayList<String>> entryPatient2: entryPatient.getValue().entrySet()){
-											if(entryPatient.getKey().equals(patientID) && !entryPatient2.getKey().equals(appointmentType)){
-												ArrayList<String> apps = new ArrayList<String>();
-												apps.add(appointmentID);
-												entryPatient.getValue().put(appointmentType, apps);
-												capacity --;
-												entry1.getValue().replace(appointmentID,capacity);
-												logFile.writeLog("Booked on existing patient: "+ patientID+" Type: "+appointmentType+" Appointment: "+appointmentID);
-												return "SUCCESS";
-											}
-											else if(entryPatient.getKey().equals(patientID) && entryPatient2.getKey().equals(appointmentType) && entryPatient2.getValue().contains(appointmentID)){
-												logFile.writeLog("Booking not successfull. This appointment already exists in patient's record"+appointmentID);
-												return "FAIL";
-												
-											}else if(entryPatient.getKey().equals(patientID) && entryPatient2.getKey().equals(appointmentType) && !entryPatient2.getValue().contains(appointmentID)){
-												entryPatient2.getValue().add(appointmentID);
-												capacity --;
-												entry1.getValue().replace(appointmentID, capacity);
-												logFile.writeLog("Booked: Patient: "+ patientID+" Type: "+appointmentType+" Appointment: "+appointmentID);
-												return "SUCCESS";
-											}
-										}//end for <entryPatient2>
-									}//end for <entryPatient>
-								}else{
-								HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
-								ArrayList<String> apps = new ArrayList<String>();
-								apps.add(appointmentID);
-								map.put(appointmentType, apps);
-								patientRecords.put(patientID,map);
-								capacity --;
-								entry1.getValue().replace(appointmentID, capacity);
-								logFile.writeLog("Booked: Patient: "+ patientID+" Type: "+appointmentType+" Appointment: "+appointmentID);
-								return "SUCCESS";
-								}
-						}
-				}//end for <entry2>
-			}//end for <entry1>
-		}else{
-			logFile.writeLog("Booking failed, appointment records empty");
-			return "FAIL";
-		}
-		
-		return "FAIL";
-	}
-	
-	
-	
-	
-	public String getLocalSchedule(String patientID){
-		if(!patientRecords.isEmpty()){
-			String result = "";
-			for(HashMap.Entry<String, HashMap<String,ArrayList<String>>> entry1 : patientRecords.entrySet()){
-				for(HashMap.Entry<String,ArrayList<String>> entry2 : entry1.getValue().entrySet()){
-					if(entry1.getKey().equals(patientID)){
-						for(int i=0;i<entry2.getValue().size();i++){
-							result = result+ entry2.getKey().toString()+";"+entry2.getValue().get(i)+";";
-						}
-					}
-				}
-			}
-			logFile.writeLog("getLocalSchedule: Patient "+patientID+":"+result);
-			return result;
-		}
-		logFile.writeLog("getLocalSchedule: Patient "+patientID+" has no scheduled appointments");
-		return "";
-	}
-	
 	
 	
 
@@ -403,14 +245,17 @@ public class DhmsServant extends DhmsPOA{
 	            logFile.writeLog("["+serverLocation+" Server]: Got the reply of getAppointmentSchedule("+patientID+") request from "+th2.remoteServer+" server. \""+th2.replyFromServer+"\"");
 	
 	            //create return message
-	            resultStr = String.valueOf(getLocalSchedule(patientID))+th1.replyFromServer+th2.replyFromServer;
+	            //resultStr = String.valueOf(getLocalSchedule(patientID))+th1.replyFromServer+th2.replyFromServer;
+	            resultStr = removeLastChar(sortAppointmentSchedule(String.valueOf(getLocalSchedule(patientID))+th1.replyFromServer+th2.replyFromServer));
 	
 	            //release thread object
 	            th1 = null;
 	            th2 = null;
 	            
 	            logFile.writeLog("["+serverLocation+" Server] " +patientID +": "+ resultStr);
+	            
 	            return resultStr;
+	        
 	        }catch (InterruptedException e)	{
 	            e.printStackTrace();
 	            logFile.writeLog("["+serverLocation+" Server] ERROR: listing shcedule failed, Internal error.");
@@ -419,60 +264,9 @@ public class DhmsServant extends DhmsPOA{
 		}else{
 			logFile.writeLog("listAppointmentSchedule: Invalid inputs");
 			return "FAIL";
-		}
-	        
+		}      
 	}
 
-	
-	public void returnAppointment(String appointmentType, String appointmentID){
-		
-			if(!appointmentRecords.isEmpty()){
-				for(HashMap.Entry<String, HashMap<String, Integer>> entry1 : appointmentRecords.entrySet()){
-					for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
-						int capacity = entry2.getValue();
-						if(entry1.getKey().equals(appointmentType) && entry2.getKey().equals(appointmentID)){
-							capacity ++;
-							entry1.getValue().replace(appointmentID, capacity);
-						}
-						else if(entry1.getKey().equals(appointmentType) && !entry1.getValue().containsKey(appointmentID)){
-							capacity = 1;
-							entry1.getValue().put(appointmentID, capacity);
-						}
-					}
-				}
-				
-			}else{
-			
-				HashMap<String, Integer> InnerMap = new HashMap<String, Integer>();
-				InnerMap.put(appointmentID, 11);
-				appointmentRecords.put(appointmentType, InnerMap);
-				}
-
-	}
-	
-	
-	
-	
-	public String cancelLocalAppointment(String patientID, String appointmentID) {
-		for(HashMap.Entry<String, HashMap<String, ArrayList<String>>> entryPatient: patientRecords.entrySet()){
-			for(HashMap.Entry<String, ArrayList<String>> entryPatient2: entryPatient.getValue().entrySet()){
-				if(entryPatient.getKey().equals(patientID) && entryPatient2.getValue().contains(appointmentID)){
-					entryPatient2.getValue().remove(appointmentID);
-					//add appointment back in appointment records
-					if(entryPatient2.getValue().isEmpty()){
-						entryPatient.getValue().clear();
-					}
-					returnAppointment(entryPatient2.getKey(), appointmentID);
-					logFile.writeLog("Appointment cancelled: "+ patientID+":"+appointmentID);
-					return "SUCCESS";
-				}
-			}
-		}
-		logFile.writeLog("cancelLocalAppointment: "+ appointmentID + " was not found in patient records");
-		return "FAIL";
-	}
-	
-	
 	
 	
 	@Override
@@ -560,10 +354,8 @@ public class DhmsServant extends DhmsPOA{
 		        }
 		}else {
 			logFile.writeLog("cancelAppointment: Inputs invalid");
-			return "FAIL";
-			
-		}
-		
+			return "FAIL";	
+		}	
 	}
 	
 	
@@ -604,6 +396,274 @@ public class DhmsServant extends DhmsPOA{
 	
 	
 	
+	
+	public String listLocalAppointments(String appointmentType){
+		if(validateAppointmentType(appointmentType)){
+			if(!appointmentRecords.isEmpty()){
+				String result = "";
+				for(HashMap.Entry<String, HashMap<String, Integer>> entry1 : appointmentRecords.entrySet()){
+					for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
+						if(entry1.getKey().equals(appointmentType) && entry2.getValue()>0){
+							
+							result = result+entry2.getKey().toString()+" "+entry2.getValue().toString()+";";
+						}
+					}
+				}
+			logFile.writeLog("listLocalAppointments: "+ result);
+			
+			return result;
+			
+			}else{
+				logFile.writeLog("Attempting to list appointmets when records are empty.");
+				return "";
+			}
+		}
+		
+		logFile.writeLog("listLocalAppointments: Invalid inputs");	
+		return "FAIL";
+	}
+	
+	
+
+	
+	
+	public String bookLocalAppointment(String patientID, String appointmentID, String appointmentType) {
+		
+		if(!appointmentRecords.isEmpty()){
+			for(HashMap.Entry<String, HashMap<String, Integer>> entry1 : appointmentRecords.entrySet()){
+				for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
+						//first check if appointment is available
+						if(entry1.getKey().equals(appointmentType) && entry2.getKey().equals(appointmentID) && entry2.getValue()>0){
+								int capacity = entry2.getValue();
+								if(!patientRecords.isEmpty()){
+									for(HashMap.Entry<String, HashMap<String, ArrayList<String>>> entryPatient: patientRecords.entrySet()){
+										for(HashMap.Entry<String, ArrayList<String>> entryPatient2: entryPatient.getValue().entrySet()){
+											if(entryPatient.getKey().equals(patientID) && !entryPatient2.getKey().equals(appointmentType)){
+												ArrayList<String> apps = new ArrayList<String>();
+												apps.add(appointmentID);
+												entryPatient.getValue().put(appointmentType, apps);
+												capacity --;
+												entry1.getValue().replace(appointmentID,capacity);
+												logFile.writeLog("Booked on existing patient: "+ patientID+" Type: "+appointmentType+" Appointment: "+appointmentID);
+												return "SUCCESS";
+											}
+											else if(entryPatient.getKey().equals(patientID) && entryPatient2.getKey().equals(appointmentType) && entryPatient2.getValue().contains(appointmentID)){
+												logFile.writeLog("Booking not successfull. This appointment already exists in patient's record"+appointmentID);
+												return "FAIL";
+												
+											}else if(entryPatient.getKey().equals(patientID) && entryPatient2.getKey().equals(appointmentType) && !entryPatient2.getValue().contains(appointmentID)){
+												entryPatient2.getValue().add(appointmentID);
+												capacity --;
+												entry1.getValue().replace(appointmentID, capacity);
+												logFile.writeLog("Booked: Patient: "+ patientID+" Type: "+appointmentType+" Appointment: "+appointmentID);
+												return "SUCCESS";
+											}
+										}//end for <entryPatient2>
+									}//end for <entryPatient>
+								}else{
+								HashMap<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
+								ArrayList<String> apps = new ArrayList<String>();
+								apps.add(appointmentID);
+								map.put(appointmentType, apps);
+								patientRecords.put(patientID,map);
+								capacity --;
+								entry1.getValue().replace(appointmentID, capacity);
+								logFile.writeLog("Booked: Patient: "+ patientID+" Type: "+appointmentType+" Appointment: "+appointmentID);
+								return "SUCCESS";
+								}
+						}
+				}//end for <entry2>
+			}//end for <entry1>
+		}else{
+			logFile.writeLog("Booking failed, appointment records empty");
+			return "FAIL";
+		}
+		
+		return "FAIL";
+	}
+	
+	
+	
+	
+	public String getLocalSchedule(String patientID){
+		if(!patientRecords.isEmpty()){
+			String result = "";
+			for(HashMap.Entry<String, HashMap<String,ArrayList<String>>> entry1 : patientRecords.entrySet()){
+				for(HashMap.Entry<String,ArrayList<String>> entry2 : entry1.getValue().entrySet()){
+					if(entry1.getKey().equals(patientID)){
+						for(int i=0;i<entry2.getValue().size();i++){
+							result = result+ entry2.getKey().toString()+" "+entry2.getValue().get(i)+";";
+						}
+					}
+				}
+			}
+			logFile.writeLog("getLocalSchedule: Patient "+patientID+":"+result);
+			return result;
+		}
+		logFile.writeLog("getLocalSchedule: Patient "+patientID+" has no scheduled appointments");
+		return "";
+	}
+	
+	
+	
+	
+	
+	
+	public void returnAppointment(String appointmentType, String appointmentID){
+		
+		if(!appointmentRecords.isEmpty()){
+			for(HashMap.Entry<String, HashMap<String, Integer>> entry1 : appointmentRecords.entrySet()){
+				for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
+					int capacity = entry2.getValue();
+					if(entry1.getKey().equals(appointmentType) && entry2.getKey().equals(appointmentID)){
+						capacity ++;
+						entry1.getValue().replace(appointmentID, capacity);
+					}
+					else if(entry1.getKey().equals(appointmentType) && !entry1.getValue().containsKey(appointmentID)){
+						capacity = 1;
+						entry1.getValue().put(appointmentID, capacity);
+					}
+				}
+			}
+			
+		}else{
+		
+			HashMap<String, Integer> InnerMap = new HashMap<String, Integer>();
+			InnerMap.put(appointmentID, 11);
+			appointmentRecords.put(appointmentType, InnerMap);
+			}
+	}
+
+
+
+
+	public String cancelLocalAppointment(String patientID, String appointmentID) {
+		for(HashMap.Entry<String, HashMap<String, ArrayList<String>>> entryPatient: patientRecords.entrySet()){
+			for(HashMap.Entry<String, ArrayList<String>> entryPatient2: entryPatient.getValue().entrySet()){
+				if(entryPatient.getKey().equals(patientID) && entryPatient2.getValue().contains(appointmentID)){
+					entryPatient2.getValue().remove(appointmentID);
+					//add appointment back in appointment records
+					if(entryPatient2.getValue().isEmpty()){
+						entryPatient.getValue().clear();
+					}
+					returnAppointment(entryPatient2.getKey(), appointmentID);
+					logFile.writeLog("Appointment cancelled: "+ patientID+":"+appointmentID);
+					return "SUCCESS";
+				}
+			}
+		}
+		logFile.writeLog("cancelLocalAppointment: "+ appointmentID + " was not found in patient records");
+		return "FAIL";
+	}
+	
+	
+	public String showAppointment() {
+		if(!appointmentRecords.isEmpty())
+			return appointmentRecords.toString();
+		else 
+			return "Appointment records are empty";
+	}
+	
+	
+	public String showPatients() {
+		if(!patientRecords.isEmpty())
+			return patientRecords.toString();
+		else 
+			return "Patient records are empty";
+	}
+	
+
+	public boolean validateAppointmentID(String id){
+		if(!id.matches("^(MTL|QUE|SHE)(E|A|M)\\d{6}"))
+			return false;
+		else
+			return true;
+	}
+	
+	
+	public boolean validateAppointmentType(String type){
+		if(!type.matches("(Surgeon|Dental|Physician)"))
+			return false;
+		else
+			return true;	
+	}
+	
+	
+	public boolean validatePatientID(String id){
+		if(!id.matches("^(MTL|QUE|SHE)(P)\\d{4}"))
+			return false;
+		else
+			return true;
+	}
+	
+	
+	public boolean validateAdminID(String id){
+		if(!id.matches("^(MTL|QUE|SHE)(A)\\d{4}"))
+			return false;
+		else
+			return true;
+	}
+	
+	
+	public static String removeLastChar(String str) {
+	    return str.substring(0, str.length() - 1);
+	}
+	
+
+	public static String sortListAvailability(String appointmentAvailability){
+	
+		String result= "";
+        String [] availabilityList=appointmentAvailability.split(";");
+        Arrays.sort(availabilityList);
+        for(int i = 0;i<availabilityList.length; i++){
+        	result = result + availabilityList[i]+";";
+        }
+        return result;
+    }
+	
+	public static String sortAppointmentSchedule(String schedule){
+		HashMap <String, ArrayList <String> > sch = new HashMap<String,ArrayList <String>>();
+		String result="";
+		ArrayList <String> dental = new ArrayList<String>();
+		ArrayList <String> physician = new ArrayList<String>();
+		ArrayList <String> surgeon = new ArrayList<String>();
+		String [] parts = schedule.split(";");
+		sch.put("Dental", dental);
+		sch.put("Physician", physician);
+		sch.put("Surgeon", surgeon);
+		
+		if(!sch.isEmpty()){
+			for(int i=0; i<parts.length; i++){
+				for(HashMap.Entry<String, ArrayList <String>> entry : sch.entrySet()){
+					if(parts[i].substring(0,6).equals("Dental") && entry.getKey().equals("Dental")){
+						dental.add(parts[i].substring(7));
+						Collections.sort(dental);
+						
+					}else if(parts[i].substring(0,9).equals("Physician") && entry.getKey().equals("Physician")){
+						physician.add( parts[i].substring(10));
+						Collections.sort(physician);
+						
+					}else if(parts[i].substring(0,7).equals("Surgeon") && entry.getKey().equals("Surgeon")){
+						surgeon.add(parts[i].substring(8));
+						Collections.sort(surgeon);
+						
+					}
+				}
+			}
+		}
+		//sort the keys
+		TreeMap<String, ArrayList<String>> sorted = new TreeMap<>(sch);
+		
+		
+		for(HashMap.Entry<String, ArrayList <String>> entry : sorted.entrySet()){
+			for(int i=0; i < entry.getValue().size(); i++){
+				result = result + entry.getKey()+";"+entry.getValue().get(i)+";";
+			}
+		}
+
+		return result;
+			
+	}
 	
 	
 

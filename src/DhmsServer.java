@@ -25,20 +25,20 @@ public class DhmsServer {
 	            DhmsServant SHE = new DhmsServant(args[3],args[1],"SHE");
 	            	
 	            //add some initial data in the servers
-	            MTL.addAppointment("MTLE232323", "PHYSICIAN", 5);
-	            MTL.addAppointment("MTLE343434", "SURGEON", 4);
-	            MTL.addAppointment("MTLM232323", "DENTAL", 3);
-	            MTL.addAppointment("MTLM121212", "DENTAL", 2);
+	            MTL.addAppointment("MTLE232323", "Physician", 5);
+	            MTL.addAppointment("MTLE343434", "Surgeon", 4);
+	            MTL.addAppointment("MTLM232323", "Dental", 3);
+	            MTL.addAppointment("MTLM121212", "Dental", 2);
 	            
-	            QUE.addAppointment("QUEE232323", "PHYSICIAN", 5);
-	            QUE.addAppointment("QUEE343434", "SURGEON", 4);
-	            QUE.addAppointment("QUEM232323", "DENTAL", 3);
-	            QUE.addAppointment("QUEM121212", "DENTAL", 2);
+	            QUE.addAppointment("QUEE232323", "Physician", 5);
+	            QUE.addAppointment("QUEE343434", "Surgeon", 4);
+	            QUE.addAppointment("QUEM232323", "Dental", 3);
+	            QUE.addAppointment("QUEM121212", "Dental", 2);
 	            
-	            SHE.addAppointment("SHEE232323", "PHYSICIAN", 5);
-	            SHE.addAppointment("SHEE343434", "SURGEON", 4);
-	            SHE.addAppointment("SHEM232323", "DENTAL", 3);
-	            SHE.addAppointment("SHEM121212", "DENTAL", 2);
+	            SHE.addAppointment("SHEE232323", "Physician", 5);
+	            SHE.addAppointment("SHEE343434", "Surgeon", 4);
+	            SHE.addAppointment("SHEM232323", "Dental", 3);
+	            SHE.addAppointment("SHEM121212", "Dental", 2);
 	            
 
 	            org.omg.CORBA.Object refMTL = rootpoa.servant_to_reference(MTL);
