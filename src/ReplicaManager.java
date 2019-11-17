@@ -1,4 +1,12 @@
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
@@ -11,49 +19,34 @@ import DhmsApp.DhmsHelper;
 public class ReplicaManager {
 	
 	private static int udpPort = 6790;
-	private UDPserverRM listener;
 	private static int currentSequenceNum;
 	private static int rmID = 2;
 	private static HashMap<Integer, String> buffer;
-	public Log logFile;
+	public static Log logFile;
 	
-
-	public ReplicaManager (){
-		
-		//create listener
-		listener = new UDPserverRM(this, udpPort);
-		//start it
-		listener.start();
-		//create log file
-		logFile = new Log ("RM"+rmID+".txt");
-		logFile.writeLog("Replica Manager "+rmID+ " is listening for requests from Sequencer.");
-		
-		
-	}
 	
-	public int getRmID(){
-		return rmID;
-	}
+	public int getRmID() {return rmID;}
 	
-	public String processBuffer(){
+	public static String processBuffer(){
+		String result = "";
 		if(!buffer.isEmpty()){
-			String result = currentSequenceNum+";"+rmID+";";
 			for(HashMap.Entry<Integer,String> entry : buffer.entrySet()){
 				if(entry.getKey()==currentSequenceNum){
-					String [] param = entry.getValue().split(";");
-					String id = param[0];
-					String com = param[1];
-					String ar = param[2];
+					List<String> parameter = Arrays.asList(entry.getValue().split(";"));
+					String id = parameter.get(0);
+					String com = parameter.get(1);
+					String ar = parameter.get(2);
 					result = result + digest(entry.getKey(), id, com, ar);
 				}
 			}
-			return result;
-		}else
-			return "dontsend";
-		
+		}
+		return result;
 	}
 	
-	public String digest(Integer sequenceNum, String userID, String command, String arguments){
+
+	
+	
+	public static String digest(Integer sequenceNum, String userID, String command, String arguments){
 		
 		String result = sequenceNum.toString()+";"+rmID+";";
 		if(sequenceNum == currentSequenceNum){
@@ -66,99 +59,135 @@ public class ReplicaManager {
 	            NameComponent path[] = {nc};
 	            Dhms reference = DhmsHelper.narrow(ncRef.resolve(path));
 	            
-	            String [] arg = arguments.split(";");
+	            List<String> arg = Arrays.asList(arguments.split(";"));
 	            
 	            switch(command){
-	            
 		            case "addAppointment": {
 		            	if(userID.substring(3).equals("P"))
 		            		return "FAIL";
 		            	else{
-		            		String appointmentID = arg[0];
-		            		String appointmentType = arg[1];
-		            		int capacity = Integer.valueOf(arg[2]);
+		            		String appointmentID = arg.get(0);
+		            		String appointmentType = arg.get(1);
+		            		int capacity = Integer.valueOf(arg.get(2));
 		            		result = result + reference.addAppointment(appointmentID, appointmentType, capacity);
 		            	}
 		            }break;
-		            
 		            case "removeAppointment": {
 		            	if(userID.substring(3).equals("P"))
 		            		return "FAIL";
 		            	else{
-		            		String appointmentID = arg[0];
-		            		String appointmentType = arg[1];
+		            		String appointmentID = arg.get(0);
+		            		String appointmentType = arg.get(1);
 		            		result = result + reference.removeAppointment(appointmentID, appointmentType);
 		            	}
 		            }break;
-		            
 		            case "listAppointmentAvailability": {
 		            	if(userID.substring(3).equals("P"))
 		            		return "FAIL";
 		            	else{
-		            		String appointmentType = arg[0];
+		            		String appointmentType = arg.get(0);
 		            		result = result + reference.listAppointmentAvailability(appointmentType);
 		            	}
-		            }break;
-		            
+		            }break;  
 		            case "bookAppointment": {
-		            	String patientID = arg[0];
-		            	String appointmentID = arg[1];
-	            		String appointmentType = arg[2];
+		            	String patientID = arg.get(0);
+		            	String appointmentID = arg.get(1);
+	            		String appointmentType = arg.get(2);
 	            		result = result + reference.bookAppointment(patientID, appointmentID, appointmentType);
-		            }break;
-		            
+		            }break; 
 		            case "getAppointmentSchedule": {
-		            	String patientID = arg[0];
+		            	String patientID = arg.get(0);
 		            	result = result + reference.getAppointmentSchedule(patientID);	
-		            }break;
-		            
+		            }break;  
 		            case "cancelAppointment": {
-		            	String patientID = arg[0];
-		            	String appointmentID = arg[1];
+		            	String patientID = arg.get(0);
+		            	String appointmentID = arg.get(0);
 		            	result = result + reference.cancelAppointment(patientID, appointmentID);	
-		            }break;
-		            
+		            }break;  
 		            case "swapAppointment": {
-		            	String patientID = arg[0];
-		            	String oldAppointmentID = arg[1];
-		            	String oldAppointmentType = arg[2];
-		            	String newAppointmentID = arg[3];
-		            	String newAppointmentType = arg[4];
+		            	String patientID = arg.get(0);
+		            	String oldAppointmentID = arg.get(1);
+		            	String oldAppointmentType = arg.get(2);
+		            	String newAppointmentID = arg.get(3);
+		            	String newAppointmentType = arg.get(4);
 		            	result = result + reference.swapAppointment(patientID, oldAppointmentID, oldAppointmentType, newAppointmentID, newAppointmentType);
 		            }break;
 		            default: 
 		            	result = "FAIL";
-	            
-	            }// end switch
-	            
+	            }// end switch  
 			}catch (Exception e){
 	            logFile.writeLog("ERROR: "+userID+" unknown error;");
 	            System.err.println("ERROR: "+e);
 	            e.printStackTrace(System.out);
 			}
 			
-			
-			
 		}else if(sequenceNum < currentSequenceNum){
-			return "dontsend";
+			System.out.println(logFile.writeLog("RM"+rmID+" received a message with sequence number less than current sequence number"));
+			return "";
 			
 		}else if (sequenceNum > currentSequenceNum){
 			// put in buffer
 			String request = userID+";"+command+";"+arguments;
 			buffer.put(sequenceNum,request);
-			// check buffer for packets to be executed
+			System.out.println(logFile.writeLog("RM"+rmID+" received a message with sequence number greater than current sequence number"));
+			return "";
 			
 		}
 		currentSequenceNum++;
 		return result;
+	}
 	
 	
-	}//end digest()
+	
+	
+	
+	
 	
 	public static void main(String args[]){
 	
-		ReplicaManager rm = new ReplicaManager();
-	}
-	
+		boolean running = true;
+		logFile = new Log("RM.txt");
 		
-}
+		while(running){
+			
+			String sequencerRequest = SequencerListener.getSequencerRequest();
+			// “FE_IP;FE_UPD_Port;SequenceId;UserId;Command;Arguments”   or “RM#;FAIL 
+			// “127.0.0.1;8675;1;MTLA2222;addAppointment;appointmentID;appointmentType;capacity”
+
+			List<String> parts = Arrays.asList(sequencerRequest.split(";"));
+			
+			if(parts.size() == 2 && parts.get(0).equals("RM"+rmID) && parts.get(1).equals("FAIL")){
+				running = false;
+				System.out.println(logFile.writeLog("RM"+rmID+" received a message ["+parts.get(0)+" "+parts.get(1)+"] from Sequencer"));
+				continue;	
+			}else if(parts.size() > 2){
+				SequencerListener.sendAck("ack");
+				System.out.println(logFile.writeLog("RM"+rmID+" sent an ACK to Sequencer "));
+				String feIP = parts.get(0);
+				int fePort = Integer.valueOf(parts.get(1));
+				int sequenceNum = Integer.valueOf(parts.get(2));
+				String userID = parts.get(3);
+				String command = parts.get(4);
+				String arguments = "";
+				for(int i=5; i<parts.size(); i++){
+					arguments = arguments+parts.get(i)+";";
+				}
+				System.out.println(logFile.writeLog("RM"+rmID+" received a message ["+sequenceNum+" "+userID+" "+command+" "+arguments+"] from Sequencer"));
+				String replyToFe = digest(sequenceNum, userID, command, arguments);
+				if(replyToFe.equals(""))
+					continue;
+				else{
+					FEreplyer.replyToFe(replyToFe, feIP, fePort);
+					System.out.println(logFile.writeLog("RM"+rmID+" sent a reply: ["+replyToFe+"] to FE "+feIP+":"+fePort));
+					replyToFe = processBuffer();
+					if(replyToFe.equals("")){
+						continue;
+					}else{
+						FEreplyer.replyToFe(replyToFe, feIP, fePort);
+						System.out.println(logFile.writeLog("RM"+rmID+" sent a reply: ["+replyToFe+"] to FE "+feIP+":"+fePort));
+					}		
+				}
+			}
+		}//end while
+	}//end main	
+}//end class
