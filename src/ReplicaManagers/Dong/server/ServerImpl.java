@@ -1,7 +1,7 @@
 package ReplicaManagers.Dong.server;
 
 import static ReplicaManagers.Dong.utils_server.Utils.getCityFromAppointmentID;
-import static ReplicaManagers.Dong.utils_server.Utils.getTotalResponse;
+import static ReplicaManagers.Dong.utils_server.Utils.cleanAndConcatAllResponses;
 
 import java.io.IOException;
 import java.net.SocketException;
@@ -44,46 +44,40 @@ public class ServerImpl extends IServerPOA {
 
       if (!cityRecords.containsKey(appointmentType)) {
          cityRecords.put(appointmentType, appIDMap);
-         return String.format("You have successfully added an appointment ID %s under appointment type %s!", appointmentID, appointmentType);
+         return SUCCESS;
       }
       if (cityRecords.get(appointmentType).containsKey(appointmentID)) {
          return FAIL;
-//         return String.format("The given appointment ID %s is already exist in appointment type %s!", appointmentID, appointmentType);
       }
       cityRecords.get(appointmentType).put(appointmentID, appDetail);
-      return String.format("You have successfully added an appointment ID %s under appointment type %s!", appointmentID, appointmentType);
+      return SUCCESS;
    }
 
    @Override
    public synchronized String removeAppointment(String appointmentID, String appointmentType) {
       if (appointmentID == null || appointmentType == null || appointmentID.isEmpty() || appointmentType.isEmpty()) {
          return FAIL;
-//         return "Illegal parameter(s), is null or missing!";
       }
       if (!cityRecords.containsKey(appointmentType)) {
          return FAIL;
-//         return "No such an appointment type in record!";
       }
       if (!cityRecords.get(appointmentType).containsKey(appointmentID)) {
          return FAIL;
-//         return String.format("No such an appointment ID %s under given appointment type %s", appointmentID, appointmentType);
       }
       if (cityRecords.get(appointmentType).get(appointmentID).size() == 1) {
          cityRecords.get(appointmentType).remove(appointmentID);
-         return String.format("The appointment id %s has been removed from appointment type %s.", appointmentID, appointmentType);
-//         return String.format("The appointment id %s has been removed from appointment type %s.", appointmentID, appointmentType);
+         return SUCCESS;
       }
       if (cityRecords.get(appointmentType).get(appointmentID).size() > 1) {
-         return "Not able to remove the appointment, as there are patients inside, please contact the patients to make another appoint.";
+         return FAIL;
       }
-      return "Should not be here: admin - removeAppointment";
+      return FAIL;
    }
 
    @Override
    public synchronized String bookAppointment(String patientID, String appointmentID, String appointmentType) {
       if (patientID.isEmpty() || appointmentID.isEmpty() || appointmentType.isEmpty()) {
          return FAIL;
-//         return "Missing Parameters!";
       }
       String numberType = appointmentType;
       appointmentType = Utils.getRealAppType(appointmentType);
@@ -93,53 +87,47 @@ public class ServerImpl extends IServerPOA {
          } else {
             if (!cityRecords.containsKey(appointmentType)) {
                return FAIL;
-//               return String.format("No local record for appointment type %s in ReplicaManagers.Dong.server %s yet.", appointmentType, this.getServerName());
             }
             if (!cityRecords.get(appointmentType).containsKey(appointmentID)) {
                return FAIL;
-//               return String.format("No local record for appointment id %s in ReplicaManagers.Dong.server %s yet.", appointmentID, this.getServerName());
             }
             List<String> appDetail = cityRecords.get(appointmentType).get(appointmentID);
 
             if (Integer.parseInt(appDetail.get(0)) == 0) {
                return FAIL;
-//               return String.format("No more available place to register under this appointment id %s in ReplicaManagers.Dong.server %s", appointmentID, this.getServerName());
             }
             appDetail.set(0, String.valueOf(Integer.parseInt(appDetail.get(0)) - 1));
             appDetail.add(patientID.toUpperCase());
             // Records each patient
             patientsBookingCount.put(patientID, patientsBookingCount.getOrDefault(patientID, 1) + 1);
-            return String.format("You, patient ID %s has successfully reserved a place under appointment ID %s in ReplicaManagers.Dong.server %s", patientID.toUpperCase(), appointmentID, this.getServerName());
+            return SUCCESS;
          }
       } catch (IOException e) {
          e.printStackTrace();
       }
-      return "bookAppointment - ServerImpl";
+      return FAIL;
    }
 
    @Override
    public synchronized String cancelAppointment(String patientID, String appointmentID) {
       if (patientID.isEmpty() || appointmentID.isEmpty()) {
          return FAIL;
-//         return "No, missing Parameters!";
       }
       if (cityRecords.size() == 0) {
          return FAIL;
-//         return "No record in system which might be not initiated yet!";
       }
       // Validate the appointment id
       boolean doesAppointmentIdExist =
               cityRecords.entrySet().stream().anyMatch(entry -> entry.getValue().get(appointmentID) != null);
       if (!doesAppointmentIdExist) {
          return FAIL;
-//         return String.format("No, the appointment id %s does not exist in system of city %s.", appointmentID, this.getServerName());
       }
 
       // Validate the patient id
       boolean doesPatientIdExist =
               cityRecords.entrySet().stream().anyMatch(entry -> entry.getValue().get(appointmentID).contains(patientID));
       if (!doesPatientIdExist) {
-         return String.format("No, the patient ID %s does not exist in city %s!", patientID, this.getServerName());
+         return FAIL;
       }
 
       // Do work
@@ -151,22 +139,22 @@ public class ServerImpl extends IServerPOA {
             element.get(appointmentID).set(0, (Integer.parseInt(appDetail.get(0)) + 1) + "");
          }
       }
-      return String.format("You, patient ID %s has successfully cancelled a place under appointment ID %s in ReplicaManagers.Dong.server %s", patientID, appointmentID, this.getServerName());
+      return SUCCESS;
    }
 
    @Override
    public String swapAppointment(String patientID, String oldAppointmentID, String oldAppointmentType, String newAppointmentID, String newAppointmentType) {
-      String response = "";
+      String response;
       /**
        * Check local record for given patient ID
        */
       oldAppointmentType = Utils.getRealAppType(oldAppointmentType);
       if (!cityRecords.containsKey(oldAppointmentType))
-         return String.format("No record for the old appointment type %s in ReplicaManagers.Dong.server %s", oldAppointmentType, this.getServerName());
+         return FAIL;
       if (!cityRecords.get(oldAppointmentType).containsKey(oldAppointmentID))
-         return String.format("No record for old appointment id %s under old appointment type %s for ReplicaManagers.Dong.server city %s", oldAppointmentID, oldAppointmentType, this.getServerName());
+         return FAIL;
       if (!cityRecords.get(oldAppointmentType).get(oldAppointmentID).contains(patientID))
-         return String.format("No record for patient id %s under old appointment id %s of old appointment type %s for ReplicaManagers.Dong.server city %s", patientID, oldAppointmentID, oldAppointmentType, this.getServerName());
+         return FAIL;
 
       /**
        * UDP Client [mtl, que, she]
@@ -174,8 +162,9 @@ public class ServerImpl extends IServerPOA {
        */
       synchronized (this) {
          response = this.bookAppointment(patientID, newAppointmentID, newAppointmentType);
-         if (response.startsWith("No")) return response;
-         response = this.cancelAppointment(patientID, oldAppointmentID) + ", meanwhile, " + response;
+         if (response.equals(FAIL)) return response;
+         this.cancelAppointment(patientID, oldAppointmentID);
+         response = SUCCESS;
       }
 
       return response;
@@ -217,7 +206,6 @@ public class ServerImpl extends IServerPOA {
       String localResponse = getLocalAppointmentAvailability(appointmentType);
       String remoteResponse1 = "";
       String remoteResponse2 = "";
-      String totalResponse = "";
 
       /**
        * UDP Client [mtl, que, she]
@@ -235,8 +223,8 @@ public class ServerImpl extends IServerPOA {
       } catch (IOException e) {
          logger.log(Level.SEVERE, "IO in ReplicaManagers.Dong.server side (ReplicaManagers.Dong.server impl): " + e.getMessage());
       }
-      totalResponse = getTotalResponse(localResponse, remoteResponse1, remoteResponse2);
-      return totalResponse.trim().isEmpty() ? String.format("%s - No records yet.", appointmentType) : String.format("%s - %s.", appointmentType, totalResponse.trim());
+      //Dental;MTLE121236;Dental;SHEA111111;Physician;MTLE121236
+      return cleanAndConcatAllResponses(localResponse, remoteResponse1, remoteResponse2);
    }
 
    @Override
@@ -244,7 +232,6 @@ public class ServerImpl extends IServerPOA {
       String localResponse = getLocalAppSchedule(patientID);
       String remoteResponse1 = "";
       String remoteResponse2 = "";
-      String totalResponse = "";
 
 /**
  * UDP Client [mtl, que, she]
@@ -262,8 +249,7 @@ public class ServerImpl extends IServerPOA {
       } catch (IOException e) {
          logger.log(Level.SEVERE, "IO in ReplicaManagers.Dong.server side (ReplicaManagers.Dong.server impl): " + e.getMessage());
       }
-      totalResponse = getTotalResponse(localResponse, remoteResponse1, remoteResponse2);
-      return totalResponse.trim().length() < 8 ? String.format("%s - No records yet.", patientID) : String.format("%s - %s.", this.getServerName(), totalResponse.trim());
+      return cleanAndConcatAllResponses(localResponse, remoteResponse1, remoteResponse2);
    }
 
    public String getLocalAppSchedule(String patientID) {
@@ -278,9 +264,9 @@ public class ServerImpl extends IServerPOA {
          }
       }));
       return appointmentIdRecords.toString()
-              .replace("=", "<--->")
+              .replace("=", ";")
               .replace("{", " ")
-              .replace("}", " ");
+              .replace("}", " ")
+              .trim();
    }
-
 }

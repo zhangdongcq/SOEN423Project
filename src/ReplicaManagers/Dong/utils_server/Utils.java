@@ -10,6 +10,9 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -182,12 +185,13 @@ public class Utils {
       }
    }
 
-   public static String getTotalResponse(String localResponse, String remoteResponse1, String remoteResponse2) {
-      String totalResponse = "";
-      totalResponse = localResponse.isEmpty() ? totalResponse : localResponse;
-      totalResponse = remoteResponse1.isEmpty() ? totalResponse : String.join(",", totalResponse, remoteResponse1);
-      totalResponse = remoteResponse2.isEmpty() ? totalResponse : String.join(",", totalResponse, remoteResponse2);
-      return totalResponse;
+   public static String cleanAndConcatAllResponses(String localResponse, String remoteResponse1, String remoteResponse2) {
+      List<String> allResponses = Arrays.asList(
+              String.join(",", localResponse, remoteResponse1, remoteResponse2)
+                      .split(",")
+      );
+      allResponses.sort(Comparator.naturalOrder());
+      return String.join(";", allResponses);
    }
 
    public static String getRealAppType(String optionNumber) {
