@@ -58,7 +58,8 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
       byte[] buffer = new byte[1024];//to store the received data, it will be populated by what receive method returns
       getAllResponseMessagesFromRMs(aSocket, buffer);
       if (!allResponsesReceived) {
-         if (allRequestRecords.get(currentSequenceId) == null) return "No any response for your request.";
+         currentSequenceId = String.valueOf(allRequestRecords.size());
+         if (Objects.isNull(allRequestRecords.get(currentSequenceId))) return "No any response for your request.";
          sendFailureMessage();
       }
       return getCleanResponse();

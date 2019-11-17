@@ -19,8 +19,8 @@ public class Sequencer {
    private static Map<Integer, String> msgBackup = new HashMap<>();
    private static Queue<String> allMsgs = new LinkedList<>();
    private static Integer globalSequenceCounter = 0;
-   private final static String multicastAddress = "228.5.6.9";
-   private final static int multicastPort = 6790;
+   private static final String multicastAddress = "228.5.6.9";
+   private static final int multicastPort = 6790;
    private static DatagramPacket request;
 
    public static void main(String[] args) {
@@ -44,7 +44,7 @@ public class Sequencer {
    private static void sendAckToFE(String msgFromFrontEnd, DatagramSocket sequencerServerSocket) throws IOException
    {
       //TODO: Send acknowledge to FE
-      String ack = msgFromFrontEnd.contains("FAILURE_NOTICE") ? "FAILURE_NOTICE_ACK" : "SEQUENCER_ACK|" + (globalSequenceCounter - 1);
+      String ack = msgFromFrontEnd.contains("FAIL") ? "FAILURE_NOTICE_ACK" : "SEQUENCER_ACK|" + globalSequenceCounter;
       byte[] sequencer_ack_msg = ack.getBytes();
       DatagramPacket reply = new DatagramPacket(sequencer_ack_msg, sequencer_ack_msg.length, request.getAddress(),
               request.getPort());// reply packet ready
@@ -58,7 +58,7 @@ public class Sequencer {
       int fePort = 7789;
       // Global Counter ++ after encapsulation
       String msgToRMs = encapsulateRequest(msgFromFrontEnd, feAddress, fePort);
-      msgBackup.put(globalSequenceCounter - 1, msgToRMs);
+      msgBackup.put(globalSequenceCounter, msgToRMs);
       allMsgs.offer(msgToRMs);
       logger.log(Level.INFO, "Request received from client: " + msgFromFrontEnd);
       System.out.println("Msg sent to RMs is: " + msgToRMs);

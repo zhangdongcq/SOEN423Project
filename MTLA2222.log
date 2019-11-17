@@ -2,15 +2,14 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2019-11-14T12:40:03</date>
-  <millis>1573753203058</millis>
-  <sequence>3</sequence>
+  <date>2019-11-16T23:45:36</date>
+  <millis>1573965936577</millis>
+  <sequence>4</sequence>
   <logger>user</logger>
   <level>INFO</level>
-  <class>ReplicaManagers.Dong.client.Client</class>
+  <class>Client.Client</class>
   <method>main</method>
   <thread>1</thread>
-  <message>Hello, this is ReplicaManagers.Dong.server MTL, I have completed ReplicaManagers.Dong.server initiation.
-</message>
+  <message>No any response for your request.</message>
 </record>
 </log>
