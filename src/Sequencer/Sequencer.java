@@ -49,6 +49,7 @@ public class Sequencer {
       DatagramPacket reply = new DatagramPacket(sequencer_ack_msg, sequencer_ack_msg.length, request.getAddress(),
               request.getPort());// reply packet ready
       sequencerServerSocket.send(reply);// reply sent
+      System.out.println("(Sequencer) Sent ACK Msg to FE --> Done");
    }
 
    private static void multiCastToRMs(String msgFromFrontEnd)
@@ -79,6 +80,7 @@ public class Sequencer {
       request = new DatagramPacket(buffer, buffer.length);
       // Server waits for the request to come, block until a msg is in
       sequencerServerSocket.receive(request);// request received
+      System.out.println("recieveMsgFromFE --> get message from fe");
       return new String(buffer, 0, request.getLength());
    }
 

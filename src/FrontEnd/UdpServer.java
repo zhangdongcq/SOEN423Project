@@ -46,6 +46,7 @@ class UdpServer extends Thread {
                 InetAddress serverName2 = InetAddress.getByName(targetAddress);
                 requestTarget =
                         new DatagramPacket(toSend, toSend.length, serverName2, targetUdpPort);
+                System.out.println("(sendReliableAsyncMessageToSequencer)Message will be sent to sequencer: "+ msgToSend);
                 clientSocket.send(requestTarget);
 
                 //Receive
@@ -53,6 +54,11 @@ class UdpServer extends Thread {
                 DatagramPacket reply = new DatagramPacket(repliedData, repliedData.length);
                 clientSocket.receive(reply);
                 String response = new String(receivedMsgBuffer, 0, reply.getLength());
+
+                //*********
+                System.out.println("frontEndToSequencerThread --> Get ack msg from sequencer: "+response);
+
+
                 if (!response.equals("FAILURE_NOTICE_ACK")) {
                     String sequenceId = response.split("|")[1];
                     String msg = response.split("|")[0];

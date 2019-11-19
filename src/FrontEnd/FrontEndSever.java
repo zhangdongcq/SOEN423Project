@@ -28,7 +28,7 @@ public class FrontEndSever {
 
    public static void main(String[] args) {
       try {
-         String frontEndName = getClientRequest();
+         String frontEndName = getAndSetFrontEndName();
          startCorbaServices(args, frontEndName);
       } catch (ServantNotActive | WrongPolicy | InvalidName | org.omg.CORBA.ORBPackage.InvalidName | CannotProceed | NotFound | AdapterInactive | IOException servantNotActive) {
          servantNotActive.printStackTrace();
@@ -67,7 +67,7 @@ public class FrontEndSever {
       orb.run();
    }
 
-   public static String getClientRequest() throws IOException {
+   public static String getAndSetFrontEndName() throws IOException {
       //Get user input and Register frontend name
       InputStreamReader is = new InputStreamReader(System.in);
       BufferedReader br = new BufferedReader(is);

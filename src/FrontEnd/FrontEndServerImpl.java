@@ -47,7 +47,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
          sendReliableAsyncMessageToSequencer(msgToSend);
       }
 
-      //TODO: Receive MSG from RMs and SE
+      //TODO: Receive MSG from RMs
       DatagramSocket aSocket;
       try {
          aSocket = new DatagramSocket(frontEndReplicaManagerListenerUdpPort);
