@@ -32,7 +32,6 @@ public class RM {
 	static int FE_UPD_Port=0;
 	static ArrayList<String> processBuffer=new ArrayList<String>();
 	static String responseFromServers="";
-	static String messageToSequencer;
 	
 	public RM() {
 		try {
@@ -62,7 +61,6 @@ public class RM {
 		patient=new PatientRM();
 		try {
 			receiveFromSequencer();
-			sendMessageToSequencer(messageToSequencer);
 			sendMessageToFE(responseFromServers);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -85,6 +83,7 @@ public class RM {
 				String sentenceStr = new String(requestFromSequencer.getData());				
 				executeRequest(sentenceStr);								
 			}
+			System.err.println("Failcount exceeds 3, replica has failed!");
 		} catch (SocketException e) {
 			System.out.println("Socket: " + e.getMessage());
 		} catch (IOException e) {
@@ -94,26 +93,7 @@ public class RM {
 				aSocket.close();
 		}
 	}
-	public static void sendMessageToSequencer(String acknowledgement){
 
-		DatagramSocket aSocket = null;
-		try {
-			aSocket = new DatagramSocket();
-			byte[] messageByte = acknowledgement.getBytes();
-			InetAddress aHost = InetAddress.getByName("localhost");
-			DatagramPacket request = new DatagramPacket(messageByte, messageByte.length, aHost, 6789);
-			aSocket.send(request);
-			//System.out.println(acknowledgement);
-		} catch (SocketException e) {
-			System.out.println("Socket: " + e.getMessage());
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println("IO: " + e.getMessage());
-		} finally {
-			if (aSocket != null)
-				aSocket.close();
-		}
-	}
 	public static void sendMessageToFE(String message) {
 		DatagramSocket aSocket = null;
 		try {
