@@ -1,14 +1,14 @@
 package ReplicaManagers.Dong.client;
 
-import static ReplicaManagers.Dong.utils_client.Utils.getValidAppointmentId;
-import static ReplicaManagers.Dong.utils_client.Utils.getValidAppointmentType;
-import static ReplicaManagers.Dong.utils_client.Utils.getValidPatientId;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.SocketException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,170 +24,167 @@ import ReplicaManagers.Dong.corbasystem_RM.IServerHelper;
 import ReplicaManagers.Dong.utils_client.Utils;
 
 public class Client {
-
-   private static String appointmentId;
-   private static String appointmentType;
-   private static String capacity;
-   private static String patientId;
+   private static String[] pureRequest;
    private static String userType;
    private static String operatorId;
+   private static String sequenceId;
+   private static String targetCity;
+   private static IServer server;
+   private static String frontEndIp;
+   private static String frontEndPort;
+   private static String request;
+   private static Map<String, String[]> requestsFromSequencer;
    private static final Logger loggerClient = Logger.getLogger("ReplicaManagers/Dong/client");
-   private static final Logger loggerUser = Logger.getLogger("user");
+   private static final Logger loggerUser = Logger.getLogger(operatorId);
 
    public static void main(String args[]) {
-
       try {
-         loggerClient.log(Level.INFO, "Enter your user id to start with:");
-         InputStreamReader is = new InputStreamReader(System.in);
-         BufferedReader br = new BufferedReader(is);
 
-         //Get a valid User Id
-         String userID = br.readLine();
-         while (!Utils.isValidUserId(userID)) {
-            loggerClient.log(Level.WARNING, "Please input a valid user id.");
-            userID = br.readLine();
-         }
+         startSequencerListenerThread();
 
-         //Setup FileHandler for Logging in file
-         try {
-            FileHandler fileHandler = new FileHandler(userID + ".log");
-            fileHandler.setLevel(Level.INFO);
-            loggerUser.addHandler(fileHandler);
-         } catch (IOException e) {
-            loggerClient.log(Level.SEVERE, "File logger is not working.", e);
-         }
+         //TODO:  127.0.0.1;8675;1;MTLA2222;addAppointment;appointmentID;appointmentType;capacity
+         while (true) {
+            if (!Objects.isNull(requestsFromSequencer.get(sequenceId)) && !requestsFromSequencer.get(sequenceId)[2].isEmpty()) {
 
-         /**
-          * Setup connection
-          */
-         operatorId = userID;
-         String targetCity = Utils.getCity(userID);
-         Properties props = new Properties();
-         //Generate and initiate the ORB
-         props.put("org.omg.CORBA.ORBInitialPort", "1050");
-         props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
-         ORB orb = ORB.init(args, props);
-         // Get Root naming ReplicaManagers.Dong.server
-         org.omg.CORBA.Object objRef = null;
-         objRef = orb.resolve_initial_references("NameService");
+               findReplica(args);
 
-         NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+               pureRequest = requestsFromSequencer.get(sequenceId)[0].split(";");
 
-         // Get object reference through naming ReplicaManagers.Dong.server
-         IServer server = null;
-         server = IServerHelper.narrow(ncRef.resolve_str(targetCity));
-         loggerClient.log(Level.INFO, "Lookup completed.");
+               String operationResult = getReplicaResponse();
 
-         userType = Utils.getUserType(userID);
-         if (userType.equals(Utils.ADMIN)) {
-            /**
-             * Admins Operations
-             */
-            loggerClient.log(Level.INFO, Utils.mainMsg(userType, userID));
-            String userInput = Utils.getValidInput(br);
-            while (!userInput.equals("0")) {
-               String opsRes = adminActions(br, userInput, server, targetCity);
-               loggerUser.log(Level.INFO, opsRes);
-               loggerClient.log(Level.INFO, Utils.mainMsg(userType, userID));
-               userInput = Utils.getValidInput(br);
+               requestsFromSequencer.get(sequenceId)[2] = operationResult;
+               loggerUser.log(Level.INFO, operationResult);
+               //TODO: UDP send result to FE
+               Utils.sendResultToFrontEnd(operationResult, frontEndIp, frontEndPort);
             }
-         } else if (userType.equals(Utils.PATIENT)) {
-            /**
-             * Patients Operations
-             */
-            loggerClient.log(Level.INFO, Utils.mainMsg(userType, userID));
-            String userInput = Utils.getValidInput(br);
-            while (!userInput.equals("0")) {
-               String opsRes = patientActions(br, userInput, server);
-               loggerUser.log(Level.INFO, opsRes);
-               loggerClient.log(Level.INFO, Utils.mainMsg(userType, userID));
-               userInput = Utils.getValidInput(br);
-            }
-         } else {
-            loggerClient.log(Level.SEVERE, "Wrong user type from your user id! Bye.");
          }
-
       } catch (InvalidName | IOException | CannotProceed | NotFound | org.omg.CosNaming.NamingContextPackage.InvalidName invalidName) {
          invalidName.printStackTrace();
       }
    } //end main
 
-   /**
-    * Sub functions
-    */
-   private static String patientActions(BufferedReader br, String userSelection, IServer server) throws IOException {
-      switch (userSelection.toLowerCase()) {
-         case "a":
-            patientId = getValidPatientId(br);
+   private static IServer lookupReplicaServer(String[] args) throws InvalidName, CannotProceed, org.omg.CosNaming.NamingContextPackage.InvalidName, NotFound {
+      Properties props = new Properties();
+      //Generate and initiate the ORB
+      props.put("org.omg.CORBA.ORBInitialPort", "1050");
+      props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
+      ORB orb = ORB.init(args, props);
+      // Get Root naming ReplicaManagers.Dong.server
+      org.omg.CORBA.Object objRef = null;
+      objRef = orb.resolve_initial_references("NameService");
 
-            appointmentId = getValidAppointmentId(br, Utils.APP_ID);
+      NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
 
-            appointmentType = getValidAppointmentType(br, Utils.APP_TYPE);
+      // Get object reference through naming ReplicaManagers.Dong.server
+      IServer server = null;
+      server = IServerHelper.narrow(ncRef.resolve_str(targetCity));
+      loggerClient.log(Level.INFO, "Lookup completed.");
+      return server;
+   }
 
-            return server.bookAppointment(patientId, appointmentId, appointmentType);
-         case "b":
-            patientId = getValidPatientId(br);
+   private static String patientActions() throws IOException {
+      switch (pureRequest[0]) {
+         case "bookAppointment": // patientId, appointmentId, appointmentType
+            return server.bookAppointment(pureRequest[1], pureRequest[2], pureRequest[3]);
 
-            return server.getAppointmentSchedule(patientId);
-         case "c":
-            patientId = getValidPatientId(br);
+         case "getAppointmentSchedule": // patientID
+            return server.getAppointmentSchedule(pureRequest[1]);
 
-            if (userType.equals(Utils.PATIENT) && !patientId.equalsIgnoreCase(operatorId)) {
-               return "You are not able to cancel the appointment which does not belongs to you.";
-            }
-            appointmentId = getValidAppointmentId(br, Utils.APP_ID);
+         case "cancelAppointment":// patientID, String appointmentID
+            return server.cancelAppointment(pureRequest[1], pureRequest[2]);
 
-            return server.cancelAppointment(patientId, appointmentId);
-         case "d":
-            patientId = getValidPatientId(br);
-            String oldAppointmentId = getValidAppointmentId(br, Utils.OLD_APP_ID);
-            String newAppointmentId = getValidAppointmentId(br, Utils.NEW_APP_ID);
-            String oldAppointmentType = getValidAppointmentType(br, Utils.OLD_APP_TYPE);
-            String newAppointmentType = getValidAppointmentType(br, Utils.NEW_APP_TYPE);
-            return server.swapAppointment(patientId, oldAppointmentId, oldAppointmentType, newAppointmentId, newAppointmentType);
+         case "swapAppointment"://patientId, oldAppointmentId, oldAppointmentType, newAppointmentId, newAppointmentType
+            return server.swapAppointment(pureRequest[1], pureRequest[2], pureRequest[3], pureRequest[4], pureRequest[5]);
+
          default:
             return "Could not go here, no such a selection in patient menu!";
       }
    }
 
-   private static String adminActions(BufferedReader br, String userSelection, IServer server, String targetCity) throws IOException {
-      switch (userSelection) {
-         case "1":
-            appointmentId = getValidAppointmentId(br, Utils.APP_ID);
+   private static String adminActions() throws IOException {
+      switch (pureRequest[0]) {
+         case "addAppointment": // appointmentId, realType, capacity
+            return server.addAppointment(pureRequest[1], pureRequest[2], pureRequest[3]);
 
-            appointmentType = getValidAppointmentType(br, Utils.APP_TYPE);
+         case "removeAppointment": // appointmentID, appointmentType
+            return server.removeAppointment(pureRequest[1], pureRequest[2]);
 
-            Utils.askForCapacity();
-            capacity = br.readLine();
-            String realType = Utils.getRealAppType(appointmentType);
-            if (!appointmentId.substring(0, 3).equalsIgnoreCase(targetCity)) {
-               return String.format("Please only add your city-specific appointment. City: %s(A/E/M)XXXXXX.", targetCity.toUpperCase());
-            }
-            return server.addAppointment(appointmentId, realType, capacity);
-         case "2":
+         case "listAppointmentAvailability": //appointmentType
+            return server.listAppointmentAvailability(pureRequest[1]);
 
-            appointmentId = getValidAppointmentId(br, Utils.APP_ID);
-
-            do {
-               appointmentType = getValidAppointmentType(br, Utils.APP_TYPE);
-            }
-            while (Utils.getRealAppType(appointmentType).equals(Utils.WRONG));
-            return server.removeAppointment(appointmentId, Utils.getRealAppType(appointmentType));
-         case "3":
-            do {
-               appointmentType = getValidAppointmentType(br, Utils.APP_TYPE);
-            }
-            while (Utils.getRealAppType(appointmentType).equals(Utils.WRONG));
-            return server.listAppointmentAvailability(Utils.getRealAppType(appointmentType));
-         case "4":
-            return server.initiateServer(targetCity);
          case "a":
          case "b":
          case "c":
          case "d":
-            return patientActions(br, userSelection, server);
+            return patientActions();
          default:
             return "Could not go here, no such a selection in admin menu!";
       }
    }
+
+   static class SequencerListener extends Thread {
+      @Override
+      public void run() {
+         MulticastSocket aSocket = null;
+         try {
+            aSocket = new MulticastSocket(6790);
+            System.out.println("Replica Manager 1111 Started............");
+            aSocket.joinGroup(InetAddress.getByName("228.5.6.9"));
+            byte[] buffer = new byte[1024];
+            while (true) {
+               DatagramPacket requestFromSe = new DatagramPacket(buffer, buffer.length);
+               aSocket.receive(requestFromSe);
+
+               request = new String(requestFromSe.getData(),
+                       requestFromSe.getOffset(), requestFromSe.getLength());
+               putMsg(request);
+            }
+         } catch (SocketException e) {
+            System.out.println("Socket: " + e.getMessage());
+         } catch (IOException e) {
+            System.out.println("IO: " + e.getMessage());
+         } finally {
+            if (aSocket != null)
+               aSocket.close();
+         }
+      }
+
+      private synchronized void putMsg(String request) {
+         String[] requestInDetail = request.split(";");
+         frontEndIp = requestInDetail[0];
+         frontEndPort = requestInDetail[1];
+         sequenceId = requestInDetail[2];
+         operatorId = requestInDetail[3];
+         String[] reqAndReq = new String[2]; // 0: Request, 1: Response
+         //Pure request
+         reqAndReq[0] = request.substring(frontEndIp.length() + frontEndPort.length() + sequenceId.length() + 4);
+         requestsFromSequencer = new HashMap<>();
+         requestsFromSequencer.put(sequenceId, reqAndReq);
+         targetCity = Utils.getCity(operatorId);
+      }
+   }
+
+   private static void findReplica(String[] args) throws InvalidName, CannotProceed, org.omg.CosNaming.NamingContextPackage.InvalidName, NotFound {
+      while (true) {
+         if (!targetCity.isEmpty()) {
+            server = lookupReplicaServer(args);
+            break;
+         }
+      }
+   }
+
+   private static void startSequencerListenerThread() {
+      //TODO: GET msg from sequencer; Multicasting listening
+      SequencerListener sequencerListenerThread = new SequencerListener();
+      sequencerListenerThread.start();
+   }
+
+   private static String getReplicaResponse() throws IOException {
+      userType = Utils.getUserType(operatorId);
+      return userType.equals(Utils.ADMIN) ? adminActions() : patientActions();
+   }
+
+
 }
+
+

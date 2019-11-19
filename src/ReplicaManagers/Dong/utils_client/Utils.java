@@ -2,6 +2,9 @@ package ReplicaManagers.Dong.utils_client;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -222,5 +225,18 @@ public class Utils {
       return appointmentTypeNumber.equalsIgnoreCase("1")
               || appointmentTypeNumber.equalsIgnoreCase("2")
               || appointmentTypeNumber.equalsIgnoreCase("3");
+   }
+
+   public static void sendResultToFrontEnd(String response, String feAddress, String fePort) throws IOException {
+      try (DatagramSocket clientSocket = new DatagramSocket()) {
+         byte[] toSend = response.getBytes();
+
+         //Send1
+         int serverPort = Integer.parseInt(fePort);
+         InetAddress serverName2 = InetAddress.getByName(feAddress);
+         DatagramPacket requestTarget =
+                 new DatagramPacket(toSend, toSend.length, serverName2, serverPort);
+         clientSocket.send(requestTarget);
+      }
    }
 }
