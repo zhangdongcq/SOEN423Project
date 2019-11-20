@@ -58,7 +58,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
       byte[] buffer = new byte[1024];//to store the received data, it will be populated by what receive method returns
       getAllResponseMessagesFromRMs(aSocket, buffer);
       if (!allResponsesReceived) {
-         currentSequenceId = String.valueOf(allRequestRecords.size());
+         currentSequenceId = String.valueOf(allRequestRecords.size()-1);
          if (Objects.isNull(allRequestRecords.get(currentSequenceId))) return "No any response for your request.";
          sendFailureMessage();
       }
@@ -93,10 +93,9 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
          } catch (IOException e) {
             e.printStackTrace();
             System.out.println("IO: " + e.getMessage());
-         } finally {
-            if (aSocket != null) aSocket.close();
          }
       }
+//      if (aSocket != null) aSocket.close();
       finalResult = false;
    }
 

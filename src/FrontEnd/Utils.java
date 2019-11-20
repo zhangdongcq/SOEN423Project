@@ -67,7 +67,9 @@ public class Utils {
 
    public static String getMajority(String [] responseList)
     {
-        int majority;
+       System.out.println("getMajority ---> HERE");
+       if(responseList.length == 1) return responseList[0];
+       int majority;
         if(responseList.length%2 ==0)
             majority = responseList.length/2;
         else

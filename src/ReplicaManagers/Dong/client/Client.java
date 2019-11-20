@@ -22,6 +22,7 @@ import ReplicaManagers.Dong.corbasystem_RM.IServer;
 import ReplicaManagers.Dong.corbasystem_RM.IServerHelper;
 import ReplicaManagers.Dong.utils_client.Utils;
 
+// Replica Manager
 public class Client {
    private static String[] pureRequestArray;
    private static String userType;
@@ -30,9 +31,9 @@ public class Client {
    private static String targetCity;
    private static IServer server;
    private static String frontEndIp;
+   private static String request;
    private static String frontEndPort;
-   private static String request = "";
-   private static boolean hasMsg = false;
+   private static String replicaManagerId = "1";
    private static Map<String, String[]> requestsFromSequencer = new HashMap<>();
    private static final Logger loggerClient = Logger.getLogger("ReplicaManagers/Dong/client");
    private static final Logger loggerUser = Logger.getLogger("user");
@@ -40,51 +41,55 @@ public class Client {
    public static void main(String args[]) {
 
       //TODO:  127.0.0.1;8675;1;MTLA2222;addAppointment;appointmentID;appointmentType;capacity
+
+      MulticastSocket aSocket = null;
       try {
-         startSequencerListenerThread();
+         aSocket = new MulticastSocket(6790);
+         System.out.println("Replica Manager 1111 Started............");
+         aSocket.joinGroup(InetAddress.getByName("228.5.6.9"));
+         byte[] buffer = new byte[1024];
+         while (true) {
+            DatagramPacket requestFromSe = new DatagramPacket(buffer, buffer.length);
+            aSocket.receive(requestFromSe);
 
-         while (true){
-            if (hasMsg && !request.isEmpty()) {
-               System.out.println("new niming Thread: " + request);
-               try { // 127.0.0.1;8675;1;MTLA2222;addAppointment;appointmentID;appointmentType;capacity
-
-                  // MTLA2222;addAppointment;appointmentID;appointmentType;capacity
-                  String cleanRequest = Utils.getPureRequest(request);
-                  pureRequestArray = cleanRequest.split(";");
-                  System.out.println(String.join(" | ", pureRequestArray));
-                  if(cleanRequest.contains(";FAIL")){
-                     //TODO: Handle three-time failure!
-                     System.out.println("Got a FAILUIRE!!");
-                     hasMsg = false;
-                     request = "";
-                     continue;
-                  }
-                  findReplica(args);
-                  String operationResult = getReplicaResponse();
-
-                  String toFrontEnd = String.join(";", sequenceId, "1", operationResult);
-                  System.out.println("(ReplicaManager): Response from replica: " + toFrontEnd);
-                  requestsFromSequencer.get(sequenceId)[1] = operationResult;
-                  loggerUser.log(Level.INFO, operationResult);
-                  //TODO: UDP send result to FE
-                  Utils.sendResultToFrontEnd(operationResult, frontEndIp, frontEndPort);
-                  hasMsg = false;
-                  request = "";
-               } catch (InvalidName invalidName) {
-                  invalidName.printStackTrace();
-               } catch (CannotProceed cannotProceed) {
-                  cannotProceed.printStackTrace();
-               } catch (org.omg.CosNaming.NamingContextPackage.InvalidName invalidName) {
-                  invalidName.printStackTrace();
-               } catch (NotFound notFound) {
-                  notFound.printStackTrace();
-               } catch (IOException e) {
-                  e.printStackTrace();
-               }
+            request = new String(requestFromSe.getData(),
+                    requestFromSe.getOffset(), requestFromSe.getLength());
+            // 127.0.0.1;8675;1;MTLA2222;addAppointment;appointmentID;appointmentType;capacity
+            String[] header = request.split(";");
+            frontEndIp = header[0];
+            frontEndPort = header[1];
+            sequenceId = header[2];
+            operatorId = header[3];
+            targetCity = Utils.getCity(operatorId);
+            String cleanRequest = Utils.getPureRequest(request);
+            pureRequestArray = cleanRequest.split(";");
+            System.out.println(String.join(" | ", pureRequestArray));
+            if (cleanRequest.contains(";FAIL")) {
+               //TODO: Handle three-time failure!
+               System.out.println("Got a FAILUIRE!!");
+               continue;
             }
+            findReplica(args);
+            String operationResult = getReplicaResponse();
+            Utils.sendResultToFrontEnd(operationResult, sequenceId, replicaManagerId, frontEndIp, frontEndPort);
+            System.out.println("(ReplicaManager) gets msg from sequencer: " + request);
+            System.out.println("(ReplicaManager) send msg to frontend: " + String.join(";",sequenceId, replicaManagerId, operationResult));
          }
-      } catch (Exception e){
-         e.printStackTrace();
+      } catch (SocketException e) {
+         System.out.println("Socket: " + e.getMessage());
+      } catch (IOException e) {
+         System.out.println("IO: " + e.getMessage());
+      } catch (CannotProceed cannotProceed) {
+         cannotProceed.printStackTrace();
+      } catch (NotFound notFound) {
+         notFound.printStackTrace();
+      } catch (InvalidName invalidName) {
+         invalidName.printStackTrace();
+      } catch (org.omg.CosNaming.NamingContextPackage.InvalidName invalidName) {
+         invalidName.printStackTrace();
+      } finally {
+         if (aSocket != null)
+            aSocket.close();
       }
    }
 
@@ -127,7 +132,7 @@ public class Client {
    }
 
    private static String adminActions() throws IOException {
-      System.out.println("(adminActions) pureRequest: "+ pureRequestArray.toString());
+      System.out.println("(adminActions) pureRequest: " + String.join("|", pureRequestArray));
       switch (pureRequestArray[0]) {
          case "addAppointment": // appointmentId, realType, capacity
             return server.addAppointment(pureRequestArray[1], pureRequestArray[2], pureRequestArray[3]);
@@ -138,11 +143,17 @@ public class Client {
          case "listAppointmentAvailability": //appointmentType
             return server.listAppointmentAvailability(pureRequestArray[1]);
 
-         case "bookAppointment":
-         case "getAppointmentSchedule":
-         case "cancelAppointment":
-         case "swapAppointment":
-            return patientActions();
+         case "bookAppointment": // patientId, appointmentId, appointmentType
+            return server.bookAppointment(pureRequestArray[1], pureRequestArray[2], pureRequestArray[3]);
+
+         case "getAppointmentSchedule": // patientID
+            return server.getAppointmentSchedule(pureRequestArray[1]);
+
+         case "cancelAppointment":// patientID, String appointmentID
+            return server.cancelAppointment(pureRequestArray[1], pureRequestArray[2]);
+
+         case "swapAppointment"://patientId, oldAppointmentId, oldAppointmentType, newAppointmentId, newAppointmentType
+            return server.swapAppointment(pureRequestArray[1], pureRequestArray[2], pureRequestArray[3], pureRequestArray[4], pureRequestArray[5]);
          default:
             return "(adminActions - RM) Could not go here, no such a selection in admin menu!";
       }
@@ -163,7 +174,7 @@ public class Client {
 
                request = new String(requestFromSe.getData(),
                        requestFromSe.getOffset(), requestFromSe.getLength());
-               System.out.println("(ReplicaManager) gets msg from sequencer: "+request);
+               System.out.println("(ReplicaManager) gets msg from sequencer: " + request);
                putMsg(request);
             }
          } catch (SocketException e) {
@@ -187,7 +198,6 @@ public class Client {
          reqAndReq[0] = request.substring(frontEndIp.length() + frontEndPort.length() + sequenceId.length() + 3);
          requestsFromSequencer.put(seId, reqAndReq);
          targetCity = Utils.getCity(operatorId);
-         hasMsg = true;
          System.out.println(String.format("putMsg: frontEndIp %s, frontEndPort %s, sequenceId %s, requestsFromSequencer %s", frontEndIp, frontEndPort, sequenceId, requestsFromSequencer.toString()));
       }
    }

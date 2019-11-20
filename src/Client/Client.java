@@ -130,7 +130,7 @@ public class Client {
 
             String realAppType = Utils.getRealAppType(appointmentType);
 
-            return frontEndServer.requestHandler(userId, "bookAppointment", String.join(",", patientId, appointmentId, realAppType));
+            return frontEndServer.requestHandler(userId, "bookAppointment", String.join(";", patientId, appointmentId, realAppType));
          case "b":
             patientId = getValidPatientId(br);
 
@@ -143,7 +143,7 @@ public class Client {
             }
             appointmentId = getValidAppointmentId(br, Utils.APP_ID);
 
-            return frontEndServer.requestHandler(userId, "cancelAppointment", String.join(",", patientId, appointmentId));
+            return frontEndServer.requestHandler(userId, "cancelAppointment", String.join(";", patientId, appointmentId));
          case "d":
             patientId = getValidPatientId(br);
             String oldAppointmentId = getValidAppointmentId(br, Utils.OLD_APP_ID);
@@ -155,7 +155,7 @@ public class Client {
 
             String newAppointmentType = getValidAppointmentType(br, Utils.NEW_APP_TYPE);
             newAppointmentType = Utils.getRealAppType(newAppointmentType);
-            return frontEndServer.requestHandler(userId, "swapAppointment", String.join(",", patientId, oldAppointmentId, oldAppointmentType, newAppointmentId, newAppointmentType));
+            return frontEndServer.requestHandler(userId, "swapAppointment", String.join(";", patientId, oldAppointmentId, oldAppointmentType, newAppointmentId, newAppointmentType));
          default:
             return "Could not go here, no such a selection in patient menu!";
       }
@@ -174,7 +174,7 @@ public class Client {
             if (!appointmentId.substring(0, 3).equalsIgnoreCase(targetCity)) {
                return String.format("Please only add your city-specific appointment. City: %s(A/E/M)XXXXXX.", targetCity.toUpperCase());
             }
-            return frontEndServer.requestHandler(userId, "addAppointment", String.join(",", appointmentId, realType, capacity));
+            return frontEndServer.requestHandler(userId, "addAppointment", String.join(";", appointmentId, realType, capacity));
 
          case "2":
 
@@ -184,7 +184,7 @@ public class Client {
                appointmentType = getValidAppointmentType(br, Utils.APP_TYPE);
             }
             while (Utils.getRealAppType(appointmentType).equals(Utils.WRONG));
-            return frontEndServer.requestHandler(userId, "removeAppointment", String.join(",", appointmentId, Utils.getRealAppType(appointmentType)));
+            return frontEndServer.requestHandler(userId, "removeAppointment", String.join(";", appointmentId, Utils.getRealAppType(appointmentType)));
 
          case "3":
             do {

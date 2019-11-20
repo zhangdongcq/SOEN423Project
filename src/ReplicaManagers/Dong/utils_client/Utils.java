@@ -227,9 +227,9 @@ public class Utils {
               || appointmentTypeNumber.equalsIgnoreCase("3");
    }
 
-   public static void sendResultToFrontEnd(String response, String feAddress, String fePort) throws IOException {
+   public static void sendResultToFrontEnd(String response, String sequenceId, String replicaManagerId, String feAddress, String fePort) throws IOException {
       try (DatagramSocket clientSocket = new DatagramSocket()) {
-         byte[] toSend = response.getBytes();
+         byte[] toSend = String.join(";",sequenceId, replicaManagerId, response).getBytes();
 
          //Send1
          int serverPort = Integer.parseInt(fePort);
@@ -246,4 +246,5 @@ public class Utils {
       int pureRequestionPos = args[0].length() + args[1].length() + args[2].length() + args[3].length() + 4;
       return request.substring(pureRequestionPos);
    }
+
 }
