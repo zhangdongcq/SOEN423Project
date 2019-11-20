@@ -17,6 +17,7 @@ import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -426,8 +427,9 @@ public class QUEServer extends OperationsPOA{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return getAppointmentSchedule;
+		return sortAppointmentBySchedule(getAppointmentSchedule);
 	}
+	
 	public synchronized String cancelAppointment(String clientID,String patientID, String appointmentID,String appointmentType)
 	{
 		String success="";
@@ -487,7 +489,17 @@ public class QUEServer extends OperationsPOA{
 			}
 			
 		}
-		return printAppointmentByType;
+		
+		return sortAppointmentByType(printAppointmentByType);
+	}
+	public String sortAppointmentByType(String printAppointmentByType){
+		String [] SplitInArray=printAppointmentByType.split(";");
+		Arrays.sort(SplitInArray);
+		String sortedString="";
+		for(int i=0;i<SplitInArray.length;i++) {
+			sortedString+=SplitInArray[i]+";";
+		}
+		return sortedString;
 	}
 	public String printAppointmentBySchedule(Map<String, Map<String,ArrayList<String>>> map,String clientID){
 		String printAppointmentBySchedule="";
@@ -504,6 +516,55 @@ public class QUEServer extends OperationsPOA{
 			}
 		}
 		return printAppointmentBySchedule;
+	}
+	public String sortAppointmentBySchedule(String printAppointmentBySchedule) {
+		String physicianStr="";
+		String dentalStr="";
+		String surgeonStr="";
+		String result="";
+		String [] SplitInArray=printAppointmentBySchedule.split(";");
+		for(int i=0;i<SplitInArray.length;i++) {
+			if(SplitInArray[i].equalsIgnoreCase("Physician")) {
+				physicianStr+=SplitInArray[i]+";";
+				physicianStr+=SplitInArray[i+1]+";";
+			}
+		}
+		physicianStr=sortAppointmentByScheduleForEachType(physicianStr);
+		for(int i=0;i<SplitInArray.length;i++) {
+			if(SplitInArray[i].equalsIgnoreCase("Surgeon")) {
+				surgeonStr+=SplitInArray[i]+";";
+				surgeonStr+=SplitInArray[i+1]+";";
+			}
+		}
+		surgeonStr=sortAppointmentByScheduleForEachType(surgeonStr);
+		for(int i=0;i<SplitInArray.length;i++) {
+			if(SplitInArray[i].equalsIgnoreCase("Dental")) {
+				dentalStr+=SplitInArray[i]+";";
+				dentalStr+=SplitInArray[i+1]+";";
+			}
+		}
+		dentalStr=sortAppointmentByScheduleForEachType(dentalStr);
+		result=dentalStr+physicianStr+surgeonStr;
+		return result;
+		
+	}
+	public String sortAppointmentByScheduleForEachType(String scheduleForEachType) {
+		String [] tempArr=scheduleForEachType.split(";");
+		String [] appointmentIDintempArr = new String[tempArr.length/2];
+		String [] sortedArr=new String[tempArr.length/2];
+		String result="";
+		for(int i=0;i<tempArr.length-1;i=i+2) {
+			appointmentIDintempArr[i/2]=tempArr[i+1];
+		}
+		Arrays.sort(appointmentIDintempArr);
+		for(int i=0;i<appointmentIDintempArr.length;i++) {
+			sortedArr[i]=(tempArr[0]+";"+appointmentIDintempArr[i]);
+		}
+		for(int i=0;i<sortedArr.length;i++) {
+			result+=sortedArr[i]+";";
+		}
+		return result;
+		
 	}
 	public String createAndListenSocketCli(String appointmentType,String patientID,String task, String appointmentID,String clientID,
 			String newAppointmentID, String newAppointmentType) throws ClassNotFoundException, IOException {
@@ -600,7 +661,26 @@ public class QUEServer extends OperationsPOA{
 				accessCount2=1;
 				//SocketCli2.close();
 			}
-
+			//System.out.println("*** Appointments Summary (QUE) ***");
+			if(task.equalsIgnoreCase("listAppointmentAvailability")) {
+				printAppointmentByType(QUEMap,appointmentType);
+				writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"list Appointment Availability", "Success");
+			}			
+			else if(task.equalsIgnoreCase("getAppointmentSchedule")) {
+				printAppointmentBySchedule(QUEMap,patientID);
+				writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"get Appointment Schedule", "Success");
+			}			
+			else if(task.equalsIgnoreCase("bookAppointment")) {
+				printAppointment(QUEMap);
+				writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"book Appointment", "accessed");
+			}else if(task.equalsIgnoreCase("cancelAppointment")) {
+				printAppointment(QUEMap);
+				writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"cancel Appointment", "accessed");
+			}else if(task.equalsIgnoreCase("swapAppointment"))
+			{
+				printAppointment(QUEMap);
+				writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"swapAppointment", "accessed");
+			}
 			//System.out.println("*** Appointments Summary (SHE) ***");
 			if(task.equalsIgnoreCase("listAppointmentAvailability")) {
 				printAppointmentByType(otherMap2,appointmentType);
@@ -632,26 +712,8 @@ public class QUEServer extends OperationsPOA{
 				e.printStackTrace();
 			}
 	
-		//System.out.println("*** Appointments Summary (QUE) ***");
+		
 		if(task.equalsIgnoreCase("listAppointmentAvailability")) {
-			printAppointmentByType(QUEMap,appointmentType);
-			writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"list Appointment Availability", "Success");
-		}			
-		else if(task.equalsIgnoreCase("getAppointmentSchedule")) {
-			printAppointmentBySchedule(QUEMap,patientID);
-			writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"get Appointment Schedule", "Success");
-		}			
-		else if(task.equalsIgnoreCase("bookAppointment")) {
-			printAppointment(QUEMap);
-			writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"book Appointment", "accessed");
-		}else if(task.equalsIgnoreCase("cancelAppointment")) {
-			printAppointment(QUEMap);
-			writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"cancel Appointment", "accessed");
-		}else if(task.equalsIgnoreCase("swapAppointment"))
-		{
-			printAppointment(QUEMap);
-			writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"swapAppointment", "accessed");
-		}if(task.equalsIgnoreCase("listAppointmentAvailability")) {
 			return listAppointmentByType;
 		}else if(task.equalsIgnoreCase("getAppointmentSchedule")) {
 			return listAppointmentBySchedule;
