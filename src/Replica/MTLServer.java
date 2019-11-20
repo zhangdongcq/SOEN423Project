@@ -17,6 +17,7 @@ import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -422,7 +423,7 @@ public class MTLServer extends OperationsPOA{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return getAppointmentSchedule;
+		return sortAppointmentBySchedule(getAppointmentSchedule);
 	}
 	public synchronized String cancelAppointment(String clientID,String patientID, String appointmentID,String appointmentType)
 	{
@@ -487,7 +488,17 @@ public class MTLServer extends OperationsPOA{
 			}
 			
 		}
-		return printAppointmentByType;
+
+		return sortAppointmentByType(printAppointmentByType);
+	}
+	public String sortAppointmentByType(String printAppointmentByType){
+		String [] SplitInArray=printAppointmentByType.split(";");
+		Arrays.sort(SplitInArray);
+		String sortedString="";
+		for(int i=0;i<SplitInArray.length;i++) {
+			sortedString+=SplitInArray[i]+";";
+		}
+		return sortedString;
 	}
 	public String printAppointmentBySchedule(Map<String, Map<String,ArrayList<String>>> map,String clientID){
 		String printAppointmentBySchedule="";
@@ -505,7 +516,55 @@ public class MTLServer extends OperationsPOA{
 		}
 		return printAppointmentBySchedule;
 	}
-	
+	public String sortAppointmentBySchedule(String printAppointmentBySchedule) {
+		String physicianStr="";
+		String dentalStr="";
+		String surgeonStr="";
+		String result="";
+		String [] SplitInArray=printAppointmentBySchedule.split(";");
+		for(int i=0;i<SplitInArray.length;i++) {
+			if(SplitInArray[i].equalsIgnoreCase("Physician")) {
+				physicianStr+=SplitInArray[i]+";";
+				physicianStr+=SplitInArray[i+1]+";";
+			}
+		}
+		physicianStr=sortAppointmentByScheduleForEachType(physicianStr);
+		for(int i=0;i<SplitInArray.length;i++) {
+			if(SplitInArray[i].equalsIgnoreCase("Surgeon")) {
+				surgeonStr+=SplitInArray[i]+";";
+				surgeonStr+=SplitInArray[i+1]+";";
+			}
+		}
+		surgeonStr=sortAppointmentByScheduleForEachType(surgeonStr);
+		for(int i=0;i<SplitInArray.length;i++) {
+			if(SplitInArray[i].equalsIgnoreCase("Dental")) {
+				dentalStr+=SplitInArray[i]+";";
+				dentalStr+=SplitInArray[i+1]+";";
+			}
+		}
+		dentalStr=sortAppointmentByScheduleForEachType(dentalStr);
+		result=dentalStr+physicianStr+surgeonStr;
+		return result;
+		
+	}
+	public String sortAppointmentByScheduleForEachType(String scheduleForEachType) {
+		String [] tempArr=scheduleForEachType.split(";");
+		String [] appointmentIDintempArr = new String[tempArr.length/2];
+		String [] sortedArr=new String[tempArr.length/2];
+		String result="";
+		for(int i=0;i<tempArr.length-1;i=i+2) {
+			appointmentIDintempArr[i/2]=tempArr[i+1];
+		}
+		Arrays.sort(appointmentIDintempArr);
+		for(int i=0;i<appointmentIDintempArr.length;i++) {
+			sortedArr[i]=(tempArr[0]+";"+appointmentIDintempArr[i]);
+		}
+		for(int i=0;i<sortedArr.length;i++) {
+			result+=sortedArr[i]+";";
+		}
+		return result;
+		
+	}
 	public synchronized String createAndListenSocketCli(String appointmentType,String patientID,String task, String appointmentID,String clientID,
 			String newAppointmentID, String newAppointmentType) throws ClassNotFoundException, IOException {
 		String listAppointmentByType="";
@@ -541,7 +600,28 @@ public class MTLServer extends OperationsPOA{
 				accessCount1=1;
 				//SocketCli.close();
 			}
-						
+			//System.out.println("*** Appointments Summary (MTL) ***");
+			if(task.equalsIgnoreCase("listAppointmentAvailability"))
+			{
+				writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"list Appointment Availability", "Success");
+				printAppointmentByType(MTLMap,appointmentType);
+			}			
+			else if(task.equalsIgnoreCase("getAppointmentSchedule")) {
+				writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"get Appointment Schedule", "Success");
+				printAppointmentBySchedule(MTLMap,patientID);
+			}			
+			else if(task.equalsIgnoreCase("bookAppointment")) {
+				writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"book Appointment", "accessed");
+				printAppointment(MTLMap);
+			}
+			else if(task.equalsIgnoreCase("cancelAppointment")) {
+				writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"cancel Appointment", "accessed");
+				printAppointment(MTLMap);
+			}else if(task.equalsIgnoreCase("swapAppointment"))
+			{
+				printAppointment(MTLMap);
+				writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"swapAppointment", "accessed");
+			}			
 
 			//System.out.println("*** Appointments Summary (QUE) ***");
 			if(task.equalsIgnoreCase("listAppointmentAvailability")) {
@@ -641,28 +721,8 @@ public class MTLServer extends OperationsPOA{
 				e.printStackTrace();
 			}
 
-		//System.out.println("*** Appointments Summary (MTL) ***");
-		if(task.equalsIgnoreCase("listAppointmentAvailability"))
-		{
-			writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"list Appointment Availability", "Success");
-			printAppointmentByType(MTLMap,appointmentType);
-		}			
-		else if(task.equalsIgnoreCase("getAppointmentSchedule")) {
-			writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"get Appointment Schedule", "Success");
-			printAppointmentBySchedule(MTLMap,patientID);
-		}			
-		else if(task.equalsIgnoreCase("bookAppointment")) {
-			writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"book Appointment", "accessed");
-			printAppointment(MTLMap);
-		}
-		else if(task.equalsIgnoreCase("cancelAppointment")) {
-			writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"cancel Appointment", "accessed");
-			printAppointment(MTLMap);
-		}else if(task.equalsIgnoreCase("swapAppointment"))
-		{
-			printAppointment(MTLMap);
-			writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"swapAppointment", "accessed");
-		}if(task.equalsIgnoreCase("listAppointmentAvailability")) {
+		
+		if(task.equalsIgnoreCase("listAppointmentAvailability")) {
 			return listAppointmentByType;
 		}else if(task.equalsIgnoreCase("getAppointmentSchedule")) {
 			return listAppointmentBySchedule;
