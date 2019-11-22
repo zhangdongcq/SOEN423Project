@@ -11,38 +11,38 @@ public class CorbaDelivery {
 
     public static String deliverCorbaRequest(List<String> deliveryArguments, RemotelyInvokableHospital remotelyInvokableHospital)
     {
-        String option = deliveryArguments.get(0);
+        String option = deliveryArguments.get(4);
         switch (option)
         {
             case "logout":
                 return "Logging out user";
             case "bookAppointment":
                 return remotelyInvokableHospital.bookAppointment(
-                        deliveryArguments.get(1), deliveryArguments.get(2),
-                        StringConversion.getAppointmentType(deliveryArguments.get(3)));
+                        deliveryArguments.get(5), deliveryArguments.get(6),
+                        StringConversion.getAppointmentType(deliveryArguments.get(7)));
             case "getAppointmentSchedule":
                 return remotelyInvokableHospital.getAppointmentSchedule(
-                        deliveryArguments.get(1));
+                        deliveryArguments.get(5));
             case "cancelAppointment":
                 return remotelyInvokableHospital.cancelAppointment(
-                        deliveryArguments.get(1), deliveryArguments.get(2));
+                        deliveryArguments.get(5), deliveryArguments.get(6));
             case "addAppointment":
                 return remotelyInvokableHospital.addAppointment(
-                        deliveryArguments.get(1), StringConversion.getAppointmentType(deliveryArguments.get(2)),
-                        Integer.parseInt(deliveryArguments.get(3)));
+                        deliveryArguments.get(5), StringConversion.getAppointmentType(deliveryArguments.get(6)),
+                        Integer.parseInt(deliveryArguments.get(7)));
             case "removeAppointment":
                 return remotelyInvokableHospital.removeAppointment(
-                        deliveryArguments.get(1), StringConversion.getAppointmentType(deliveryArguments.get(2))
+                        deliveryArguments.get(5), StringConversion.getAppointmentType(deliveryArguments.get(6))
                 );
             case "listAppointmentAvailability":
                 return remotelyInvokableHospital.listAppointmentAvailability(
-                        StringConversion.getAppointmentType(deliveryArguments.get(1)));
+                        StringConversion.getAppointmentType(deliveryArguments.get(5)));
             case "swapAppointment":
-                    return remotelyInvokableHospital.swapAppointment(deliveryArguments.get(1), deliveryArguments.get(2),
-                            StringConversion.getAppointmentType(deliveryArguments.get(3)), deliveryArguments.get(4),
-                            StringConversion.getAppointmentType(deliveryArguments.get(5)));
+                    return remotelyInvokableHospital.swapAppointment(deliveryArguments.get(5), deliveryArguments.get(6),
+                            StringConversion.getAppointmentType(deliveryArguments.get(7)), deliveryArguments.get(8),
+                            StringConversion.getAppointmentType(deliveryArguments.get(9)));
             default:
-                return "Error: unknown RMI method";
+                return "Error: unknown method";
         }
     }
 

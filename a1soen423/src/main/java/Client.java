@@ -26,7 +26,7 @@ public class Client {
             while (true) {
                 String sequencerString = SequencerCommunicator.receiveFromSequencer(MessageExecutor.getCountFail());
                 List<String> requestArguments = Arrays.<String>asList(sequencerString.split(";"));
-                int userIDLocation = 3; //TODO find real location
+                int userIDLocation = 3;
                 user = new User(requestArguments.get(userIDLocation));
                 RemotelyInvokableHospital remotelyInvokableHospital = getHospital(user, objRef);
                 MessageExecutor.executeRequest(requestArguments, remotelyInvokableHospital);

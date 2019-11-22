@@ -9,7 +9,7 @@ import java.util.List;
 
 public class MessageExecutor {
 
-    private static int RMnumber=4; //TODO add correct RM number
+    private static int RMnumber=2;
     private static String ipAddress = "";
     private static Integer portNumber = 0;
     private static int sequencerID=0;
@@ -21,8 +21,6 @@ public class MessageExecutor {
 
     public static void executeRequest(List<String> requestArguments, RemotelyInvokableHospital remotelyInvokableHospital)
     {
-        //TODO make sure request arguments are in the correct order
-
         if(requestArguments.size()>2) {
             ipAddress=requestArguments.get(0);
             String FE_UPD_PortStr=requestArguments.get(1);
