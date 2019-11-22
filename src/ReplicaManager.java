@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,13 +20,114 @@ import DhmsApp.DhmsHelper;
 public class ReplicaManager {
 	
 	private static int udpPort = 6790;
-	private static int currentSequenceNum;
+	private static int currentSequenceNum = 1;
 	private static int rmID = 2;
-	private static HashMap<Integer, String> buffer;
+	private static HashMap<Integer, String> buffer = new HashMap<Integer, String>();
 	public static Log logFile;
 	
 	
-	public int getRmID() {return rmID;}
+	//public int getRmID() {return rmID;}
+	
+	
+	public static void main(String args[]){
+	
+		boolean running = true;
+		logFile = new Log("RM2.txt");
+		
+		while(running){
+			
+			String sequencerRequest = getSequencerRequest();
+			List<String> parts = Arrays.asList(sequencerRequest.split(";"));
+			
+			if(parts.size() == 4 && parts.get(2).equals("RM"+rmID) && parts.get(3).equals("FAIL")){
+				running = false;
+				System.out.println(logFile.writeLog("RM"+rmID+" received a message ["+parts.get(0)+" "+parts.get(1)+"] from Sequencer"));
+				continue;	
+			}else if(parts.size() > 4){
+				
+				String feIP = parts.get(0);
+				int fePort = Integer.valueOf(parts.get(1));
+				int sequenceNum = Integer.valueOf(parts.get(2));
+				String userID = parts.get(3);
+				String command = parts.get(4);
+				String arguments = "";
+				for(int i=5; i<parts.size(); i++){
+					arguments = arguments+parts.get(i)+";";
+				}
+				System.out.println(logFile.writeLog("RM"+rmID+" received a message ["+sequenceNum+" "+userID+" "+command+" "+arguments+"] from Sequencer"));
+				System.out.println(logFile.writeLog("RM"+rmID+": current Sequence Number in RM: "+ currentSequenceNum));
+				String replyToFe = digest(sequenceNum, userID, command, arguments);
+				System.out.println(logFile.writeLog("RM"+rmID+" REPLY: "+ replyToFe));
+				if(replyToFe.isEmpty())
+					continue;
+				else{
+					replyToFe(replyToFe,Integer.toString(rmID), feIP, fePort);
+					System.out.println(logFile.writeLog("RM"+rmID+" sent a reply: ["+replyToFe+"] to FE "+feIP+":"+fePort));
+					replyToFe = processBuffer();
+					if(replyToFe.isEmpty()){
+						continue;
+					}else{
+						replyToFe(replyToFe,Integer.toString(rmID), feIP, fePort);
+						System.out.println(logFile.writeLog("RM"+rmID+" sent a reply: ["+replyToFe+"] to FE "+feIP+":"+fePort));
+					}		
+				}
+			}
+		}//end while
+	}//end main	
+	
+	public static String getSequencerRequest(){
+		MulticastSocket aSocket = null;
+		try{    
+			//Create socket and buffer
+			aSocket = new MulticastSocket(udpPort); 
+            System.out.println("RM2 is listening............");
+
+			aSocket.joinGroup(InetAddress.getByName("228.5.6.9"));
+			
+			byte[] buffer = new byte[1024];
+			DatagramPacket request = new DatagramPacket(buffer, buffer.length);     
+			aSocket.receive(request); //listen to request
+			String msgFromSeq = (new String(request.getData(),0,request.getLength()));
+			System.out.println(logFile.writeLog("RM"+rmID+" gets msg from sequencer: " + msgFromSeq));
+			return msgFromSeq;
+			
+		}catch (SocketException e){
+				System.out.println("Socket Server: " + e.getMessage());   
+			} catch (IOException e) {
+				System.out.println("IO: " + e.getMessage());
+			} finally {
+				if(aSocket != null) aSocket.close();
+			}
+		return "";
+			
+	}
+	
+	
+	
+	
+	
+	public static void replyToFe(String msg, String rmID, String feIP, int fePort){
+			
+	        DatagramSocket aSocket = null;
+	        try {
+	            aSocket = new DatagramSocket();
+	            byte[] buffer = String.join(";",rmID, msg).getBytes();
+	            InetAddress aHost = InetAddress.getByName(feIP);
+	            DatagramPacket reply = new DatagramPacket(buffer, buffer.length, aHost, fePort);
+	            aSocket.send(reply);
+	            
+	        } catch (SocketException e) {
+	            System.out.println("Socket: " + e.getMessage());
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            System.out.println("IO: " + e.getMessage());
+	        } finally {
+	            if (aSocket != null)
+	                aSocket.close();
+	        }
+	}
+	
+	
 	
 	public static String processBuffer(){
 		String result = "";
@@ -40,10 +142,9 @@ public class ReplicaManager {
 				}
 			}
 		}
+		
 		return result;
 	}
-	
-
 	
 	
 	public static String digest(Integer sequenceNum, String userID, String command, String arguments){
@@ -129,6 +230,7 @@ public class ReplicaManager {
 			// put in buffer
 			String request = userID+";"+command+";"+arguments;
 			buffer.put(sequenceNum,request);
+			System.out.println(logFile.writeLog("RM"+rmID+" Buffer: "+buffer.toString()));
 			System.out.println(logFile.writeLog("RM"+rmID+" received a message with sequence number greater than current sequence number"));
 			return "";
 			
@@ -136,58 +238,4 @@ public class ReplicaManager {
 		currentSequenceNum++;
 		return result;
 	}
-	
-	
-	
-	
-	
-	
-	
-	public static void main(String args[]){
-	
-		boolean running = true;
-		logFile = new Log("RM.txt");
-		
-		while(running){
-			
-			String sequencerRequest = SequencerListener.getSequencerRequest();
-			// “FE_IP;FE_UPD_Port;SequenceId;UserId;Command;Arguments”   or “RM#;FAIL 
-			// “127.0.0.1;8675;1;MTLA2222;addAppointment;appointmentID;appointmentType;capacity”
-
-			List<String> parts = Arrays.asList(sequencerRequest.split(";"));
-			
-			if(parts.size() == 2 && parts.get(0).equals("RM"+rmID) && parts.get(1).equals("FAIL")){
-				running = false;
-				System.out.println(logFile.writeLog("RM"+rmID+" received a message ["+parts.get(0)+" "+parts.get(1)+"] from Sequencer"));
-				continue;	
-			}else if(parts.size() > 2){
-				SequencerListener.sendAck("ack");
-				System.out.println(logFile.writeLog("RM"+rmID+" sent an ACK to Sequencer "));
-				String feIP = parts.get(0);
-				int fePort = Integer.valueOf(parts.get(1));
-				int sequenceNum = Integer.valueOf(parts.get(2));
-				String userID = parts.get(3);
-				String command = parts.get(4);
-				String arguments = "";
-				for(int i=5; i<parts.size(); i++){
-					arguments = arguments+parts.get(i)+";";
-				}
-				System.out.println(logFile.writeLog("RM"+rmID+" received a message ["+sequenceNum+" "+userID+" "+command+" "+arguments+"] from Sequencer"));
-				String replyToFe = digest(sequenceNum, userID, command, arguments);
-				if(replyToFe.equals(""))
-					continue;
-				else{
-					FEreplyer.replyToFe(replyToFe, feIP, fePort);
-					System.out.println(logFile.writeLog("RM"+rmID+" sent a reply: ["+replyToFe+"] to FE "+feIP+":"+fePort));
-					replyToFe = processBuffer();
-					if(replyToFe.equals("")){
-						continue;
-					}else{
-						FEreplyer.replyToFe(replyToFe, feIP, fePort);
-						System.out.println(logFile.writeLog("RM"+rmID+" sent a reply: ["+replyToFe+"] to FE "+feIP+":"+fePort));
-					}		
-				}
-			}
-		}//end while
-	}//end main	
 }//end class

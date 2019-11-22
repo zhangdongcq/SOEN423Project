@@ -1,20 +1,10 @@
-2019-11-16 15:28:27: SHE UDP port: 3332
-2019-11-16 15:28:27: Appointment added: PHYSICIAN SHEE232323 5
-2019-11-16 15:28:27: Appointment added SURGEON SHEE343434 4
-2019-11-16 15:28:27: Appointment added DENTAL SHEM232323 3
-2019-11-16 15:28:27: Appointment added DENTAL SHEM121212 2
-2019-11-16 15:34:10: SHE UDP port: 3332
-2019-11-16 15:34:10: Appointment added: PHYSICIAN SHEE232323 5
-2019-11-16 15:34:10: Appointment added SURGEON SHEE343434 4
-2019-11-16 15:34:10: Appointment added DENTAL SHEM232323 3
-2019-11-16 15:34:10: Appointment added DENTAL SHEM121212 2
-2019-11-16 15:41:07: SHE UDP port: 3332
-2019-11-16 15:41:07: Appointment added: PHYSICIAN SHEE232323 5
-2019-11-16 15:41:07: Appointment added SURGEON SHEE343434 4
-2019-11-16 15:41:07: Appointment added DENTAL SHEM232323 3
-2019-11-16 15:41:07: Appointment added DENTAL SHEM121212 2
-2019-11-16 15:53:45: SHE UDP port: 3332
-2019-11-16 15:53:45: Appointment added: PHYSICIAN SHEE232323 5
-2019-11-16 15:53:45: Appointment added SURGEON SHEE343434 4
-2019-11-16 15:53:45: Appointment added DENTAL SHEM232323 3
-2019-11-16 15:53:45: Appointment added DENTAL SHEM121212 2
+2019-11-21 19:05:50: SHE UDP port: 3332
+2019-11-21 19:05:50: Appointment added: Physician SHEE150919 5
+2019-11-21 19:05:50: Appointment added Physician SHEE160919 5
+2019-11-21 19:05:50: Appointment added Surgeon SHEM110919 4
+2019-11-21 19:05:50: Appointment added Dental SHEA120919 3
+2019-11-21 19:05:50: Appointment added Dental SHEA130919 2
+2019-11-21 19:07:57: listLocalAppointments: SHEE160919 5 SHEE150919 5 
+2019-11-21 19:07:57: [SHE Server]: Received app availabilities for: (Physician) request from MTL server and replied "SHEE160919 5 SHEE150919 5 "
+2019-11-21 19:10:22: listLocalAppointments: SHEM110919 4 
+2019-11-21 19:10:22: [SHE Server]: Received app availabilities for: (Surgeon) request from MTL server and replied "SHEM110919 4 "

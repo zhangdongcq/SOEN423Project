@@ -1,1 +1,60 @@
-2019-11-15 21:40:09: Replica Manager 2 is listening for requests from Sequencer:
+2019-11-21 19:06:22: RM2 gets msg from sequencer: 127.0.0.1;7789;1;MTLA3333;addAppointment;MTLA123456;Dental;4
+2019-11-21 19:06:22: RM2 received a message [1 MTLA3333 addAppointment MTLA123456;Dental;4;] from Sequencer
+2019-11-21 19:06:22: RM2: current Sequence Number in RM: 1
+2019-11-21 19:06:23: RM2REPLY: 1;2;SUCCESS
+2019-11-21 19:06:23: RM2 sent a reply: 1;2;SUCCESS to FE 127.0.0.1:7789
+2019-11-21 19:06:50: RM2 gets msg from sequencer: 127.0.0.1;7789;2;MTLA3333;addAppointment;MTLE126745;Surgeon;4
+2019-11-21 19:06:50: RM2 received a message [2 MTLA3333 addAppointment MTLE126745;Surgeon;4;] from Sequencer
+2019-11-21 19:06:50: RM2: current Sequence Number in RM: 2
+2019-11-21 19:06:50: RM2REPLY: 2;2;SUCCESS
+2019-11-21 19:06:50: RM2 sent a reply: 2;2;SUCCESS to FE 127.0.0.1:7789
+2019-11-21 19:07:19: RM2 gets msg from sequencer: 127.0.0.1;7789;3;MTLA3333;addAppointment;MTLM898989;Physician;4
+2019-11-21 19:07:19: RM2 received a message [3 MTLA3333 addAppointment MTLM898989;Physician;4;] from Sequencer
+2019-11-21 19:07:19: RM2: current Sequence Number in RM: 3
+2019-11-21 19:07:19: RM2REPLY: 3;2;SUCCESS
+2019-11-21 19:07:19: RM2 sent a reply: 3;2;SUCCESS to FE 127.0.0.1:7789
+2019-11-21 19:07:57: RM2 gets msg from sequencer: 127.0.0.1;7789;4;MTLA3333;listAppointmentAvailability;Physician
+2019-11-21 19:07:57: RM2 received a message [4 MTLA3333 listAppointmentAvailability Physician;] from Sequencer
+2019-11-21 19:07:57: RM2: current Sequence Number in RM: 4
+2019-11-21 19:07:57: RM2REPLY: 4;2;MTLE110919 5 MTLM898989 4 MTLE100919 5 QUEE100919 5 QUEE110919 5 SHEE160919 5 SHEE150919 5 
+2019-11-21 19:07:57: RM2 sent a reply: 4;2;MTLE110919 5 MTLM898989 4 MTLE100919 5 QUEE100919 5 QUEE110919 5 SHEE160919 5 SHEE150919 5  to FE 127.0.0.1:7789
+2019-11-21 19:10:22: RM2 gets msg from sequencer: 127.0.0.1;7789;5;MTLA3333;listAppointmentAvailability;Surgeon
+2019-11-21 19:10:22: RM2 received a message [5 MTLA3333 listAppointmentAvailability Surgeon;] from Sequencer
+2019-11-21 19:10:22: RM2: current Sequence Number in RM: 5
+2019-11-21 19:10:22: RM2 gets msg from sequencer: 127.0.0.1;7789;5;MTLA3333;listAppointmentAvailability;Surgeon
+2019-11-21 19:10:22: RM2 received a message [5 MTLA3333 listAppointmentAvailability Surgeon;] from Sequencer
+2019-11-21 19:10:22: RM2: current Sequence Number in RM: 1
+2019-11-21 19:10:22: RM2 received a message with sequence number greater than current sequence number
+2019-11-21 19:10:22: RM2 REPLY: 
+2019-11-21 19:10:22: RM2REPLY: 5;2;MTLM110919 4 MTLE126745 4 QUEM120919 4 SHEM110919 4 
+2019-11-21 19:10:22: RM2 sent a reply: 5;2;MTLM110919 4 MTLE126745 4 QUEM120919 4 SHEM110919 4  to FE 127.0.0.1:7789
+2019-11-21 19:12:06: RM2 gets msg from sequencer: 127.0.0.1;7789;6;MTLA3333;addAppointment;MTLA666666;Physician;3
+2019-11-21 19:12:06: RM2 received a message [6 MTLA3333 addAppointment MTLA666666;Physician;3;] from Sequencer
+2019-11-21 19:12:06: RM2 gets msg from sequencer: 127.0.0.1;7789;6;MTLA3333;addAppointment;MTLA666666;Physician;3
+2019-11-21 19:12:06: RM2: current Sequence Number in RM: 6
+2019-11-21 19:12:06: RM2 received a message [6 MTLA3333 addAppointment MTLA666666;Physician;3;] from Sequencer
+2019-11-21 19:12:06: RM2: current Sequence Number in RM: 1
+2019-11-21 19:12:06: RM2 gets msg from sequencer: 127.0.0.1;7789;6;MTLA3333;addAppointment;MTLA666666;Physician;3
+2019-11-21 19:12:06: RM2 received a message with sequence number greater than current sequence number
+2019-11-21 19:12:06: RM2 REPLY: 
+2019-11-21 19:12:06: RM2 received a message [6 MTLA3333 addAppointment MTLA666666;Physician;3;] from Sequencer
+2019-11-21 19:12:06: RM2: current Sequence Number in RM: 2
+2019-11-21 19:12:06: RM2 received a message with sequence number greater than current sequence number
+2019-11-21 19:12:06: RM2 REPLY: 
+2019-11-21 19:12:06: RM2REPLY: 6;2;SUCCESS
+2019-11-21 19:12:06: RM2 sent a reply: 6;2;SUCCESS to FE 127.0.0.1:7789
+2019-11-21 19:13:17: RM2 gets msg from sequencer: 127.0.0.1;7789;7;MTLA3333;addAppointment;MTLE565678;Physician;4
+2019-11-21 19:13:17: RM2 received a message [7 MTLA3333 addAppointment MTLE565678;Physician;4;] from Sequencer
+2019-11-21 19:13:17: RM2: current Sequence Number in RM: 1
+2019-11-21 19:13:17: RM2 received a message with sequence number greater than current sequence number
+2019-11-21 19:13:17: RM2 REPLY: 
+2019-11-21 19:20:27: RM2 gets msg from sequencer: 127.0.0.1;7789;8;MTLA3333;addAppointment;MTLE888888;Surgeon;4
+2019-11-21 19:20:27: RM2 received a message [8 MTLA3333 addAppointment MTLE888888;Surgeon;4;] from Sequencer
+2019-11-21 19:20:27: RM2: current Sequence Number in RM: 1
+2019-11-21 19:20:27: RM2 received a message with sequence number greater than current sequence number
+2019-11-21 19:20:27: RM2 REPLY: 
+2019-11-21 19:22:02: RM2 gets msg from sequencer: 127.0.0.1;7789;9;MTLA3333;bookAppointment;MTLP3333;MTLE888888;Surgeon
+2019-11-21 19:22:02: RM2 received a message [9 MTLA3333 bookAppointment MTLP3333;MTLE888888;Surgeon;] from Sequencer
+2019-11-21 19:22:02: RM2: current Sequence Number in RM: 1
+2019-11-21 19:22:02: RM2 received a message with sequence number greater than current sequence number
+2019-11-21 19:22:02: RM2 REPLY: 

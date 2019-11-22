@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2019-11-21T19:06:23</date>
+  <millis>1574381183316</millis>
+  <sequence>6</sequence>
+  <logger>user</logger>
+  <level>INFO</level>
+  <class>Client.Client</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>No any response for your request.</message>
+</record>
+<record>
+  <date>2019-11-21T19:06:50</date>
+  <millis>1574381210647</millis>
+  <sequence>11</sequence>
+  <logger>user</logger>
+  <level>INFO</level>
+  <class>Client.Client</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>UDP Socket Problem in FE</message>
+</record>
+<record>
+  <date>2019-11-21T19:07:19</date>
+  <millis>1574381239898</millis>
+  <sequence>16</sequence>
+  <logger>user</logger>
+  <level>INFO</level>
+  <class>Client.Client</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>UDP Socket Problem in FE</message>
+</record>
+<record>
+  <date>2019-11-21T19:07:57</date>
+  <millis>1574381277577</millis>
+  <sequence>19</sequence>
+  <logger>user</logger>
+  <level>INFO</level>
+  <class>Client.Client</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>UDP Socket Problem in FE</message>
+</record>
+<record>
+  <date>2019-11-21T19:10:22</date>
+  <millis>1574381422809</millis>
+  <sequence>22</sequence>
+  <logger>user</logger>
+  <level>INFO</level>
+  <class>Client.Client</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>UDP Socket Problem in FE</message>
+</record>
+<record>
+  <date>2019-11-21T19:12:06</date>
+  <millis>1574381526730</millis>
+  <sequence>27</sequence>
+  <logger>user</logger>
+  <level>INFO</level>
+  <class>Client.Client</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>UDP Socket Problem in FE</message>
+</record>
+<record>
+  <date>2019-11-21T19:13:17</date>
+  <millis>1574381597942</millis>
+  <sequence>32</sequence>
+  <logger>user</logger>
+  <level>INFO</level>
+  <class>Client.Client</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>UDP Socket Problem in FE</message>
+</record>
+<record>
+  <date>2019-11-21T19:20:27</date>
+  <millis>1574382027012</millis>
+  <sequence>37</sequence>
+  <logger>user</logger>
+  <level>INFO</level>
+  <class>Client.Client</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>UDP Socket Problem in FE</message>
+</record>
+<record>
+  <date>2019-11-21T19:22:02</date>
+  <millis>1574382122310</millis>
+  <sequence>42</sequence>
+  <logger>user</logger>
+  <level>INFO</level>
+  <class>Client.Client</class>
+  <method>main</method>
+  <thread>1</thread>
+  <message>UDP Socket Problem in FE</message>
+</record>
