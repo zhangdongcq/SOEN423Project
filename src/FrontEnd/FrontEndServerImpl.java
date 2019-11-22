@@ -36,7 +36,6 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
 
    @Override
    public String requestHandler(String userId, String command, String parameters) {
-      //TODO: Gets client commands -- Done in client Stub!
 
       String msgToSend = String.join(";", userId, command, parameters);
       System.out.println("FE Started........");
@@ -48,19 +47,18 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
       }
 
       //TODO: Receive MSG from RMs
-      DatagramSocket aSocket;
-      try {
-         aSocket = new DatagramSocket(frontEndReplicaManagerListenerUdpPort);
+
+      try(DatagramSocket aSocket = new DatagramSocket(frontEndReplicaManagerListenerUdpPort)) {
+         byte[] buffer = new byte[1024];//to store the received data, it will be populated by what receive method returns
+         getAllResponseMessagesFromRMs(aSocket, buffer);
+         if (!allResponsesReceived) {
+            currentSequenceId = String.valueOf(allRequestRecords.size()-1);
+            if (Objects.isNull(allRequestRecords.get(currentSequenceId))) return "No any response for your request.";
+            sendFailureMessage();
+         }
       } catch (SocketException e) {
          e.printStackTrace();
          return "UDP Socket Problem in FE";
-      }
-      byte[] buffer = new byte[1024];//to store the received data, it will be populated by what receive method returns
-      getAllResponseMessagesFromRMs(aSocket, buffer);
-      if (!allResponsesReceived) {
-         currentSequenceId = String.valueOf(allRequestRecords.size()-1);
-         if (Objects.isNull(allRequestRecords.get(currentSequenceId))) return "No any response for your request.";
-         sendFailureMessage();
       }
       return getCleanResponse();
    }
@@ -119,16 +117,19 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    private String getResponseFromRM(DatagramSocket aSocket, byte[] buffer) throws SocketException, IOException {
       //TODO: prepare to receive Replica Manager msg. Receiving port: 7789
 
-      DatagramPacket reply = new DatagramPacket(buffer, buffer.length);//reply packet ready but not populated.
+      byte[] bufferLocal = new byte[1024];
+      DatagramPacket reply = new DatagramPacket(bufferLocal, bufferLocal.length);//reply packet ready but not populated.
       aSocket.setSoTimeout(timeOutTwoHundreds);
       aSocket.receive(reply);
-      return new String(buffer, 0, reply.getLength());
+      String re = new String(bufferLocal, 0, reply.getLength());
+      System.out.println("Got a response from a Replica Manager："+re);
+      return new String(bufferLocal, 0, reply.getLength());
    }
 
    private String getCleanResponse() {
       //4: Clean data to detect replica failures, make sure keep only one response in List
       //TODO: call cleanData()
-      String cleanResponse = Utils.getMajority(allRequestRecords.get(currentSequenceId));
+      String cleanResponse = Utils.findMajority(allRequestRecords.get(currentSequenceId));
       //5: Return result
       //TODO: Return clean msg to client stub which shows the msg in client console
       switch (cleanResponse) {

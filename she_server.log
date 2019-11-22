@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2019-11-14T12:39:52</date>
-  <millis>1573753192237</millis>
+  <date>2019-11-21T22:36:42</date>
+  <millis>1574393802531</millis>
   <sequence>1</sequence>
   <logger>ReplicaManagers/Dong/server</logger>
   <level>INFO</level>

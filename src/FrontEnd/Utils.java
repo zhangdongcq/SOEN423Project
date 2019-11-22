@@ -7,7 +7,10 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Utils {
    public static final String MTL = "MTL";
@@ -18,11 +21,13 @@ public class Utils {
    public static final String SHE_L = "she";
 
    private static DatagramSocket serverSocket;
-   public static boolean validateRMsResponse(String response){
+
+   public static boolean validateRMsResponse(String response) {
       //TODO: check whether data is good.
       return true;
    }
-   public static boolean UdpSender(String clientIp, int clientPort, String sendMsg){
+
+   public static boolean UdpSender(String clientIp, int clientPort, String sendMsg) {
       boolean sendStatus = false;
       try (DatagramSocket clientSocket = new DatagramSocket()) {
          byte[] toSend = sendMsg.getBytes();
@@ -42,7 +47,7 @@ public class Utils {
       return sendStatus;
    }
 
-   public static DatagramPacket UdpReceiver(int sourcePort){
+   public static DatagramPacket UdpReceiver(int sourcePort) {
       String receivedString = "Nothing Received, check Utils.UdpReceived method, line 29";
       DatagramPacket requestPackage;
       byte[] buffer = new byte[1024];
@@ -65,39 +70,56 @@ public class Utils {
               || input.equalsIgnoreCase(SHE);
    }
 
-   public static String getMajority(String [] responseList)
-    {
-       System.out.println("getMajority ---> HERE");
-       if(responseList.length == 1) return responseList[0];
-       int majority;
-        if(responseList.length%2 ==0)
-            majority = responseList.length/2;
-        else
-            majority = responseList.length/2 +1;
-        for(int i=1; i<responseList.length; i++)
-        {
-            int numberTheSame = 1;
-            for(int j=i+1; j<responseList.length; j++)
-            {
-                if(responseList[i].equals(responseList[j]))
-                    numberTheSame++;
-                if(numberTheSame == majority)
-                    return responseList[i];
-            }
-        }
-        return "NO_MAJORITY";
-    }
+   public static String getMajority(String[] responseList) {
+      System.out.println("getMajority ---> HERE");
+      int majority;
+      if (responseList.length % 2 == 0)
+         majority = responseList.length / 2;
+      else
+         majority = responseList.length / 2 + 1;
+      for (int i = 1; i < responseList.length; i++) {
+         int numberTheSame = 1;
+         for (int j = i + 1; j < responseList.length; j++) {
+            if (responseList[i].equals(responseList[j]))
+               numberTheSame++;
+            if (numberTheSame == majority)
+               return responseList[i];
+         }
+      }
+      return "NO_MAJORITY";
+   }
 
-    public static boolean isAllPopulated(String[] responseList){
-       return responseList != null && Arrays.stream(responseList).allMatch(Objects::nonNull);
-    }
+   public static String findMajority(String[] responseList) {
 
-    public static int findFailureMachine(String[] responseList){
-       for(int i = 0; i < responseList.length; ++i) {
-          if(responseList[i] == null) return i;
-       }
-       return -1;
-    }
+      //responseList: [null, SUCCESS, null, null, null ]
+      Map<String, Integer> map = new HashMap<>();
+      int responseCount = 0;
+      for (int i = 1; i < responseList.length; i++) {
+         if (!Objects.isNull(responseList[i])) {
+            responseCount++;
+            map.put(responseList[i], map.getOrDefault(responseList[i], 0) + 1);
+         }
+      }
+      if(map.size() == 0) return "No one response received from server, check your networking...";
+      final int count = responseCount/2;
+      Optional o = map.entrySet().stream()
+              .filter(item -> item.getValue() > count)
+              .findAny();
+
+      return o.isPresent() ? ((Map.Entry)o.get()).getKey().toString() : "NO_MAJORITY";
+
+   }
+
+   public static boolean isAllPopulated(String[] responseList) {
+      return responseList != null && Arrays.stream(responseList).allMatch(Objects::nonNull);
+   }
+
+   public static int findFailureMachine(String[] responseList) {
+      for (int i = 0; i < responseList.length; ++i) {
+         if (responseList[i] == null) return i;
+      }
+      return -1;
+   }
 
    public static void notifyOtherRMsTheFaiure(String message, String machineAddress, int udpPort) throws IOException {
       try (DatagramSocket clientSocket = new DatagramSocket()) {
