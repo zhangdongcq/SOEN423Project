@@ -107,16 +107,24 @@ public class Utils {
       return "NO_MAJORITY";
 
    }
-
-   public static boolean isAllPopulated(String[] responseList) {
-      return responseList != null && Arrays.stream(responseList).allMatch(Objects::nonNull);
+   
+   public static String findMajority(HashMap<Integer,String> responseList)
+   {
+	   String[] responseListArray = responseList.values().toArray(new String[0]);
+	   return findMajority(responseListArray);
    }
 
-   public static int findFailureMachine(String[] responseList) {
-      for (int i = 0; i < responseList.length; ++i) {
-         if (responseList[i] == null) return i;
+   public static boolean isAllPopulated(HashMap<Integer,String> responseList, int numberOfRMs) {
+      //return responseList != null && Arrays.stream(responseList).allMatch(Objects::nonNull);
+	   return responseList.size() == (numberOfRMs);
+   }
+
+   public static int findFailureMachine(HashMap<Integer,String> responseList) {
+      for (int i = 1; i < responseList.size(); ++i) {
+         if (responseList.get(i) == null) return i;
       }
       return -1;
+      
    }
 
    public static void notifyOtherRMsTheFaiure(String message, String machineAddress, int udpPort) throws IOException {

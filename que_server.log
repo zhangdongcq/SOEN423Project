@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2019-11-21T22:36:39</date>
-  <millis>1574393799115</millis>
+  <date>2019-11-22T14:48:32</date>
+  <millis>1574452112101</millis>
   <sequence>1</sequence>
   <logger>ReplicaManagers/Dong/server</logger>
   <level>INFO</level>
@@ -12,4 +12,3 @@
   <thread>1</thread>
   <message>UDP ReplicaManagers.Dong.server que ReplicaManagers.Dong.server is ready.</message>
 </record>
-</log>

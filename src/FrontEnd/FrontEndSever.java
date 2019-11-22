@@ -2,6 +2,7 @@ package FrontEnd;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +27,15 @@ public class FrontEndSever {
 
    public static void main(String[] args) {
       try {
-         startCorbaServices(args);
+    	  	Scanner scanner = new Scanner(System.in);
+ 	  		System.out.print("Enter the number of RMs: ");
+ 	  		int numberOfRMs = scanner.nextInt();
+ 	  		FrontEndServerImpl.setNumberOfRMs(numberOfRMs);
+ 	  		scanner.close();
+    	  	startCorbaServices(args);
+    	  	
+   	  		
+   	  System.out.print("System running with " + numberOfRMs + " RMs...");
       } catch (ServantNotActive | WrongPolicy | InvalidName | org.omg.CORBA.ORBPackage.InvalidName | CannotProceed | NotFound | AdapterInactive | IOException servantNotActive) {
          servantNotActive.printStackTrace();
       }
