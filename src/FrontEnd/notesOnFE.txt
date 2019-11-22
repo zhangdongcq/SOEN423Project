@@ -1,0 +1,2 @@
+1: sendAckToFE: changed the returned requestId from globalSequenceCounter - 1 to globalSequenceCounter;
+2: FrontEndServerImpl -> Fixed a bug (currentSequenceId possible be null)
