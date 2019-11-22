@@ -55,6 +55,11 @@ public class Client {
             request = new String(requestFromSe.getData(),
                     requestFromSe.getOffset(), requestFromSe.getLength());
             // 127.0.0.1;8675;1;MTLA2222;addAppointment;appointmentID;appointmentType;capacity
+            if (request.contains(";FAIL")) {
+               //TODO: Handle three-time failure!
+               System.out.println("Got a FAILUIRE!!");
+               continue;
+            }
             String[] header = request.split(";");
             frontEndIp = header[0];
             frontEndPort = header[1];
@@ -64,11 +69,7 @@ public class Client {
             String cleanRequest = Utils.getPureRequest(request);
             pureRequestArray = cleanRequest.split(";");
             System.out.println(String.join(" | ", pureRequestArray));
-            if (cleanRequest.contains(";FAIL")) {
-               //TODO: Handle three-time failure!
-               System.out.println("Got a FAILUIRE!!");
-               continue;
-            }
+
             findReplica(args);
             String operationResult = getReplicaResponse();
             Utils.sendResultToFrontEnd(operationResult, sequenceId, replicaManagerId, frontEndIp, frontEndPort);

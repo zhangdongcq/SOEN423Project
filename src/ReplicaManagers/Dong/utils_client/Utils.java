@@ -242,6 +242,7 @@ public class Utils {
 
    public static String getPureRequest(String request){
       // 127.0.0.1;8675;1;MTLA2222;addAppointment;appointmentID;appointmentType;capacity
+      if(request.contains("FAIL")) return request;
       String[] args = request.split(";");
       int pureRequestionPos = args[0].length() + args[1].length() + args[2].length() + args[3].length() + 4;
       return request.substring(pureRequestionPos);
