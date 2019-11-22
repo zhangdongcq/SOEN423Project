@@ -30,6 +30,12 @@ public class FrontEndSever {
     	  	Scanner scanner = new Scanner(System.in);
  	  		System.out.print("Enter the number of RMs: ");
  	  		int numberOfRMs = scanner.nextInt();
+ 	  		for(int i=0; i<numberOfRMs; i++)
+ 	  		{
+ 	  			System.out.print("RM" + (i+1) + "'s number: ");
+ 	  			FrontEndServerImpl.addRM(scanner.nextInt());
+ 	  			System.out.println();
+ 	  		}
  	  		FrontEndServerImpl.setNumberOfRMs(numberOfRMs);
  	  		scanner.close();
     	  	startCorbaServices(args);

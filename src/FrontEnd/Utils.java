@@ -116,15 +116,15 @@ public class Utils {
 
    public static boolean isAllPopulated(HashMap<Integer,String> responseList, int numberOfRMs) {
       //return responseList != null && Arrays.stream(responseList).allMatch(Objects::nonNull);
-	   return responseList.size() == (numberOfRMs);
+	   return responseList.values().stream().allMatch(Objects::nonNull);
    }
 
    public static int findFailureMachine(HashMap<Integer,String> responseList) {
-      for (int i = 1; i < responseList.size(); ++i) {
-         if (responseList.get(i) == null) return i;
-      }
-      return -1;
-      
+	   for(Integer name : FrontEndServerImpl.getRmNames())
+	   {
+		   if (responseList.get(name) == null) return name;
+	   }
+     return -1;
    }
 
    public static void notifyOtherRMsTheFaiure(String message, String machineAddress, int udpPort) throws IOException {
