@@ -1,0 +1,14 @@
+*.log
+.idea
+mtl_server.log
+que_server.log
+she_server.log
+.classpath
+.project
+.settings/
+mtl_server.log.lck
+que_server.log.lck
+she_server.log.lck
+MTLA1234.log.lck
+/bin
+target/

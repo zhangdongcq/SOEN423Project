@@ -11,8 +11,12 @@ public class SequencerCommunicator {
         MulticastSocket aSocket = null;
         try {
             aSocket = new MulticastSocket(6790);
+
             System.out.println("Replica Manager 1111 Started............");
-            aSocket.joinGrougit p(InetAddress.getByName("228.5.6.9"));
+            aSocket.joinGroup(InetAddress.getByName("228.5.6.9"));
+            System.out.println("Replica Manager MIKE Started............");
+            aSocket.joinGroup(InetAddress.getByName("228.5.6.9"));
+
             byte[] buffer = new byte[1000];
             while (countFail<3) {
                 DatagramPacket requestFromSequencer = new DatagramPacket(buffer, buffer.length);

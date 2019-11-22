@@ -16,6 +16,7 @@ import org.omg.PortableServer.POAPackage.WrongPolicy;
 import udp.UDPServer;
 import utility.IdValidator;
 
+import java.util.Properties;
 import java.util.Scanner;
 
 public class MainServer {
@@ -34,7 +35,11 @@ public class MainServer {
         RemotelyInvokableHospitalImpl.setHospitalID(hospitalID);
 
         try {
-            ORB orb = ORB.init(args, null);
+        	Properties props = new Properties();
+            //Initiate the port
+            props.put("org.omg.CORBA.ORBInitialPort", "1080");
+            props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
+            ORB orb = ORB.init(args, props);
 
             POA rootPoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
             rootPoa.the_POAManager().activate();

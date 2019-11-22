@@ -13,6 +13,7 @@ import RM.SequencerCommunicator;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 
 public class Client {
 
@@ -20,7 +21,10 @@ public class Client {
 
         try {
             User user;
-            ORB orb = ORB.init(args, null);
+            Properties props = new Properties();
+            props.put("org.omg.CORBA.ORBInitialPort", "1080");
+            props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
+            ORB orb = ORB.init(args, props);
 
             org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
             while (true) {
@@ -32,6 +36,7 @@ public class Client {
                 MessageExecutor.executeRequest(requestArguments, remotelyInvokableHospital);
                 Pair<String, Integer> ipPort = MessageExecutor.getIpPort();
                 String response = MessageExecutor.getResponse();
+                System.out.println("Response to FE: " + response);
                 FrontEndCommunicator.sendResponseToFE(response, ipPort);
                 logRequestResponse(requestArguments, response, user);
             }
