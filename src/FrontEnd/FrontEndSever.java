@@ -1,8 +1,6 @@
 package FrontEnd;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,14 +26,13 @@ public class FrontEndSever {
 
    public static void main(String[] args) {
       try {
-         String frontEndName = getAndSetFrontEndName();
-         startCorbaServices(args, frontEndName);
+         startCorbaServices(args);
       } catch (ServantNotActive | WrongPolicy | InvalidName | org.omg.CORBA.ORBPackage.InvalidName | CannotProceed | NotFound | AdapterInactive | IOException servantNotActive) {
          servantNotActive.printStackTrace();
       }
    } // end main
 
-   public static void startCorbaServices(String[] args, String frontEndName) throws ServantNotActive, WrongPolicy,  InvalidName,
+   public static void startCorbaServices(String[] args) throws ServantNotActive, WrongPolicy,  InvalidName,
            org.omg.CORBA.ORBPackage.InvalidName,  CannotProceed,  NotFound,  AdapterInactive,  IOException
    {
       //TODO: Starts Corba Services
@@ -51,7 +48,7 @@ public class FrontEndSever {
       POA poa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
       poa.the_POAManager().activate();
       //TODO: Initiated a ServerImpl instance
-      FrontEndServerImpl server = new FrontEndServerImpl(frontEndName);
+      FrontEndServerImpl server = new FrontEndServerImpl("frontEnd_fe");
       org.omg.CORBA.Object ref = poa.servant_to_reference(server);
       IFrontEndServer href = IFrontEndServerHelper.narrow(ref);
       // TODO: Get naming context
@@ -60,24 +57,11 @@ public class FrontEndSever {
       //TODO: Publish the frontend with specified name into naming service
       NameComponent[] nc = ncRef.to_name("frontEnd_fe");
       ncRef.rebind(nc, href);
-      System.out.println(frontEndName + "_fe Front End server is ready and waiting......");
+      System.out.println("frontEnd_fe Front End server is ready and waiting......");
 
       //Block until orb closes
       logger.log(Level.INFO, "FrontEnd server is ready.");
       orb.run();
    }
 
-   public static String getAndSetFrontEndName() throws IOException {
-      //Get user input and Register frontend name
-      InputStreamReader is = new InputStreamReader(System.in);
-      BufferedReader br = new BufferedReader(is);
-      String frontEndName;
-      logger.log(Level.INFO, "Enter the city:");
-      frontEndName = (br.readLine()).trim().toLowerCase();
-      while (!Utils.isValidCityInput(frontEndName)) {
-         logger.log(Level.WARNING, "Invalid city! mtl, que, she are options. Input another one.");
-         frontEndName = (br.readLine()).trim().toLowerCase();
-      }
-      return frontEndName;
-   }
 }

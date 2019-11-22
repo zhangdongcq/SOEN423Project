@@ -31,28 +31,15 @@ public class Client {
    private static String patientId;
    private static String userID;
    private static String userType;
-   private static String frontEndServerName;
    private static String operatorId;
    private static final Logger loggerClient = Logger.getLogger("client");
    private static final Logger loggerUser = Logger.getLogger("user");
 
-   public static void main(String args[]) {
-
-      try {
-         loggerClient.log(Level.INFO, "Enter your user id to start with:");
-         InputStreamReader is = new InputStreamReader(System.in);
+   public static void main(String args[]) {    	  
+    	 IFrontEndServer frontEndServer = getServerConnection(args);
+    	 InputStreamReader is = new InputStreamReader(System.in);
          BufferedReader br = new BufferedReader(is);
-
-         //Get a valid User Id
-         userID = br.readLine();
-         while (!Utils.isValidUserId(userID)) {
-            loggerClient.log(Level.WARNING, "Please input a valid user id.");
-            userID = br.readLine();
-         }
-
-         //Get Frontend server name
-         frontEndServerName = Utils.getCity(userID);
-
+         getUser(br);
          //Setup FileHandler for Logging in file
          try {
             FileHandler fileHandler = new FileHandler(userID + ".log");
@@ -61,60 +48,93 @@ public class Client {
          } catch (IOException e) {
             loggerClient.log(Level.SEVERE, "File logger is not working.", e);
          }
-
-         /**
-          * Setup connection
-          */
-         operatorId = userID;
-
-         Properties props = new Properties();
-         //Generate and initiate the ORB
-         props.put("org.omg.CORBA.ORBInitialPort", "1050");
-         props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
-         ORB orb = ORB.init(args, props);
-         // Get Root naming server
-         org.omg.CORBA.Object objRef = null;
-         objRef = orb.resolve_initial_references("NameService");
-
-         NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-
-         // Get object reference through naming server
-         IFrontEndServer frontEndServer = IFrontEndServerHelper.narrow(ncRef.resolve_str("frontEnd_fe"));
-         loggerClient.log(Level.INFO, "Lookup completed.");
-
-         userType = Utils.getUserType(userID);
-         if (userType.equals(Utils.ADMIN)) {
-            /**
-             * Admins Operations
-             */
-            loggerClient.log(Level.INFO, Utils.mainMsg(userType, userID));
-            String userInput = Utils.getValidInput(br);
-            while (!userInput.equals("0")) {
-               String opsRes = adminActions(userID, br, userInput, frontEndServer, getCity(userID));//city-specified ops
-               loggerUser.log(Level.INFO, opsRes);
-               loggerClient.log(Level.INFO, Utils.mainMsg(userType, userID));
-               userInput = Utils.getValidInput(br);
-            }
-         } else if (userType.equals(Utils.PATIENT)) {
-            /**
-             * Patients Operations
-             */
-            loggerClient.log(Level.INFO, Utils.mainMsg(userType, userID));
-            String userInput = Utils.getValidInput(br);
-            while (!userInput.equals("0")) {
-               String opsRes = patientActions(userID, br, userInput, frontEndServer);
-               loggerUser.log(Level.INFO, opsRes);
-               loggerClient.log(Level.INFO, Utils.mainMsg(userType, userID));
-               userInput = Utils.getValidInput(br);
-            }
-         } else {
-            loggerClient.log(Level.SEVERE, "Wrong user type from your user id! Bye.");
+         while(true)
+         {
+        	 runUserOperations(frontEndServer, br);
+        	 getUser(br);
          }
+   } 
+   
+   private static void runUserOperations(IFrontEndServer frontEndServer, BufferedReader br)
+   {
+	   try {
+		   operatorId = userID;
+	
+	       userType = Utils.getUserType(userID);
+	       if (userType.equals(Utils.ADMIN)) {
+	          /**
+	           * Admins Operations
+	           */
+	          loggerClient.log(Level.INFO, Utils.mainMsg(userType, userID));
+	          String userInput = Utils.getValidInput(br);
+	          while (!userInput.equals("0")) {
+	             String opsRes = adminActions(userID, br, userInput, frontEndServer, getCity(userID));//city-specified ops
+	             loggerUser.log(Level.INFO, opsRes);
+	             loggerClient.log(Level.INFO, Utils.mainMsg(userType, userID));
+	             userInput = Utils.getValidInput(br);
+	          }
+	       } else if (userType.equals(Utils.PATIENT)) {
+	          /**
+	           * Patients Operations
+	           */
+	          loggerClient.log(Level.INFO, Utils.mainMsg(userType, userID));
+	          String userInput = Utils.getValidInput(br);
+	          while (!userInput.equals("0")) {
+	             String opsRes = patientActions(userID, br, userInput, frontEndServer);
+	             loggerUser.log(Level.INFO, opsRes);
+	             loggerClient.log(Level.INFO, Utils.mainMsg(userType, userID));
+	             userInput = Utils.getValidInput(br);
+	          }
+	       } else {
+	          loggerClient.log(Level.SEVERE, "Wrong user type from your user id! Bye.");
+	       }
+	   } catch(IOException e)
+	   {
+		   e.printStackTrace();
+	   }
+   }
+   
+   private static String getUser(BufferedReader br)
+   {
+	   try {
+		   loggerClient.log(Level.INFO, "Enter your user id to start with:");
+	       
+	       //Get a valid User Id
+	       userID = br.readLine();
+	       while (!Utils.isValidUserId(userID)) {
+	          loggerClient.log(Level.WARNING, "Please input a valid user id.");
+	          userID = br.readLine();
+	       }
+	   } catch(IOException e)
+	   {
+		   e.printStackTrace();
+	   }
+       return userID;
+   }
+   
+   private static IFrontEndServer getServerConnection(String[] args)
+   {
+	   IFrontEndServer frontEndServer = null;
+	   try {
+	   Properties props = new Properties();
+       //Generate and initiate the ORB
+       props.put("org.omg.CORBA.ORBInitialPort", "1050");
+       props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
+       ORB orb = ORB.init(args, props);
+       // Get Root naming server
+       org.omg.CORBA.Object objRef = null;
+       objRef = orb.resolve_initial_references("NameService");
 
-      } catch (InvalidName | IOException | CannotProceed | NotFound | org.omg.CosNaming.NamingContextPackage.InvalidName invalidName) {
+       NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+
+       // Get object reference through naming server
+       frontEndServer = IFrontEndServerHelper.narrow(ncRef.resolve_str("frontEnd_fe"));
+       loggerClient.log(Level.INFO, "Lookup completed.");
+	   } catch (InvalidName | CannotProceed | NotFound | org.omg.CosNaming.NamingContextPackage.InvalidName invalidName) {
          invalidName.printStackTrace();
-      }
-   } //end main
+	   }
+       return frontEndServer;
+   }
 
    /**
     * Sub functions
