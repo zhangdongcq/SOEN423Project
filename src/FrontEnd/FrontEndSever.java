@@ -58,7 +58,7 @@ public class FrontEndSever {
       org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
       NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
       //TODO: Publish the frontend with specified name into naming service
-      NameComponent[] nc = ncRef.to_name(frontEndName+"_fe");
+      NameComponent[] nc = ncRef.to_name("frontEnd_fe");
       ncRef.rebind(nc, href);
       System.out.println(frontEndName + "_fe Front End server is ready and waiting......");
 

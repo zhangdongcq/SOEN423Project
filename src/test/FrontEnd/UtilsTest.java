@@ -1,8 +1,10 @@
-package FrontEnd;
+package test.FrontEnd;
 
 import static org.junit.Assert.assertEquals;
 
  import org.junit.Test;
+
+import FrontEnd.Utils;
 
  public class UtilsTest {
 
