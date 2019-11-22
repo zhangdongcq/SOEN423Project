@@ -20,26 +20,29 @@ public class DhmsServer {
 	        	POA rootpoa = (POA)orb.resolve_initial_references("RootPOA");
 	            rootpoa.the_POAManager().activate();
 	                
-	            DhmsServant MTL = new DhmsServant(args[3],args[1],"MTL");
-	            DhmsServant QUE = new DhmsServant(args[3],args[1],"QUE");
-	            DhmsServant SHE = new DhmsServant(args[3],args[1],"SHE");
+	            DhmsServant MTL = new DhmsServant("localhost","1050","MTL");
+	            DhmsServant QUE = new DhmsServant("localhost","1050","QUE");
+	            DhmsServant SHE = new DhmsServant("localhost","1050","SHE");
 	            	
 	            //add some initial data in the servers
-	            // MTL.addAppointment("MTLE232323", "Physician", 5);
-	            // MTL.addAppointment("MTLE343434", "Surgeon", 4);
-	            // MTL.addAppointment("MTLM232323", "Dental", 3);
-	            // MTL.addAppointment("MTLM121212", "Dental", 2);
-	            
-	            // QUE.addAppointment("QUEE232323", "Physician", 5);
-	            // QUE.addAppointment("QUEE343434", "Surgeon", 4);
-	            // QUE.addAppointment("QUEM232323", "Dental", 3);
-	            // QUE.addAppointment("QUEM121212", "Dental", 2);
-	            
-	            // SHE.addAppointment("SHEE232323", "Physician", 5);
-	            // SHE.addAppointment("SHEE343434", "Surgeon", 4);
-	            // SHE.addAppointment("SHEM232323", "Dental", 3);
-	            // SHE.addAppointment("SHEM121212", "Dental", 2);
-	            
+//	            MTL.addAppointment("MTLE100919", "Physician", 5);
+//	            MTL.addAppointment("MTLE110919", "Physician", 5);
+//	            MTL.addAppointment("MTLM110919", "Surgeon", 4);
+//	            MTL.addAppointment("MTLA100919", "Dental", 3);
+//	            MTL.addAppointment("MTLA110919", "Dental", 2);
+//	            
+//	            QUE.addAppointment("QUEE100919", "Physician", 5);
+//	            QUE.addAppointment("QUEE110919", "Physician", 5);
+//	            QUE.addAppointment("QUEM120919", "Surgeon", 4);
+//	            QUE.addAppointment("QUEA130919", "Dental", 3);
+//	            QUE.addAppointment("QUEA140919", "Dental", 2);
+//	            
+//	            SHE.addAppointment("SHEE150919", "Physician", 5);
+//	            SHE.addAppointment("SHEE160919", "Physician", 5);
+//	            SHE.addAppointment("SHEM110919", "Surgeon", 4);
+//	            SHE.addAppointment("SHEA120919", "Dental", 3);
+//	            SHE.addAppointment("SHEA130919", "Dental", 2);
+//	            
 
 	            org.omg.CORBA.Object refMTL = rootpoa.servant_to_reference(MTL);
 	            Dhms hrefMTL = DhmsHelper.narrow(refMTL);

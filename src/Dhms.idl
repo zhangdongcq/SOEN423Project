@@ -17,8 +17,8 @@ module DhmsApp {
 	long logoutPatient(in string patientID);
 	boolean validateAppointmentID(in string id);
 	boolean validateAppointmentType(in string type);
-	string showAppointment();
-	string showPatients();
+	string showAppointmentRecords();
+	string showPatientRecords();
 	
 	};
 };

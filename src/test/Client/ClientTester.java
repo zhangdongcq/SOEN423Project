@@ -9,6 +9,8 @@ import org.omg.CosNaming.NamingContextExtHelper;
 import org.omg.CosNaming.NamingContextPackage.CannotProceed;
 import org.omg.CosNaming.NamingContextPackage.NotFound;
 
+import Client.Utils;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;

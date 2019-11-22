@@ -1,4 +1,4 @@
-package test.Client
+package test.Client;
 
 import org.junit.Test;
 
