@@ -29,3 +29,7 @@
 2019-11-13 10:11:21PM > Request:[ listAppointmentAvailability Dental ] Response:[ ;SHEA250619 1;QUEE110619 1 ]
 2019-11-13 10:11:21PM > Request:[ listAppointmentAvailability Physician ] Response:[ ;SHEA130619 1;MTLA120619 2;QUEE100619 2 ]
 2019-11-13 10:11:21PM > Request:[ listAppointmentAvailability Surgeon ] Response:[ ;MTLA140619 1 ]
+2019-11-22 11:39:33AM > Request:[ listAppointment Surgeon ] Response:[  ]
+2019-11-22 11:39:55AM > Request:[ listAppointment Dental ] Response:[  ]
+2019-11-22 11:41:37AM > Request:[ listAppointment Surgeon ] Response:[  ]
+2019-11-22 11:42:23AM > Request:[ listAppointment Dental ] Response:[  ]

@@ -26,6 +26,9 @@ public class MessageExecutor {
             String FE_UPD_PortStr=requestArguments.get(1);
             portNumber=Integer.parseInt(FE_UPD_PortStr);
             sequencerID=Integer.parseInt(requestArguments.get(2));
+            
+            expectedID = sequencerID; //TODO remove during actual test
+            
             if(sequencerID==expectedID) {
                 response = CorbaDelivery.deliverCorbaRequest(requestArguments ,remotelyInvokableHospital);
                 expectedID++;
@@ -52,6 +55,13 @@ public class MessageExecutor {
             }
         }
         return returnFromReplica;
+    }
+    
+    private static String encapsulateResponse(String response)
+    {
+    	if(response.equals("SUCCESS")|| response.equals("FAIL"))
+    		return (expectedID-1) + ";" + RMnumber +";" + response;
+    	return (expectedID-1) + ";" + RMnumber + response;
     }
 
     private static boolean checkBufferSequencerID(int expectedID) {
@@ -82,6 +92,6 @@ public class MessageExecutor {
 
     public static String getResponse()
     {
-        return response;
+        return encapsulateResponse(response);
     }
 }

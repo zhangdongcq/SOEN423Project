@@ -1,0 +1,2 @@
+2019-11-22 11:50:17AM > Request:[ login ] Response:[ successful login ]
+2019-11-22 11:50:17AM > Request:[   127.0.0.1 7789 29 QUEA1234 addAppointment QUEA111111 Dental 2 ] Response:[ 29;2;SUCCESS ]

@@ -29,3 +29,8 @@
 2019-11-13 10:11:21PM > Request:[ listAppointment Dental ] Response:[ ;QUEE110619 1 ]
 2019-11-13 10:11:21PM > Request:[ listAppointment Physician ] Response:[ ;QUEE100619 2 ]
 2019-11-13 10:11:21PM > Request:[ listAppointment Surgeon ] Response:[  ]
+2019-11-22 11:39:33AM > Request:[ listAppointment Surgeon ] Response:[  ]
+2019-11-22 11:39:55AM > Request:[ listAppointment Dental ] Response:[  ]
+2019-11-22 11:41:37AM > Request:[ listAppointment Surgeon ] Response:[  ]
+2019-11-22 11:42:23AM > Request:[ listAppointment Dental ] Response:[  ]
+2019-11-22 11:50:17AM > Request:[ addAppointment QUEA111111 Dental 2 ] Response:[ SUCCESS ]

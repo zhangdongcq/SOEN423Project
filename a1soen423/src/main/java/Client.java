@@ -11,9 +11,11 @@ import user.User;
 import RM.SequencerCommunicator;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 public class Client {
 
@@ -29,7 +31,9 @@ public class Client {
             org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
             while (true) {
                 String sequencerString = SequencerCommunicator.receiveFromSequencer(MessageExecutor.getCountFail());
-                List<String> requestArguments = Arrays.<String>asList(sequencerString.split(";"));
+                List<String> requestArguments = Arrays.asList(sequencerString.split(";"));
+                for(int i = 0; i< requestArguments.size(); i++)
+                	requestArguments.set(i, ((String)requestArguments.get(i).trim()));
                 int userIDLocation = 3;
                 user = new User(requestArguments.get(userIDLocation));
                 RemotelyInvokableHospital remotelyInvokableHospital = getHospital(user, objRef);

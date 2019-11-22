@@ -1,0 +1,2 @@
+2019-11-22 11:21:32AM > Request:[ login ] Response:[ successful login ]
+2019-11-22 11:21:32AM > Request:[   127.0.0.1 7789 21 MTLA1235 addAppointment MTLA161111 Dental 5 ] Response:[ SUCCESS ]
