@@ -1,8 +1,17 @@
 package Client;
 
 import corbasystem.IFrontEndServer;
+import corbasystem.IFrontEndServerHelper;
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.ORBPackage.InvalidName;
+import org.omg.CosNaming.NamingContextExt;
+import org.omg.CosNaming.NamingContextExtHelper;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Properties;
 
 public class ClientTester extends Thread {
 
@@ -17,6 +26,33 @@ public class ClientTester extends Thread {
         this.userID = userID;
         this.command = arguments.get(0);
         this.parameters =getParameters(arguments);
+        if(Objects.isNull(_remotelyInvokableHospital))
+            setupCorba();
+    }
+
+    private static void setupCorba()
+    {
+        try {
+            Properties props = new Properties();
+            //Generate and initiate the ORB
+            props.put("org.omg.CORBA.ORBInitialPort", "1050");
+            props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
+            ORB orb = ORB.init(new String[1], props);
+            // Get Root naming server
+            org.omg.CORBA.Object objRef = null;
+            objRef = orb.resolve_initial_references("NameService");
+
+            NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
+
+            String frontEndServerName = Utils.getCity("MTLA1234"); //TODO make sure this is correct for accessing FE server
+            // Get object reference through naming server
+            IFrontEndServer iFrontEndServer = IFrontEndServerHelper.narrow(ncRef.resolve_str(frontEndServerName + "_fe"));
+            ClientTester.setRemoteObject(iFrontEndServer);
+
+        } catch (InvalidName | NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -26,15 +62,19 @@ public class ClientTester extends Thread {
 
     public static String deliverArguments(String userID, List<String> arguments)
     {
+        if(Objects.isNull(_remotelyInvokableHospital))
+            setupCorba();
         return  _remotelyInvokableHospital.requestHandler(userID, arguments.get(0), getParameters(arguments));
     }
 
     public static String deliverArguments(String userID, String command, String parameters)
     {
+        if(Objects.isNull(_remotelyInvokableHospital))
+            setupCorba();
         return  _remotelyInvokableHospital.requestHandler(userID, command, parameters);
     }
 
-    public static void setRemoteObject(IFrontEndServer remotelyInvokableHospital)
+    private static void setRemoteObject(IFrontEndServer remotelyInvokableHospital)
     {
         _remotelyInvokableHospital = remotelyInvokableHospital;
     }

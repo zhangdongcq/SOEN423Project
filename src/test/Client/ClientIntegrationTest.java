@@ -1,51 +1,13 @@
 package Client;
 
-import corbasystem.IFrontEndServer;
-import corbasystem.IFrontEndServerHelper;
-import org.junit.Before;
 import org.junit.Test;
-import org.omg.CORBA.ORB;
-import org.omg.CORBA.ORBPackage.InvalidName;
-import org.omg.CosNaming.NamingContextExt;
-import org.omg.CosNaming.NamingContextExtHelper;
-import org.omg.CosNaming.NamingContextPackage.CannotProceed;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class ClientIntegrationTest {
-
-    @Before
-    public void setup()
-    {
-        try {
-            Properties props = new Properties();
-            //Generate and initiate the ORB
-            props.put("org.omg.CORBA.ORBInitialPort", "1050");
-            props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
-            ORB orb = ORB.init(new String[1], props);
-            // Get Root naming server
-            org.omg.CORBA.Object objRef = null;
-            objRef = orb.resolve_initial_references("NameService");
-
-            NamingContextExt ncRef = NamingContextExtHelper.narrow(objRef);
-
-            String frontEndServerName = Utils.getCity("MTLA1234"); //TODO make sure this is correct for accessing FE server
-            // Get object reference through naming server
-            IFrontEndServer iFrontEndServer = IFrontEndServerHelper.narrow(ncRef.resolve_str(frontEndServerName + "_fe"));
-            ClientTester.setRemoteObject(iFrontEndServer);
-
-        } catch (InvalidName | NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName e)
-        {
-            e.printStackTrace();
-        }
-    }
-
 
     @Test
     public void givenPatientBooks3AppointmentsInAWeekInOtherHospitals_callingSwapAppointment_returnsFail()
