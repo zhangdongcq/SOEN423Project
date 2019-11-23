@@ -21,6 +21,7 @@ class UdpServer extends Thread {
     private int timeOut;
     private int counter = 1;
     private boolean resend = false;
+    public static long timeStampSendRequestToSequencer;
 
     UdpServer(int targetUdpPort, String targetAddress, String msgToSend, Map<String, HashMap<Integer,String>> allRequestRecords, int timeOut) {
         this.targetUdpPort = targetUdpPort;
@@ -49,6 +50,7 @@ class UdpServer extends Thread {
                         new DatagramPacket(toSend, toSend.length, serverName2, targetUdpPort);
                 System.out.println("(sendReliableAsyncMessageToSequencer)Message will be sent to sequencer: "+ msgToSend);
                 clientSocket.send(requestTarget);
+                timeStampSendRequestToSequencer = System.currentTimeMillis();
 
                 //Receive
                 byte[] repliedData = new byte[1024];

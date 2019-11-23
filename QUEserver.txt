@@ -3,3 +3,29 @@
 2019-11-23 11:05:18: QUE UDP port: 3331
 2019-11-23 11:06:18: QUE UDP port: 3331
 2019-11-23 11:23:39: QUE UDP port: 3331
+2019-11-23 11:31:34: QUE UDP port: 3331
+2019-11-23 12:03:22: QUE UDP port: 3331
+2019-11-23 12:12:39: QUE UDP port: 3331
+2019-11-23 12:28:34: QUE UDP port: 3331
+2019-11-23 12:33:17: QUE UDP port: 3331
+2019-11-23 12:38:47: QUE UDP port: 3331
+2019-11-23 12:41:22: QUE UDP port: 3331
+2019-11-23 12:44:37: QUE UDP port: 3331
+2019-11-23 12:52:33: listLocalAppointments: records are empty
+2019-11-23 12:52:33: [QUE Server]: Received app availabilities for: (Physician) request from MTL server and replied ""
+2019-11-23 12:54:40: QUE UDP port: 3331
+2019-11-23 12:56:01: listLocalAppointments: records are empty
+2019-11-23 12:56:01: [QUE Server]: Received app availabilities for: (Physician) request from MTL server and replied ""
+2019-11-23 13:06:08: getLocalSchedule: Patient MTLP3333 has no scheduled appointments
+2019-11-23 13:06:08: [QUE Server]: Received app availabilities for: (MTLP3333) request from MTL server and replied ""
+2019-11-23 13:17:37: QUE UDP port: 3331
+2019-11-23 13:19:12: getLocalSchedule: Patient MTLP3333 has no scheduled appointments
+2019-11-23 13:19:12: [QUE Server]: Received app availabilities for: (MTLP3333) request from MTL server and replied ""
+2019-11-23 13:26:45: QUE UDP port: 3331
+2019-11-23 13:28:42: getLocalSchedule: Patient MTLP3333 has no scheduled appointments
+2019-11-23 13:28:42: [QUE Server]: Received app availabilities for: (MTLP3333) request from MTL server and replied ""
+2019-11-23 13:35:25: QUE UDP port: 3331
+2019-11-23 13:48:07: QUE UDP port: 3331
+2019-11-23 14:04:00: QUE UDP port: 3331
+2019-11-23 15:27:14: QUE UDP port: 3331
+2019-11-23 15:36:02: QUE UDP port: 3331

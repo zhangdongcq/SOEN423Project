@@ -38,3 +38,74 @@
 2019-11-23 11:06:18: MTL UDP port: 2234
 2019-11-23 11:23:39: MTL UDP port: 2234
 2019-11-23 11:24:52: Appointment added: Surgeon MTLE121212 3
+2019-11-23 11:31:34: MTL UDP port: 2234
+2019-11-23 11:32:17: Appointment added: Surgeon MTLA121212 3
+2019-11-23 12:03:22: MTL UDP port: 2234
+2019-11-23 12:04:15: Appointment added: Surgeon MTLA121212 3
+2019-11-23 12:12:39: MTL UDP port: 2234
+2019-11-23 12:14:22: Appointment added: Dental MTLA121212 4
+2019-11-23 12:28:34: MTL UDP port: 2234
+2019-11-23 12:29:13: Appointment added: Surgeon MTLA121212 3
+2019-11-23 12:33:17: MTL UDP port: 2234
+2019-11-23 12:33:53: Appointment added: Dental MTLA121212 4
+2019-11-23 12:38:47: MTL UDP port: 2234
+2019-11-23 12:39:22: Appointment added: Dental MTLA121212 4
+2019-11-23 12:41:22: MTL UDP port: 2234
+2019-11-23 12:41:52: Appointment added: Surgeon MTLA121212 3
+2019-11-23 12:43:01: Appointment added Surgeon MTLA131313 4
+2019-11-23 12:44:37: MTL UDP port: 2234
+2019-11-23 12:45:12: Appointment added: Surgeon MTLA121212 3
+2019-11-23 12:51:37: Appointment added Physician MTLE232323 4
+2019-11-23 12:51:53: Appointment added Dental MTLM123456 4
+2019-11-23 12:52:27: Appointment added Physician MTLA455667 4
+2019-11-23 12:52:33: [MTL Server]: send listAppointmentAvailability(Physician) request to QUE and SHE server.
+2019-11-23 12:52:33: [MTL Server]: Got the reply of listAppointmentAvailability(Physician) request from QUE server. ""
+2019-11-23 12:52:33: [MTL Server]: Got the reply of listAppointmentAvailability(Physician) request from SHE server. ""
+2019-11-23 12:52:33: listLocalAppointments: MTLA455667 4 MTLE232323 4 
+2019-11-23 12:52:33: [MTL Server] Physician: MTLA455667 4 MTLE232323 4 
+2019-11-23 12:54:40: MTL UDP port: 2234
+2019-11-23 12:55:29: Appointment added: Physician MTLA111111 4
+2019-11-23 12:55:43: Appointment added Physician MTLE111111 4
+2019-11-23 12:55:57: Appointment added Physician MTLM111111 4
+2019-11-23 12:56:01: [MTL Server]: send listAppointmentAvailability(Physician) request to QUE and SHE server.
+2019-11-23 12:56:01: [MTL Server]: Got the reply of listAppointmentAvailability(Physician) request from QUE server. ""
+2019-11-23 12:56:01: [MTL Server]: Got the reply of listAppointmentAvailability(Physician) request from SHE server. ""
+2019-11-23 12:56:01: listLocalAppointments: MTLM111111 4;MTLE111111 4;MTLA111111 4;
+2019-11-23 12:56:01: [MTL Server] Physician: MTLA111111 4;MTLE111111 4;MTLM111111 4
+2019-11-23 13:04:54: Booked: Patient: MTLP3333 Type: Physician Appointment: MTLM111111
+2019-11-23 13:06:08: [MTL Server]: send getAppointmentSchedule(MTLP3333) request to QUE and SHE server.
+2019-11-23 13:06:08: [MTL Server]: Got the reply of getAppointmentSchedule(MTLP3333) request from QUE server. ""
+2019-11-23 13:06:08: [MTL Server]: Got the reply of getAppointmentSchedule(MTLP3333) request from SHE server. ""
+2019-11-23 13:06:08: getLocalSchedule: Patient MTLP3333:Physician;MTLM111111;
+2019-11-23 13:17:37: MTL UDP port: 2234
+2019-11-23 13:18:27: Appointment added: Physician MTLA111111 4
+2019-11-23 13:18:57: Booked: Patient: MTLP3333 Type: Physician Appointment: MTLA111111
+2019-11-23 13:19:12: [MTL Server]: send getAppointmentSchedule(MTLP3333) request to QUE and SHE server.
+2019-11-23 13:19:12: [MTL Server]: Got the reply of getAppointmentSchedule(MTLP3333) request from QUE server. ""
+2019-11-23 13:19:12: [MTL Server]: Got the reply of getAppointmentSchedule(MTLP3333) request from SHE server. ""
+2019-11-23 13:19:12: getLocalSchedule: Patient MTLP3333:Physician;MTLA111111;
+2019-11-23 13:19:12: [MTL Server] MTLP3333: Physician;MTLA111111;
+2019-11-23 13:26:45: MTL UDP port: 2234
+2019-11-23 13:27:18: Appointment added: Physician MTLA111111 4
+2019-11-23 13:27:29: Appointment added Surgeon MTLE222222 4
+2019-11-23 13:28:00: Booked: Patient: MTLP3333 Type: Physician Appointment: MTLA111111
+2019-11-23 13:28:24: Booked on existing patient: MTLP3333 Type: Surgeon Appointment: MTLE222222
+2019-11-23 13:28:42: [MTL Server]: send getAppointmentSchedule(MTLP3333) request to QUE and SHE server.
+2019-11-23 13:28:42: [MTL Server]: Got the reply of getAppointmentSchedule(MTLP3333) request from QUE server. ""
+2019-11-23 13:28:42: [MTL Server]: Got the reply of getAppointmentSchedule(MTLP3333) request from SHE server. ""
+2019-11-23 13:28:42: getLocalSchedule: Patient MTLP3333:Physician;MTLA111111;Surgeon;MTLE222222;
+2019-11-23 13:28:42: [MTL Server] MTLP3333: Physician;MTLA111111;Surgeon;MTLE222222
+2019-11-23 13:35:25: MTL UDP port: 2234
+2019-11-23 13:36:00: Appointment added: Physician MTLA121212 4
+2019-11-23 13:48:07: MTL UDP port: 2234
+2019-11-23 13:48:47: Appointment added: Physician MTLA121212 4
+2019-11-23 14:04:00: MTL UDP port: 2234
+2019-11-23 14:04:40: Appointment added: Physician MTLA121212 4
+2019-11-23 15:27:14: MTL UDP port: 2234
+2019-11-23 15:28:11: Appointment added: Physician MTLA121212 3
+2019-11-23 15:29:06: Appointment added Surgeon MTLA232323 4
+2019-11-23 15:30:21: Booked: Patient: MTLP3333 Type: Surgeon Appointment: MTLA232323
+2019-11-23 15:36:02: MTL UDP port: 2234
+2019-11-23 15:36:42: Appointment added: Physician MTLA343434 4
+2019-11-23 15:36:52: Appointment added Surgeon MTLE121212 4
+2019-11-23 15:37:04: Appointment added Dental MTLM345634 4

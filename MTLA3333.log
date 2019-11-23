@@ -2,13 +2,35 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2019-11-23T11:24:54</date>
-  <millis>1574526294564</millis>
+  <date>2019-11-23T15:36:42</date>
+  <millis>1574541402864</millis>
   <sequence>6</sequence>
   <logger>user</logger>
   <level>INFO</level>
   <class>Client.Client</class>
   <method>runUserOperations</method>
   <thread>1</thread>
-  <message>No majority found, not able to tell you the result.</message>
+  <message>SUCCESS;</message>
+</record>
+<record>
+  <date>2019-11-23T15:36:52</date>
+  <millis>1574541412828</millis>
+  <sequence>11</sequence>
+  <logger>user</logger>
+  <level>INFO</level>
+  <class>Client.Client</class>
+  <method>runUserOperations</method>
+  <thread>1</thread>
+  <message>SUCCESS;</message>
+</record>
+<record>
+  <date>2019-11-23T15:37:04</date>
+  <millis>1574541424244</millis>
+  <sequence>16</sequence>
+  <logger>user</logger>
+  <level>INFO</level>
+  <class>Client.Client</class>
+  <method>runUserOperations</method>
+  <thread>1</thread>
+  <message>SUCCESS;</message>
 </record>

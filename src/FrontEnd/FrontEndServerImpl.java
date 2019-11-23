@@ -21,7 +21,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    private String currentSequenceId;
    private String localhost = "localhost";
    private static final int timeOutTwenty = 20;
-   private static final int timeOutTwoHundreds = 2000; //TODO make this dynamic (exponential moving average??)
+   private static int rmTimeOut = 6000; //TODO make this dynamic (exponential moving average??)
    private static final int sequencerUdpPort = 6789;
    private static final int frontEndReplicaManagerListenerUdpPort = 7789;
    private static int numberOfRMs;
@@ -29,6 +29,10 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    //0: Sequencer. 1: RM1. 2: RM2. 3: RM3. 4: RM4.
    private boolean finalResult = false;
    private boolean allResponsesReceived = false;
+   public long timeStampReceiveFromRM;
+   //a hashmap to store each RM name and its response time (RTT)
+   private HashMap<String, Integer> rtt = new HashMap<String, Integer>();
+   public int RTT;
 
    FrontEndServerImpl(String frontEndName) {
       this.frontEndName = frontEndName;
@@ -81,13 +85,19 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    private void getAllResponseMessagesFromRMs(DatagramSocket aSocket, byte[] buffer) {
 	   while (!finalResult) {
          try {
+        	System.out.println("RM TIME OUT BEFORE ALL RESPONSES: "+ rmTimeOut);
             String response = getResponseFromRM(aSocket, buffer);
             String[] detailedResponse = response.split(";");
             currentSequenceId = detailedResponse[0];
             addMessageToRecords(detailedResponse);
             allResponsesReceived = Utils.isAllPopulated(allRequestRecords.get(currentSequenceId), numberOfRMs);
 
-            if (allResponsesReceived) break;
+            if (allResponsesReceived){ 
+            	//after all responses are received, set a new timeOut
+            	rmTimeOut = setNewTimeOutRm(rtt);
+            	System.out.println("RM TIME OUT AFTER ALL RESPONSES: "+ rmTimeOut);
+            	break;
+            }
          } catch (SocketTimeoutException e) {
             finalResult = true;
          } catch (SocketException e) {
@@ -133,17 +143,63 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
       }
    }
 
+   public int getRTT(long sent, long received){
+	   RTT = (int) (received - sent);
+	   return RTT;
+   }
+   
+   
+   public void updateRTT(String response, int newRTT){
+	   String [] parts = response.split(";");
+	   String rmID = parts[1];
+	   if(!rtt.isEmpty()){
+		   for(HashMap.Entry<String, Integer> entry: rtt.entrySet()){
+			   if(entry.getKey().equals(rmID)){
+				   rtt.replace(entry.getKey(),newRTT);
+				   return;
+			   }
+		   }
+		   rtt.put(rmID, newRTT);
+	   }
+	   else{
+		   rtt.put(rmID, newRTT); 
+	   }
+	   
+   }
+   
+   //this function finds the largest (longest) time from all Replica Managers and it sets a new TimeOut depending on the logest RTT
+   public int setNewTimeOutRm(HashMap<String, Integer> rtt){
+	   int newTimeOut=0;
+	   if(!rtt.isEmpty()){
+		 long longestResponse = rtt.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getValue();
+		 newTimeOut = (int) (longestResponse*2);
+		 
+	   }
+
+	   return newTimeOut;
+   }
+   
+   
+   
    private String getResponseFromRM(DatagramSocket aSocket, byte[] buffer) throws SocketException, IOException {
       //TODO: prepare to receive Replica Manager msg. Receiving port: 7789
 
       byte[] bufferLocal = new byte[1024];
       DatagramPacket reply = new DatagramPacket(bufferLocal, bufferLocal.length);//reply packet ready but not populated.
-      aSocket.setSoTimeout(timeOutTwoHundreds);
+      aSocket.setSoTimeout(rmTimeOut);
       aSocket.receive(reply);
+      
+      timeStampReceiveFromRM = System.currentTimeMillis();
+      RTT = getRTT(UdpServer.timeStampSendRequestToSequencer,timeStampReceiveFromRM); //get individual RTT for the specific Replica Manager
       String re = new String(bufferLocal, 0, reply.getLength());
+      updateRTT(re, RTT);//put that RTT in the hashMap with all RTTs for all Replica Managers
+      
       System.out.println("Got a response from a Replica Manager："+re);
       return new String(bufferLocal, 0, reply.getLength());
    }
+   
+   
+   
 
    private String getCleanResponse() {
       //4: Clean data to detect replica failures, make sure keep only one response in List
@@ -163,15 +219,22 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
       }
    }
    
+   
+   
+   
    public static ArrayList<Integer> getRmNames()
    {
 	   return replicaNames;
    }
    
+   
+   
    public static void addRM(Integer rmNumber)
    {
 	   replicaNames.add(rmNumber);
    }
+   
+   
    
    public static void setNumberOfRMs(int _numberOfRMs)
    {
