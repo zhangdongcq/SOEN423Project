@@ -91,40 +91,31 @@ public class Utils {
 
    public static String findMajority(String[] responseList) {
 
-      //responseList: [null, SUCCESS, null, null, null ]
-      int responseCount = 0;
-      for (int i = 1; i < responseList.length; i++) {
-         if (!Objects.isNull(responseList[i])) responseCount++;
-      }
+      int responseCount = responseList.length;
       if (responseCount == 0) return "No one response received from server, check your networking...";
       Map<String, Integer> map = new HashMap<>();
-      for (int i = 1; i < responseList.length; i++) {
-         if (!Objects.isNull(responseList[i])) {
-            map.put(responseList[i], map.getOrDefault(responseList[i], 0) + 1);
-         }
-         if (map.get(responseList[i]) > responseCount / 2) return responseList[i];
+      for (String s : responseList) {
+         map.put(s, map.getOrDefault(s, 0) + 1);
+         if (map.get(s) > responseCount / 2) return s;
       }
       return "NO_MAJORITY";
-
-   }
-   
-   public static String findMajority(HashMap<Integer,String> responseList)
-   {
-	   String[] responseListArray = responseList.values().toArray(new String[0]);
-	   return findMajority(responseListArray);
    }
 
-   public static boolean isAllPopulated(HashMap<Integer,String> responseList, int numberOfRMs) {
+   public static String findMajority(HashMap<Integer, String> responseList) {
+      String[] responseListArray = responseList.values().toArray(new String[0]);
+      return findMajority(responseListArray);
+   }
+
+   public static boolean isAllPopulated(HashMap<Integer, String> responseList, int numberOfRMs) {
       //return responseList != null && Arrays.stream(responseList).allMatch(Objects::nonNull);
-	   return responseList.size() == (numberOfRMs);
+      return responseList.values().stream().allMatch(Objects::nonNull);
    }
 
-   public static int findFailureMachine(HashMap<Integer,String> responseList) {
-      for (int i = 1; i < responseList.size(); ++i) {
-         if (responseList.get(i) == null) return i;
+   public static int findFailureMachine(HashMap<Integer, String> responseList) {
+      for (Integer name : FrontEndServerImpl.getRmNames()) {
+         if (responseList.get(name) == null) return name;
       }
       return -1;
-      
    }
 
    public static void notifyOtherRMsTheFaiure(String message, String machineAddress, int udpPort) throws IOException {
