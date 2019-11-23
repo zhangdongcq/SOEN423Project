@@ -79,11 +79,9 @@ public class ServerImpl extends IServerPOA {
       if (patientID.isEmpty() || appointmentID.isEmpty() || appointmentType.isEmpty()) {
          return FAIL;
       }
-      String numberType = appointmentType;
-      appointmentType = Utils.getRealAppType(appointmentType);
       try {
          if (!getCityFromAppointmentID(appointmentID).equalsIgnoreCase(this.serverName)) { // book remote ReplicaManagers.Dong.server app
-            return Utils.getRemoteServerQueryResult(Utils.BOOK_REMOTE_APP, String.join(".", patientID.toUpperCase(), appointmentID, numberType), getCityFromAppointmentID(appointmentID).toLowerCase());
+            return Utils.getRemoteServerQueryResult(Utils.BOOK_REMOTE_APP, String.join(".", patientID.toUpperCase(), appointmentID, appointmentType), getCityFromAppointmentID(appointmentID).toLowerCase());
          } else {
             if (!cityRecords.containsKey(appointmentType)) {
                return FAIL;
@@ -148,7 +146,6 @@ public class ServerImpl extends IServerPOA {
       /**
        * Check local record for given patient ID
        */
-      oldAppointmentType = Utils.getRealAppType(oldAppointmentType);
       if (!cityRecords.containsKey(oldAppointmentType))
          return FAIL;
       if (!cityRecords.get(oldAppointmentType).containsKey(oldAppointmentID))
