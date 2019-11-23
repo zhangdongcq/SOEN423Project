@@ -5,8 +5,10 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 import corbasystem.IFrontEndServerPOA;
@@ -14,13 +16,14 @@ import corbasystem.IFrontEndServerPOA;
 public class FrontEndServerImpl extends IFrontEndServerPOA {
    private static final long serialVersionUID = 4077329331765423123L;
    private String frontEndName;
-   private Map<String, String[]> allRequestRecords = new ConcurrentHashMap<>();
+   private Map<String, HashMap<Integer, String>> allRequestRecords = new ConcurrentHashMap<>();
    private String currentSequenceId;
    private String localhost = "localhost";
    private static final int timeOutTwenty = 20;
    private static final int timeOutTwoHundreds = 200;
    private static final int sequencerUdpPort = 6789;
    private static final int frontEndReplicaManagerListenerUdpPort = 7789;
+   private static int numberOfRMs;
    //0: Sequencer. 1: RM1. 2: RM2. 3: RM3. 4: RM4.
    private boolean finalResult = false;
    private boolean allResponsesReceived = false;
@@ -35,8 +38,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    }
 
    @Override
-   public String requestHandler(String userId, String command, String parameters) {
-
+   public String requestHandler(String userId, String command, String parameters) {  
       String msgToSend = String.join(";", userId, command, parameters);
       System.out.println("FE Started........");
 
@@ -75,13 +77,13 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    }
 
    private void getAllResponseMessagesFromRMs(DatagramSocket aSocket, byte[] buffer) {
-      while (!finalResult) {
+	   while (!finalResult) {
          try {
             String response = getResponseFromRM(aSocket, buffer);
             String[] detailedResponse = response.split(";");
             currentSequenceId = detailedResponse[0];
             addMessageToRecords(detailedResponse);
-            allResponsesReceived = Utils.isAllPopulated(allRequestRecords.get(currentSequenceId));
+            allResponsesReceived = Utils.isAllPopulated(allRequestRecords.get(currentSequenceId), numberOfRMs);
 
             if (allResponsesReceived) break;
          } catch (SocketTimeoutException e) {
@@ -99,18 +101,22 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
 
    private void addMessageToRecords(String[] detailedResponse) {
       String replicaMachineId = detailedResponse[1];
-      String rmMsg = detailedResponse[2];
+      String rmMsg;
+      if(detailedResponse.length <2)
+    	  rmMsg = "NONE";
+      rmMsg = detailedResponse[2];
 
       int replicaNumber = Integer.parseInt(replicaMachineId);
-      String[] sequenceNumberRecord = allRequestRecords.get(currentSequenceId);
+      HashMap<Integer,String> sequenceNumberRecord = allRequestRecords.get(currentSequenceId);
       boolean noRecordExistsForSequenceNumber = Objects.isNull(sequenceNumberRecord);
 
       if (noRecordExistsForSequenceNumber) {
-         String[] records = new String[5];
-         records[replicaNumber] = rmMsg;
+    	  HashMap<Integer, String> records = new HashMap<>();
+         //String[] records = new String[numberOfRMs];
+         records.put(replicaNumber, rmMsg);//records[replicaNumber] = rmMsg;
          allRequestRecords.put(currentSequenceId, records);
       } else {
-         sequenceNumberRecord[replicaNumber] = rmMsg;
+         sequenceNumberRecord.put(replicaNumber,rmMsg); 
       }
    }
 
@@ -142,5 +148,10 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
          default:
             return cleanResponse;
       }
+   }
+   
+   public static void setNumberOfRMs(int _numberOfRMs)
+   {
+	   numberOfRMs = _numberOfRMs;
    }
 }

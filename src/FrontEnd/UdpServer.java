@@ -2,6 +2,7 @@ package FrontEnd;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,12 +17,12 @@ class UdpServer extends Thread {
     }
 
     private String msgToSend;
-    private Map<String, String[]> allRequestRecords;
+    private Map<String, HashMap<Integer,String>> allRequestRecords;
     private int timeOut;
     private int counter = 1;
     private boolean resend = false;
 
-    UdpServer(int targetUdpPort, String targetAddress, String msgToSend, Map<String, String[]> allRequestRecords, int timeOut) {
+    UdpServer(int targetUdpPort, String targetAddress, String msgToSend, Map<String, HashMap<Integer,String>> allRequestRecords, int timeOut) {
         this.targetUdpPort = targetUdpPort;
         this.targetAddress = targetAddress;
         this.msgToSend = msgToSend;
@@ -62,12 +63,12 @@ class UdpServer extends Thread {
                 if (!response.equals("FAILURE_NOTICE_ACK")) {
                     String sequenceId = response.split("|")[1];
                     String msg = response.split("|")[0];
-                    String[] eachResponse = new String[5]; // slot 0 : SEQUENCER. slot 1 : RM1. slot 2 : RM2...
-                    eachResponse[0] = msg;
+                    HashMap<Integer,String> eachResponse = new HashMap<>(); // slot 0 : SEQUENCER. slot 1 : RM1. slot 2 : RM2...
+                    eachResponse.put(0, msg);
                     if (allRequestRecords.get(sequenceId) == null) {
                         allRequestRecords.put(sequenceId, eachResponse);
                     } else {
-                        allRequestRecords.get(sequenceId)[0] = msg;
+                        allRequestRecords.get(sequenceId).put(0, msg);
                     }
                 }
             } catch (SocketTimeoutException e) {

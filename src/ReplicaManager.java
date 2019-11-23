@@ -61,13 +61,13 @@ public class ReplicaManager {
 				if(replyToFe.isEmpty())
 					continue;
 				else{
-					replyToFe(replyToFe,Integer.toString(rmID), feIP, fePort);
+					replyToFe(replyToFe, feIP, fePort);
 					System.out.println(logFile.writeLog("RM"+rmID+" sent a reply: ["+replyToFe+"] to FE "+feIP+":"+fePort));
 					replyToFe = processBuffer();
 					if(replyToFe.isEmpty()){
 						continue;
 					}else{
-						replyToFe(replyToFe,Integer.toString(rmID), feIP, fePort);
+						replyToFe(replyToFe, feIP, fePort);
 						System.out.println(logFile.writeLog("RM"+rmID+" sent a reply: ["+replyToFe+"] to FE "+feIP+":"+fePort));
 					}		
 				}
@@ -106,12 +106,12 @@ public class ReplicaManager {
 	
 	
 	
-	public static void replyToFe(String msg, String rmID, String feIP, int fePort){
+	public static void replyToFe(String msg, String feIP, int fePort){
 			
 	        DatagramSocket aSocket = null;
 	        try {
 	            aSocket = new DatagramSocket();
-	            byte[] buffer = String.join(";",rmID, msg).getBytes();
+	            byte[] buffer = msg.getBytes();
 	            InetAddress aHost = InetAddress.getByName(feIP);
 	            DatagramPacket reply = new DatagramPacket(buffer, buffer.length, aHost, fePort);
 	            aSocket.send(reply);

@@ -4,6 +4,8 @@ import DhmsApp.*;
 import DhmsApp.Dhms;
 import DhmsApp.DhmsHelper;
 
+import java.util.Properties;
+
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
 import org.omg.CosNaming.NamingContext;
@@ -16,7 +18,13 @@ public class DhmsServer {
 
 	 public static void main(String args[]){
 	        try {
-	        	ORB orb = ORB.init(args, null);
+	        	
+	        	Properties props = new Properties();
+	            //Generate and initiate the ORB
+	            props.put("org.omg.CORBA.ORBInitialPort", "1050");
+	            props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
+	            ORB orb = ORB.init(args, props);
+	        	
 	        	POA rootpoa = (POA)orb.resolve_initial_references("RootPOA");
 	            rootpoa.the_POAManager().activate();
 	                
@@ -68,7 +76,7 @@ public class DhmsServer {
 	            path = new NameComponent[] {nc3};
 	            ncRef.rebind(path, hrefSHE);
 	            
-	            System.out.println("Three servers are up and running, registered to name service on "+args[3]+":"+args[1]);
+	            System.out.println("Three servers are up and running, registered to name service on localhost:1050");
 	       
 	            java.lang.Object sync = new java.lang.Object();
 	            synchronized(sync) {
