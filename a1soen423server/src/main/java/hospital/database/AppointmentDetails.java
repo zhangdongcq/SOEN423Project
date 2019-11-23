@@ -56,6 +56,7 @@ public class AppointmentDetails implements Comparable<AppointmentDetails> {
             capacity--;
             return "SUCCESS";
         }
+        System.out.println("Failure: Patient capacity full");
         return "FAIL";
     }
 

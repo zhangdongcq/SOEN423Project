@@ -44,9 +44,12 @@ public class Database  {
         String result;
         if(!IdValidator.isValidAdminAppointment(appointmentDetails))
         {
+        	System.out.println("Failure: invalid appointment ID" + appointmentDetails.getAppointmentID());
             result = "FAIL";
-        } else if(containsAppointmentID(appointmentDetails))
+        } else if(containsAppointmentID(appointmentDetails)) {
+        	System.out.println("Failure:appointment already created");
             result = "FAIL";
+        }
         else {
             database.get(appointmentDetails.getAppointmentType()).put(appointmentDetails.getAppointmentID(), appointmentDetails);
             result = "SUCCESS";
@@ -60,9 +63,12 @@ public class Database  {
         lock.lock();
         String result;
         boolean removed;
-        if(!IdValidator.isPatientID(patientID))
+        if(!IdValidator.isPatientID(patientID)){
+        	System.out.println("Failure: invalid patient id");
             result = "FAIL";
+        }
         else if(!containsAppointmentID(appointmentType, appointmentID)) {
+        	System.out.println("Failure: no such appointment id exists: " + appointmentID);
             result = "FAIL";
         } else {
                 removed = getAppointmentsForType(appointmentType).get(appointmentID).removePatientAndHold(patientID);
@@ -113,8 +119,10 @@ public class Database  {
     {
         lock.lock();
         String result;
-        if(!containsAppointmentID(appointmentType, appointmentID))
+        if(!containsAppointmentID(appointmentType, appointmentID)) {
             result = "FAIL";
+            System.out.println("Failure: appointment does not exist in local database");
+        }
         else {
             Set<String> bookedPatients = database.get(appointmentType).get(appointmentID).getPatientsBooked();
             bookedPatients.forEach(patient -> {
@@ -144,12 +152,18 @@ public class Database  {
     {
         lock.lock();
         String result;
-        if(!IdValidator.isPatientID(patientID))
-            result =  "FAIL";
-        else if(!containsAppointmentID(appointmentType, appointmentID))
-            result = "FAIL";
-        else if(hasExistingAppointmentTypeThatDay(appointmentType, appointmentID, patientID))
-            result = "FAIL";
+        if(!IdValidator.isPatientID(patientID)) {
+        	System.out.println("Failure: invalid patient id:" + patientID);
+        	result =  "FAIL";
+        }
+        else if(!containsAppointmentID(appointmentType, appointmentID)) {
+        	System.out.println("Failure: no such appointment id exists:" + appointmentID);
+        	result = "FAIL"; 
+        }
+        else if(hasExistingAppointmentTypeThatDay(appointmentType, appointmentID, patientID)) {
+        	System.out.println("Failure: patient has existing appointment of that type that day");
+        	result = "FAIL";
+        }
         else {
             result = getAppointmentsForType(appointmentType).get(appointmentID).addPatient(patientID);
         }
@@ -161,8 +175,10 @@ public class Database  {
     {
         lock.lock();
         String result;
-        if(!IdValidator.isPatientID(patientID))
+        if(!IdValidator.isPatientID(patientID)) {
             result = "FAIL";
+            System.out.println("Failure: invalid patientID" + patientID);
+        }
         else {
             StringBuilder sb = new StringBuilder();
 
@@ -197,11 +213,14 @@ public class Database  {
         lock.lock();
         String result;
         boolean removed = false;
-        if(!IdValidator.isPatientID(patientID))
-            result = "FAIL";
+        if(!IdValidator.isPatientID(patientID)) {
+        	System.out.println("Failure: invalid patientID" + patientID);
+        	result = "FAIL";
+        }
         else if(!containsAppointmentID(AppointmentType.Dental, appointmentID) &&
                 !containsAppointmentID(AppointmentType.Surgeon, appointmentID) &&
                 !containsAppointmentID(AppointmentType.Physician, appointmentID)) {
+        	System.out.println("Failure: no such appointment id exists" + appointmentID);
             result = "FAIL";
         } else {
             if (containsAppointmentID(AppointmentType.Dental, appointmentID))

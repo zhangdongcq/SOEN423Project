@@ -36,6 +36,7 @@ public class RemotelyInvokableHospitalImpl extends RemotelyInvokableHospitalPOA
         if(appointmentId.contains(hospitalID))
             outcome = database.addAppointment(appointmentId, appointmentType, capacity);
         else {
+        	System.out.println("Failure: unable to add appointment for remote hospital");
             outcome = "FAIL";
         }
         Logger.saveLog(requestLog, outcome, hospitalID);
@@ -51,6 +52,7 @@ public class RemotelyInvokableHospitalImpl extends RemotelyInvokableHospitalPOA
         if(appointmentId.contains(hospitalID))
             outcome = database.removeAppointment(appointmentId, appointmentType);
         else {
+        	System.out.println("Failure: unable to add appointment for remote hospital");
             outcome = "FAIL";
         }
         Logger.saveLog(requestLog, outcome, hospitalID);
@@ -79,18 +81,20 @@ public class RemotelyInvokableHospitalImpl extends RemotelyInvokableHospitalPOA
         long numberOfAppointmentsWeekOutsideHome = getNumberOfAppointmentsInWeek(patientId, appointmentId);
         if(numberOfAppointmentsWeekOutsideHome > 2 && !AppointmentDetails.getAppointmentHospital(appointmentId).contains(hospitalID))
         {
+        	System.out.println("Failure: patient has already booked 3 appointments in other hospitals this week");
             outcome = "FAIL";
             Logger.saveLog(requestLog, outcome, hospitalID);
             return outcome;
         }
 
-        boolean hasAppointmentOfThatTypeThatDay = Arrays.stream(getAppointmentSchedule(patientId).split(","))
+        boolean hasAppointmentOfThatTypeThatDay = Arrays.stream(getAppointmentSchedule(patientId).split(";"))
                 .filter(appointment -> appointment.contains(StringConversion.getAppointmentTypeString(appointmentType)))
                 .anyMatch(item -> item.contains(appointmentId.substring(4)));
-
+        
         //;Dental-APTID;APTID;Physician-APTID;APTID;Surgeon-APTID;APTID
         if(hasAppointmentOfThatTypeThatDay)
         {
+        	System.out.println("Failure: Patient alread has appointment of that type that day");
             outcome = "FAIL";
             Logger.saveLog(requestLog, outcome, hospitalID);
             return outcome;

@@ -94,6 +94,7 @@ public class UDPServer implements Runnable {
                 Logger.saveLog(data, response, hospitalID);
                 break;
             default:
+            	System.out.println("Method name" + method + " is invalid");
                 response = "FAIL";
                 Logger.saveLog(data, response, hospitalID);
                 break;
