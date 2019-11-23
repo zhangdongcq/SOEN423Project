@@ -92,13 +92,10 @@ public class Utils {
    public static String findMajority(String[] responseList) {
 
       //responseList: [null, SUCCESS, null, null, null ]
-      int responseCount = 0;
-      for (int i = 1; i < responseList.length; i++) {
-         if (!Objects.isNull(responseList[i])) responseCount++;
-      }
+      int responseCount = responseList.length;
       if (responseCount == 0) return "No one response received from server, check your networking...";
       Map<String, Integer> map = new HashMap<>();
-      for (int i = 1; i < responseList.length; i++) {
+      for (int i = 0; i < responseList.length; i++) {
          if (!Objects.isNull(responseList[i])) {
             map.put(responseList[i], map.getOrDefault(responseList[i], 0) + 1);
          }

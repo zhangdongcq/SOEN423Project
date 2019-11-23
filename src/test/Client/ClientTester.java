@@ -1,4 +1,4 @@
-package test.Client;
+package Client;
 
 import corbasystem.IFrontEndServer;
 import corbasystem.IFrontEndServerHelper;
