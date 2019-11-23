@@ -709,7 +709,7 @@ public class DhmsServant extends DhmsPOA{
 				for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
 					if(entry1.getKey().equals(appointmentType) && entry2.getValue()>0){
 						
-						result = result+entry2.getKey().toString()+" "+entry2.getValue().toString()+" ";
+						result = result+entry2.getKey().toString()+" "+entry2.getValue().toString()+";";
 					}
 				}
 			}
