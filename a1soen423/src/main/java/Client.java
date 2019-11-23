@@ -32,10 +32,10 @@ public class Client {
             while (true) {
                 String sequencerString = SequencerCommunicator.receiveFromSequencer(MessageExecutor.getCountFail());
                 List<String> requestArguments = Arrays.asList(sequencerString.split(";"));
-                if(requestArguments.size() == 2)
+                if(hasReplicaFailureRequest(requestArguments)) {
                 	continue;
-                for(int i = 0; i< requestArguments.size(); i++)
-                	requestArguments.set(i, ((String)requestArguments.get(i).trim()));
+                }
+                cleanArgumentList(requestArguments);
                 int userIDLocation = 3;
                 user = new User(requestArguments.get(userIDLocation));
                 RemotelyInvokableHospital remotelyInvokableHospital = getHospital(user, objRef);
@@ -51,6 +51,26 @@ public class Client {
         } catch (IOException | InvalidName | NotFound | CannotProceed | org.omg.CosNaming.NamingContextPackage.InvalidName e) {
             e.printStackTrace();
         }
+    }
+    
+    private static void cleanArgumentList(List<String> requestArgs)
+    {
+    	for(int i = 0; i< requestArgs.size(); i++)
+    		requestArgs.set(i, ((String)requestArgs.get(i).trim()));
+    }
+    
+    private static boolean hasReplicaFailureRequest(List<String> requestArguments)
+    {
+    	if(requestArguments.size() == 2) {
+        	System.out.println("A replica has failed: " + requestArguments.stream().reduce("", (a,b)-> (a + ";" + b)));
+        	if(Integer.parseInt(requestArguments.get(0))== MessageExecutor.getRmNumber())
+        	{
+        		MessageExecutor.setCountFail(3);
+        		System.out.println("This replica has failed, no longer executing requests");
+        	}
+        	return true;
+        }
+    	return false;
     }
 
     private static void logRequestResponse(List<String> requestArguments, String response, User user) throws IOException

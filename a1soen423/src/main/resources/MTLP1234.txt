@@ -18,3 +18,5 @@
 2019-10-10 11:25:54AM > Request:[   bookAppointment MTLP1234 MTLA121212 Dental ] Response:[ Success ]
 2019-10-19 11:42:21AM > Request:[ login ] Response:[ successful login ]
 2019-10-19 11:42:48AM > Request:[   swapAppointment MTLP1234 MTLA111111 Surgeon MTLA111111 Physician  ] Response:[ Failure: No such patientID exists ]
+2019-11-23 10:37:00AM > Request:[ login ] Response:[ successful login ]
+2019-11-23 10:37:01AM > Request:[   127.0.0.1 7789 3 MTLP1234 bookAppointment MTLP1234 MTLA121111 Surgeon ] Response:[ 3;2;SUCCESS ]

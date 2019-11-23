@@ -22,6 +22,11 @@ public class MessageExecutor {
 
     public static void executeRequest(List<String> requestArguments, RemotelyInvokableHospital remotelyInvokableHospital)
     {
+    	if(countFail == 3)
+    	{
+    		System.out.println("This replica has failed (3incorrect responses or timeout). No longer executing requests");
+    		return;
+    	}
         if(requestArguments.size()>2) {
             ipAddress=requestArguments.get(0);
             String FE_UPD_PortStr=requestArguments.get(1);
@@ -99,6 +104,11 @@ public class MessageExecutor {
     {
         return countFail;
     }
+    
+    public static void setCountFail(int _countFail)
+    {
+    	countFail = _countFail;
+    }
 
     public static String getResponse()
     {
@@ -108,5 +118,10 @@ public class MessageExecutor {
     public static boolean hasResponse()
     {
     	return hasResponse;
+    }
+    
+    public static int getRmNumber()
+    {
+    	return RMnumber;
     }
 }
