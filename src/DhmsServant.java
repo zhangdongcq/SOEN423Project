@@ -311,8 +311,7 @@ public class DhmsServant extends DhmsPOA{
 	            th2.join();
 	            logFile.writeLog("["+serverLocation+" Server]: Got the reply of getAppointmentSchedule("+patientID+") request from "+th2.remoteServer+" server. \""+th2.replyFromServer+"\"");
 	
-	            //create return message
-	            //resultStr = String.valueOf(getLocalSchedule(patientID))+th1.replyFromServer+th2.replyFromServer;
+	            
 	            resultStr = removeLastChar(sortAppointmentSchedule(String.valueOf(getLocalSchedule(patientID))+th1.replyFromServer+th2.replyFromServer));
 	            //resultStr = sortAppointmentSchedule(String.valueOf(getLocalSchedule(patientID))+th1.replyFromServer+th2.replyFromServer);
 
@@ -553,10 +552,10 @@ public class DhmsServant extends DhmsPOA{
 				for(HashMap.Entry<String, ArrayList<String>> entryPatient2: entryPatient.getValue().entrySet()){
 					if(entryPatient.getKey().equals(patientID) && entryPatient2.getValue().contains(appointmentID)){
 						entryPatient2.getValue().remove(appointmentID);
-						//add appointment back in appointment records
 						if(entryPatient2.getValue().isEmpty()){
 							entryPatient.getValue().clear();
 						}
+						//add appointment back in appointment records
 						returnAppointment(entryPatient2.getKey(), appointmentID);
 						logFile.writeLog("Appointment cancelled: "+ patientID+":"+appointmentID);
 						return "SUCCESS";
@@ -604,11 +603,17 @@ public class DhmsServant extends DhmsPOA{
 		return capacity;
 	}
 	
+	
+	
+	
 	public void updateCapacity(String appointmentID, String appointmentType, int capacity){
 		HashMap<String, Integer> newCapacity = new HashMap<String, Integer>();
 		newCapacity.put(appointmentID, capacity);
 		appointmentRecords.replace(appointmentType,newCapacity);
 	}
+	
+	
+	
 	
 	public void addNewPatientInRecords(String patientID, String appointmentType, String appointmentID){
 		HashMap<String, ArrayList<String>> newPatientEntry = new HashMap<String, ArrayList<String>>();
@@ -632,7 +637,7 @@ public class DhmsServant extends DhmsPOA{
 								if(patientEntryTypeID.getKey().equals(appointmentType)){
 									if(patientEntryTypeID.getValue().contains(appointmentID)){
 										logFile.writeLog("Booking not successfull. This appointment already exists in patient's record"+appointmentID);
-										return "Booking not successfull. This appointment already exists in patient's record"+appointmentID;//return "FAIL";
+										return "FAIL";
 									}
 									patientEntryTypeID.getValue().add(appointmentID);
 									capacity --;
@@ -664,11 +669,11 @@ public class DhmsServant extends DhmsPOA{
 				return "SUCCESS";
 			}else{
 				logFile.writeLog("Booking failed, is not in records");
-				return "Booking failed, appointment is not in records";//"FAIL";
+				return "FAIL";
 			}
 			}else{
 				logFile.writeLog("bookAppointment: Invalid inputs");
-				return "bookAppointment: Invalid inputs";//"FAIL";
+				return "FAIL";
 			}
 		
 		
