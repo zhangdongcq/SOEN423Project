@@ -141,7 +141,8 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
       aSocket.setSoTimeout(timeOutTwoHundreds);
       aSocket.receive(reply);
       String re = new String(bufferLocal, 0, reply.getLength());
-      System.out.println("Got a response from a Replica Manager："+re);
+      String replicaNumber = re.split(";")[1];
+      System.out.println("Got a response from a Replica Manager " + replicaNumber +"："+re);
       return new String(bufferLocal, 0, reply.getLength());
    }
 
