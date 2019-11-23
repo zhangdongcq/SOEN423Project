@@ -2,3 +2,8 @@
 2019-10-09 02:46:11PM > Request:[ login ] Response:[ successful login ]
 2019-10-09 02:49:12PM > Request:[ login ] Response:[ successful login ]
 2019-10-09 02:49:18PM > Request:[   listAppointmentAvailability Dental  ] Response:[ MTLA101111 3 MTLA101212 3 MTLA111111 3 MTLA121212 3 MTLM111111 3 MTLM121212 3 SHEA101111 3 SHEA101212 3 SHEA111111 3 SHEA121212 3 SHEM111111 3 SHEM121212 3 QUEA101111 3 QUEA101212 3 QUEA111111 3 QUEA121212 3 QUEM111111 3 QUEM121212 3  ]
+2019-11-22 01:45:22PM > Request:[ login ] Response:[ successful login ]
+2019-11-22 01:45:22PM > Request:[   127.0.0.1 7789 9 MTLA1111 listAppointmentAvailability Dental ] Response:[ 9;2;MTLA111111 5;QUEA111111 6 ]
+2019-11-22 01:51:34PM > Request:[ login ] Response:[ successful login ]
+2019-11-22 01:51:34PM > Request:[   127.0.0.1 7789 10 MTLA1111 listAppointmentAvailability Surgeon ] Response:[ 10;2; ]
+2019-11-22 04:18:14PM > Request:[ login ] Response:[ successful login ]

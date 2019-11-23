@@ -32,6 +32,8 @@ public class Client {
             while (true) {
                 String sequencerString = SequencerCommunicator.receiveFromSequencer(MessageExecutor.getCountFail());
                 List<String> requestArguments = Arrays.asList(sequencerString.split(";"));
+                if(requestArguments.size() == 2)
+                	continue;
                 for(int i = 0; i< requestArguments.size(); i++)
                 	requestArguments.set(i, ((String)requestArguments.get(i).trim()));
                 int userIDLocation = 3;
@@ -41,7 +43,8 @@ public class Client {
                 Pair<String, Integer> ipPort = MessageExecutor.getIpPort();
                 String response = MessageExecutor.getResponse();
                 System.out.println("Response to FE: " + response);
-                FrontEndCommunicator.sendResponseToFE(response, ipPort);
+                if(MessageExecutor.hasResponse())
+                	FrontEndCommunicator.sendResponseToFE(response, ipPort);
                 logRequestResponse(requestArguments, response, user);
             }
 

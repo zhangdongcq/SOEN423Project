@@ -13,11 +13,12 @@ public class MessageExecutor {
     private static String ipAddress = "";
     private static Integer portNumber = 0;
     private static int sequencerID=0;
-    private static int expectedID=0;
+    private static int expectedID=1;
     private static ArrayList<List<String>> processBuffer=new ArrayList<>();
     private static int countFail = 0;
     private static String response = "";
     private static Pair<String, Integer> ipPort;
+    private static boolean hasResponse = false;
 
     public static void executeRequest(List<String> requestArguments, RemotelyInvokableHospital remotelyInvokableHospital)
     {
@@ -27,15 +28,22 @@ public class MessageExecutor {
             portNumber=Integer.parseInt(FE_UPD_PortStr);
             sequencerID=Integer.parseInt(requestArguments.get(2));
             
-            expectedID = sequencerID; //TODO remove during actual test
+            //expectedID = sequencerID; //TODO remove during actual test
             
             if(sequencerID==expectedID) {
                 response = CorbaDelivery.deliverCorbaRequest(requestArguments ,remotelyInvokableHospital);
+                encapsulateResponse();
                 expectedID++;
+                hasResponse = true;
             }else if(sequencerID>expectedID) {
                 processBuffer.add(requestArguments);
+                hasResponse = false;
             }else if(checkBufferSequencerID(expectedID)) {
-                response=processInBuffer(expectedID, requestArguments, remotelyInvokableHospital);
+                response = processInBuffer(expectedID, requestArguments, remotelyInvokableHospital);
+                encapsulateResponse();
+                hasResponse = true;
+            } else {
+            	hasResponse = false;
             }
         }else if(requestArguments.size()==2) {
             trackFailure(requestArguments);
@@ -57,11 +65,13 @@ public class MessageExecutor {
         return returnFromReplica;
     }
     
-    private static String encapsulateResponse(String response)
+    private static void encapsulateResponse()
     {
     	if(response.equals("SUCCESS")|| response.equals("FAIL"))
-    		return (expectedID-1) + ";" + RMnumber +";" + response;
-    	return (expectedID-1) + ";" + RMnumber + response;
+    		response = (expectedID) + ";" + RMnumber +";" + response;
+    	else {
+    		response = (expectedID) + ";" + RMnumber + response;
+    	}
     }
 
     private static boolean checkBufferSequencerID(int expectedID) {
@@ -92,6 +102,11 @@ public class MessageExecutor {
 
     public static String getResponse()
     {
-        return encapsulateResponse(response);
+        return response;
+    }
+    
+    public static boolean hasResponse()
+    {
+    	return hasResponse;
     }
 }
