@@ -21,7 +21,7 @@ public class ReplicaManager {
 	
 	private static int udpPort = 6790;
 	private static int currentSequenceNum = 1;
-	private static int rmID = 2;
+	private static int rmID = 3;
 	private static HashMap<Integer, String> buffer = new HashMap<Integer, String>();
 	public static Log logFile;
 	
@@ -62,13 +62,13 @@ public class ReplicaManager {
 					continue;
 				else{
 					replyToFe(replyToFe, feIP, fePort);
-					System.out.println(logFile.writeLog("RM"+rmID+" sent a reply: ["+replyToFe+"] to FE "+feIP+":"+fePort));
+					System.out.println(logFile.writeLog("RM"+rmID+" sent a reply: ["+replyToFe+"] to FE: "+feIP+":"+fePort));
 					replyToFe = processBuffer();
 					if(replyToFe.isEmpty()){
 						continue;
 					}else{
 						replyToFe(replyToFe, feIP, fePort);
-						System.out.println(logFile.writeLog("RM"+rmID+" sent a reply: ["+replyToFe+"] to FE "+feIP+":"+fePort));
+						System.out.println(logFile.writeLog("RM"+rmID+" sent a reply: ["+replyToFe+"] to FE: "+feIP+":"+fePort));
 					}		
 				}
 			}
@@ -80,7 +80,7 @@ public class ReplicaManager {
 		try{    
 			//Create socket and buffer
 			aSocket = new MulticastSocket(udpPort); 
-            System.out.println("RM2 is listening............");
+            System.out.println("RM3 is listening............");
 
 			aSocket.joinGroup(InetAddress.getByName("228.5.6.9"));
 			

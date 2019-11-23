@@ -58,3 +58,9 @@
 2019-11-21 19:22:02: RM2: current Sequence Number in RM: 1
 2019-11-21 19:22:02: RM2 received a message with sequence number greater than current sequence number
 2019-11-21 19:22:02: RM2 REPLY: 
+2019-11-23 11:24:52: RM2 gets msg from sequencer: 127.0.0.1;7789;1;MTLA3333;addAppointment;MTLE121212;Surgeon;3
+2019-11-23 11:24:52: RM2 received a message [1 MTLA3333 addAppointment MTLE121212;Surgeon;3;] from Sequencer
+2019-11-23 11:24:52: RM2: current Sequence Number in RM: 1
+2019-11-23 11:24:52: RM2 REPLY: 1;2;SUCCESS
+2019-11-23 11:24:52: RM2 sent a reply: [1;2;SUCCESS] to FE 127.0.0.1:7789
+2019-11-23 11:24:54: RM2 gets msg from sequencer: 3;FAIL
