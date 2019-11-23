@@ -760,16 +760,16 @@ public class DhmsServant extends DhmsPOA{
 			if(!sch.isEmpty()){
 				for(int i=0; i<parts.size(); i++){
 					for(HashMap.Entry<String, ArrayList <String>> entry : sch.entrySet()){
-						if(parts.get(i).substring(0,6).equals("Dental") && entry.getKey().equals("Dental")){
-							dental.add(parts.get(i).substring(7));
+						if(parts.get(i).equals("Dental") && entry.getKey().equals("Dental")){
+							dental.add(parts.get(i+1));
 							Collections.sort(dental);
 							
-						}else if(parts.get(i).substring(0,9).equals("Physician") && entry.getKey().equals("Physician")){
-							physician.add( parts.get(i).substring(10));
+						}else if(parts.get(i).equals("Physician") && entry.getKey().equals("Physician")){
+							physician.add(parts.get(i+1));
 							Collections.sort(physician);
 							
-						}else if(parts.get(i).substring(0,7).equals("Surgeon") && entry.getKey().equals("Surgeon")){
-							surgeon.add(parts.get(i).substring(8));
+						}else if(parts.get(i).equals("Surgeon") && entry.getKey().equals("Surgeon")){
+							surgeon.add(parts.get(i+1));
 							Collections.sort(surgeon);
 							
 						}
