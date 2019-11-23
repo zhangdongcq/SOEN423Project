@@ -194,6 +194,7 @@ public class ServerImpl extends IServerPOA {
               .replace("=", " ")
               .replace("{", " ")
               .replace("}", " ")
+              .replace(", ", ",")
               .trim();
    }
 

@@ -71,7 +71,7 @@ public class Client {
             System.out.println(String.join(" | ", pureRequestArray));
 
             findReplica(args);
-            String operationResult = getReplicaResponse();
+            String operationResult = getReplicaResponse().trim();
             Utils.sendResultToFrontEnd(operationResult, sequenceId, replicaManagerId, frontEndIp, frontEndPort);
             System.out.println("(ReplicaManager) gets msg from sequencer: " + request);
             System.out.println("(ReplicaManager) send msg to frontend: " + String.join(";",sequenceId, replicaManagerId, operationResult));

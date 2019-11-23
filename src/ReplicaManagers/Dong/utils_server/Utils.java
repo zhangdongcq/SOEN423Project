@@ -190,7 +190,7 @@ public class Utils {
               String.join(",", localResponse, remoteResponse1, remoteResponse2)
                       .split(",")
       );
-      allResponses.sort(Comparator.naturalOrder());
+      allResponses.sort(Comparator.comparing((String o) -> o.substring(0, 5)).thenComparing(o -> o.substring(5)));
       return String.join(";", allResponses);
    }
 
