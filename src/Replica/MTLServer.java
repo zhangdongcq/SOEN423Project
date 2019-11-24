@@ -585,11 +585,11 @@ public class MTLServer extends OperationsPOA{
 			if(task.equalsIgnoreCase("listAppointmentAvailability"))
 			{
 				writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"list Appointment Availability", "Success");
-				printAppointmentByType(MTLMap,appointmentType);
+				listAppointmentByType+=printAppointmentByType(MTLMap,appointmentType);
 			}			
 			else if(task.equalsIgnoreCase("getAppointmentSchedule")) {
 				writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"get Appointment Schedule", "Success");
-				printAppointmentBySchedule(MTLMap,patientID);
+				listAppointmentBySchedule+=printAppointmentBySchedule(MTLMap,patientID);
 			}			
 			else if(task.equalsIgnoreCase("bookAppointment")) {
 				writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"book Appointment", "accessed");
@@ -606,12 +606,12 @@ public class MTLServer extends OperationsPOA{
 
 			//System.out.println("*** Appointments Summary (QUE) ***");
 			if(task.equalsIgnoreCase("listAppointmentAvailability")) {
-				printAppointmentByType(otherMap1,appointmentType);
+				listAppointmentByType+=printAppointmentByType(otherMap1,appointmentType);
 				writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"list Appointment Availability", "Success");
 			}				
 			else if(task.equalsIgnoreCase("getAppointmentSchedule"))
 			{
-				printAppointmentBySchedule(otherMap1,patientID);
+				listAppointmentBySchedule+=printAppointmentBySchedule(otherMap1,patientID);
 				writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"get Appointment Schedule", "Success");
 			}				
 			else if(task.equalsIgnoreCase("bookAppointment"))
@@ -671,11 +671,11 @@ public class MTLServer extends OperationsPOA{
 			//System.out.println("*** Appointments Summary (SHE) ***");
 			if(task.equalsIgnoreCase("listAppointmentAvailability"))
 			{
-				printAppointmentByType(otherMap2,appointmentType);
+				listAppointmentByType+=printAppointmentByType(otherMap2,appointmentType);
 				writeTxtServerSHE(clientID,patientID,appointmentType,appointmentID,"list Appointment Availability", "Success");
 			}				
 			else if(task.equalsIgnoreCase("getAppointmentSchedule")) {
-				printAppointmentBySchedule(otherMap2,patientID);
+				listAppointmentBySchedule+=printAppointmentBySchedule(otherMap2,patientID);
 				writeTxtServerSHE(clientID,patientID,appointmentType,appointmentID,"get Appointment Schedule", "Success");
 			}				
 			else if(task.equalsIgnoreCase("bookAppointment"))
