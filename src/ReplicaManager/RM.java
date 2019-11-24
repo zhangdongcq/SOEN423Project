@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.omg.CORBA.ORB;
@@ -123,6 +124,7 @@ public class RM {
 	}
 	public static void executeRequest(String sentenceStr) throws Exception {
 		String[] patitions = sentenceStr.split(";");
+		patitions = cleanArgumentList(patitions);
 		if(patitions.length>2) {
 			FE_IP=patitions[0];
 			String FE_UPD_PortStr=patitions[1];
@@ -144,6 +146,15 @@ public class RM {
 			trackFailure(patitions);
 		}
 	}
+	
+	 private static String[] cleanArgumentList(String[] requestArgs)
+	    {
+		 	String[] args = new String[requestArgs.length];
+	    	for(int i = 0; i< requestArgs.length; i++)
+	    		args[i] = (String)requestArgs[i].trim();
+	    	return args;
+	    }
+	 
 	public static boolean checkBufferSequencerID(int expectedID) {
 	    String[] bufferedRequest;
 		for(int i=0;i<processBuffer.size();i++) {

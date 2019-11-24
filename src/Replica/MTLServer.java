@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.omg.CORBA.ORB;
@@ -70,36 +71,10 @@ public class MTLServer extends OperationsPOA{
 	String cityForAdd="";
 	private static ORB orb;
 	public MTLServer() throws RemoteException{
-		super();
-		ArrayList<String> temp1=new ArrayList<String>();
-		ArrayList<String> temp2=new ArrayList<String>();	
-		ArrayList<String> temp3=new ArrayList<String>();	
-		ArrayList<String> temp4=new ArrayList<String>();	
-		ArrayList<String> temp5=new ArrayList<String>();	
-		ArrayList<String> temp6=new ArrayList<String>();	
-		ArrayList<String> temp7=new ArrayList<String>();
-		ArrayList<String> temp8=new ArrayList<String>();	
-		ArrayList<String> temp9=new ArrayList<String>();
-		temp1.add("2");temp1.add("2");temp1.add("MTLP0001");temp2.add("2");temp2.add("2");temp2.add("MTLP0002");
-		temp3.add("2");temp3.add("2");temp3.add("MTLP0003");temp4.add("2");temp4.add("2");temp4.add("MTLP0004");
-		temp5.add("2");temp5.add("2");temp5.add("MTLP0005");temp6.add("2");temp6.add("2");temp6.add("MTLP0006");
-		temp7.add("2");temp7.add("2");temp7.add("MTLP0007");temp8.add("2");temp8.add("2");temp8.add("MTLP0008");
-		temp9.add("0");temp9.add("2");temp9.add("MTLP0009");temp9.add("MTLP0010");temp9.add("MTLP0011");
-	    Map<String,ArrayList<String>> t1=new HashMap<String,ArrayList<String>>();
-		t1.put("MTLA101119",temp1);
-		MTLMap.put("Physician",t1);
-		MTLMap.get("Physician").put("MTLM101119",temp2);
-		MTLMap.get("Physician").put("MTLE101119",temp3);
-		Map<String,ArrayList<String>> t2=new HashMap<String,ArrayList<String>>();
-		t2.put("MTLA101119",temp4);
-		MTLMap.put("Surgeon",t2);
-		MTLMap.get("Surgeon").put("MTLM101119",temp5);
-		MTLMap.get("Surgeon").put("MTLE101119",temp6);
-		Map<String,ArrayList<String>> t3=new HashMap<String,ArrayList<String>>();
-		t3.put("MTLA101119",temp7);
-		MTLMap.put("Dental",t3);
-		MTLMap.get("Dental").put("MTLM101119",temp8);
-		MTLMap.get("Dental").put("MTLE101119",temp9);
+		super();	
+		MTLMap.put("Surgeon",new HashMap<String,ArrayList<String>>());
+		MTLMap.put("Dental",new HashMap<String,ArrayList<String>>());
+		MTLMap.put("Physician",new HashMap<String,ArrayList<String>>());
 	}
 	public void setORB(ORB orb_val) {
 		orb = orb_val;
@@ -247,6 +222,8 @@ public class MTLServer extends OperationsPOA{
 	public synchronized boolean checkAppointmentExisted(String appointmentID, String appointmentType)
 	{
 		boolean key1=MTLMap.containsKey(appointmentType);
+		if(Objects.isNull(MTLMap.get(appointmentType)))
+			return false;
 		boolean key2=MTLMap.get(appointmentType).containsKey(appointmentID);
 		if(key1&&key2) {
 			return true;

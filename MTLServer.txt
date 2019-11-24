@@ -645,3 +645,17 @@ MTLA1234       MTLA1234       -                   -                   add Appoin
 MTLA1234       MTLA1234       -                   -                   add Appointment                    SUCCESS        2019-11-24 09:47:34.584                                     
 MTLA1234       MTLA1234       -                   -                   add Appointment                    SUCCESS        2019-11-24 09:49:44.698                                     
 MTLA1234       MTLA1234       -                   -                   add Appointment                    SUCCESS        2019-11-24 09:57:16.928                                     
+MTLA1234       MTLA1234       -                   -                   add Appointment                    SUCCESS        2019-11-24 10:09:49.154                                     
+MTLA1234       MTLA1234       -                   -                   add Appointment                    SUCCESS        2019-11-24 10:16:14.531                                     
+MTLA1234       MTLA1234       -                   -                   remove Appointment                 SUCCESS        2019-11-24 10:16:49.185                                     
+MTLA1234       MTLA1234       -                   -                   add Appointment                    SUCCESS        2019-11-24 10:17:11.324                                     
+MTLA1234       MTLA1234       -                   -                   add Appointment                    SUCCESS        2019-11-24 10:17:23.98                                      
+-              -              Surgeon             -                   list Appointment Availability      Success        2019-11-24 10:17:29.08                                      
+MTLA1234       MTLA1234       -                   -                   list Appointment Availability      FAIL           2019-11-24 10:17:33.111                                     
+MTLA1234       MTLA1234       -                   -                   add Appointment                    SUCCESS        2019-11-24 10:42:40.454                                     
+MTLA1234       MTLA1234       -                   -                   add Appointment                    SUCCESS        2019-11-24 10:42:55.119                                     
+-              -              Surgeon             -                   list Appointment Availability      Success        2019-11-24 10:43:03.943                                     
+MTLA1234       MTLA1234       -                   -                   list Appointment Availability      FAIL           2019-11-24 10:43:08.02                                      
+MTLA1234       MTLA1234       -                   -                   add Appointment                    SUCCESS        2019-11-24 10:47:43.808                                     
+MTLA1234       MTLA1234       -                   -                   add Appointment                    SUCCESS        2019-11-24 10:48:02.106                                     
+-              -              Surgeon             -                   list Appointment Availability      Success        2019-11-24 10:48:08.82                                      

@@ -232,3 +232,14 @@ MTLA1234       add Appointment                    SUCCESS        2019-11-24 09:4
 MTLA1234       add Appointment                    SUCCESS        2019-11-24 09:47:34.099                                     
 MTLA1234       add Appointment                    SUCCESS        2019-11-24 09:49:44.68                                      
 MTLA1234       add Appointment                    SUCCESS        2019-11-24 09:57:16.923                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 10:09:49.13                                      
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 10:16:14.497                                     
+MTLA1234       remove Appointment                 SUCCESS        2019-11-24 10:16:49.178                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 10:17:11.321                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 10:17:23.976                                     
+MTLA1234       list Appointment Availability      FAIL           2019-11-24 10:17:33.099                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 10:42:40.426                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 10:42:55.115                                     
+MTLA1234       list Appointment Availability      FAIL           2019-11-24 10:43:08.012                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 10:47:43.783                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 10:48:02.102                                     

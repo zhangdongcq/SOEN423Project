@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.omg.CORBA.ORB;
@@ -74,35 +75,9 @@ public class SHEServer extends OperationsPOA{
 	private static ORB orb;
 	public SHEServer() throws RemoteException{
 		super();
-		ArrayList<String> temp1=new ArrayList<String>();
-		ArrayList<String> temp2=new ArrayList<String>();	
-		ArrayList<String> temp3=new ArrayList<String>();	
-		ArrayList<String> temp4=new ArrayList<String>();	
-		ArrayList<String> temp5=new ArrayList<String>();	
-		ArrayList<String> temp6=new ArrayList<String>();	
-		ArrayList<String> temp7=new ArrayList<String>();
-		ArrayList<String> temp8=new ArrayList<String>();	
-		ArrayList<String> temp9=new ArrayList<String>();
-		temp1.add("1");temp1.add("2");temp1.add("SHEP0001");temp1.add("MTLP0001");temp2.add("2");temp2.add("2");temp2.add("SHEP0002");
-		temp3.add("2");temp3.add("2");temp3.add("SHEP0003");temp4.add("2");temp4.add("2");temp4.add("SHEP0004");
-		temp5.add("2");temp5.add("2");temp5.add("SHEP0005");temp6.add("2");temp6.add("2");temp6.add("SHEP0006");
-		temp7.add("1");temp7.add("2");temp7.add("SHEP0007");temp7.add("MTLP0001");temp8.add("2");temp8.add("2");temp8.add("SHEP0008");
-		temp9.add("1");temp9.add("2");temp9.add("SHEP0009");temp9.add("SHEP0010");
-		Map<String,ArrayList<String>> t1=new HashMap<String,ArrayList<String>>();
-		t1.put("SHEA101119",temp1);
-		SHEMap.put("Physician",t1);
-		SHEMap.get("Physician").put("SHEM101119",temp2);
-		SHEMap.get("Physician").put("SHEE101119",temp3);
-		Map<String,ArrayList<String>> t2=new HashMap<String,ArrayList<String>>();
-		t2.put("SHEA101119",temp4);
-		SHEMap.put("Surgeon",t2);
-		SHEMap.get("Surgeon").put("SHEM101119",temp5);
-		SHEMap.get("Surgeon").put("SHEE101119",temp6);
-		Map<String,ArrayList<String>> t3=new HashMap<String,ArrayList<String>>();
-		t3.put("SHEA111119",temp7);
-		SHEMap.put("Dental",t3);
-		SHEMap.get("Dental").put("SHEM101119",temp8);
-		SHEMap.get("Dental").put("SHEE101119",temp9);
+		SHEMap.put("Surgeon",new HashMap<String,ArrayList<String>>());
+		SHEMap.put("Dental",new HashMap<String,ArrayList<String>>());
+		SHEMap.put("Physician",new HashMap<String,ArrayList<String>>());
 	}
 	public void setORB(ORB orb_val) {
 		orb = orb_val;
@@ -247,6 +222,8 @@ public class SHEServer extends OperationsPOA{
 	public synchronized boolean checkAppointmentExisted(String appointmentID, String appointmentType)
 	{
 		boolean key1=SHEMap.containsKey(appointmentType);
+		if(Objects.isNull(SHEMap.get(appointmentType)))
+			return false;
 		boolean key2=SHEMap.get(appointmentType).containsKey(appointmentID);
 		if(key1&&key2) {
 			return true;

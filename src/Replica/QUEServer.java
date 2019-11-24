@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.omg.CORBA.ORB;
@@ -74,39 +75,9 @@ public class QUEServer extends OperationsPOA{
 	private static ORB orb;
 	public QUEServer() throws RemoteException{
 		super();
-		ArrayList<String> temp1=new ArrayList<String>();
-		ArrayList<String> temp2=new ArrayList<String>();	
-		ArrayList<String> temp3=new ArrayList<String>();	
-		ArrayList<String> temp4=new ArrayList<String>();	
-		ArrayList<String> temp5=new ArrayList<String>();	
-		ArrayList<String> temp6=new ArrayList<String>();	
-		ArrayList<String> temp7=new ArrayList<String>();
-		ArrayList<String> temp8=new ArrayList<String>();	
-		ArrayList<String> temp9=new ArrayList<String>();
-		ArrayList<String> temp10=new ArrayList<String>();
-		temp1.add("1");temp1.add("2");temp1.add("QUEP0001");temp1.add("MTLP0001");temp2.add("2");temp2.add("2");temp2.add("QUEP0002");temp2.add("MTLP0004");
-		temp3.add("2");temp3.add("2");temp3.add("QUEP0003");temp4.add("2");temp4.add("2");temp4.add("QUEP0004");
-		temp5.add("2");temp5.add("2");temp5.add("QUEP0005");temp6.add("2");temp6.add("2");temp6.add("QUEP0006");
-		temp7.add("2");temp7.add("2");temp7.add("QUEP0007");temp8.add("2");temp8.add("2");temp8.add("QUEP0008");
-		temp9.add("1");temp9.add("2");temp9.add("QUEP0009");temp9.add("QUEP0010");
-		temp10.add("2");temp10.add("3");temp10.add("QUEP0009");
-		Map<String,ArrayList<String>> t1=new HashMap<String,ArrayList<String>>();
-		t1.put("QUEA101119",temp1);
-		QUEMap.put("Physician",t1);
-		QUEMap.get("Physician").put("QUEM101119",temp2);
-		QUEMap.get("Physician").put("QUEE101119",temp3);
-		QUEMap.get("Physician").put("QUEE111119",temp4);
-		QUEMap.get("Physician").put("QUEE191119",temp10);
-		Map<String,ArrayList<String>> t2=new HashMap<String,ArrayList<String>>();
-		t2.put("QUEA101119",temp4);
-		QUEMap.put("Surgeon",t2);
-		QUEMap.get("Surgeon").put("QUEM101119",temp5);
-		QUEMap.get("Surgeon").put("QUEE101119",temp6);
-		Map<String,ArrayList<String>> t3=new HashMap<String,ArrayList<String>>();
-		t3.put("QUEA101119",temp7);
-		QUEMap.put("Dental",t3);
-		QUEMap.get("Dental").put("QUEM101119",temp8);
-		QUEMap.get("Dental").put("QUEE101119",temp9);
+		QUEMap.put("Surgeon",new HashMap<String,ArrayList<String>>());
+		QUEMap.put("Dental",new HashMap<String,ArrayList<String>>());
+		QUEMap.put("Physician",new HashMap<String,ArrayList<String>>());
 	}
 	public void setORB(ORB orb_val) {
 		orb = orb_val;
@@ -252,6 +223,8 @@ public class QUEServer extends OperationsPOA{
 	public synchronized boolean checkAppointmentExisted(String appointmentID, String appointmentType)
 	{
 		boolean key1=QUEMap.containsKey(appointmentType);
+		if(Objects.isNull(QUEMap.get(appointmentType)))
+			return false;
 		boolean key2=QUEMap.get(appointmentType).containsKey(appointmentID);
 		if(key1&&key2) {
 			return true;
