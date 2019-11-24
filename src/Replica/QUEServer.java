@@ -577,8 +577,8 @@ public class QUEServer extends OperationsPOA{
 				accessCount1=1;
 				//SocketCli.close();
 			}
-			listAppointmentByType+=	"*** Appointments Summary (MTL) ***"+"\n";	
-			listAppointmentBySchedule+="*** Appointments Summary (MTL) ***"+"\n";
+//			listAppointmentByType+=	"*** Appointments Summary (MTL) ***"+"\n";	
+//			listAppointmentBySchedule+="*** Appointments Summary (MTL) ***"+"\n";
 			//System.out.println("*** Appointments Summary (MTL) ***");
 			if(task.equalsIgnoreCase("listAppointmentAvailability")) {
 				listAppointmentByType+=printAppointmentByType(otherMap1,appointmentType);
