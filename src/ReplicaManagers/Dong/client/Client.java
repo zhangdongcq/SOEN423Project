@@ -46,7 +46,7 @@ public class Client {
       try {
          aSocket = new MulticastSocket(6790);
          System.out.println("Replica Manager 1111 Started............");
-         aSocket.joinGroup(InetAddress.getByName("228.5.6.9"));
+         aSocket.joinGroup(InetAddress.getByName("228.5.6.10"));
          byte[] buffer = new byte[1024];
          while (true) {
             DatagramPacket requestFromSe = new DatagramPacket(buffer, buffer.length);

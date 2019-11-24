@@ -19,7 +19,7 @@ public class Sequencer {
    private static Map<Integer, String> msgBackup = new HashMap<>();
    private static Queue<String> allMsgs = new LinkedList<>();
    private static Integer globalSequenceCounter = 0;
-   private static final String multicastAddress = "228.5.6.9";
+   private static final String multicastAddress = "228.5.6.10";
    private static final int multicastPort = 6790;
    private static DatagramPacket request;
 

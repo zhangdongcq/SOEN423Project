@@ -190,9 +190,61 @@ public class Utils {
               String.join(",", localResponse, remoteResponse1, remoteResponse2)
                       .split(",")
       );
-      allResponses.sort(Comparator.comparing((String o) -> o.substring(0, 5)).thenComparing(o -> o.substring(5)));
+//      allResponses.sort(Comparator.comparing((String o) -> o.substring(0, 5)).thenComparing(o -> o.substring(5)));
+      allResponses.sort(Comparator.naturalOrder());
       return String.join(";", allResponses);
    }
+
+   public static String cleanAndConcatAllResponsesForGetSchedule(String localResponse, String remoteResponse1, String remoteResponse2) {
+
+      List<String> phy = new ArrayList<>();
+      List<String> den = new ArrayList<>();
+      List<String> sur = new ArrayList<>();
+      getAppData(phy, den, sur, localResponse);
+      getAppData(phy, den, sur, remoteResponse1);
+      getAppData(phy, den, sur, remoteResponse2);
+      sortList(phy);
+      sortList(den);
+      sortList(sur);
+      StringBuffer sb = new StringBuffer();
+      sb.append(concateList(den, APP_TYPE_DENTAL));
+      sb.append(concateList(phy, APP_TYPE_PHYSICIAN));
+      sb.append(concateList(sur, APP_TYPE_SURGEON));
+      return sb.toString().substring(1);
+   }
+
+   private static void getAppData(List<String> phy, List<String> den, List<String> sur, String response) {
+
+      String[] s1 = response
+              .replace("{", "")
+              .replace("}", "")
+              .trim().split("]"); //pysician=[MTLA121212, MTLE121212    ,dental=[MTLA101010, MTLE1212
+      for (String s : s1) {
+         if (s.startsWith(",")) s = s.substring(2);
+         String[] s2 = s.replace("=[", ",").replace(", ", ",").split(",");
+         if (s2[0].contains(APP_TYPE_PHYSICIAN)) {
+            for (int i = 1; i < s2.length; ++i) phy.add(APP_TYPE_PHYSICIAN + ";"+s2[i]);
+         } else if (s2[0].contains(APP_TYPE_DENTAL)) {
+            for (int i = 1; i < s2.length; ++i) den.add(APP_TYPE_DENTAL + ";" +s2[i]);
+         } else if (s2[0].contains(APP_TYPE_SURGEON)) {
+            for (int i = 1; i < s2.length; ++i) sur.add(APP_TYPE_SURGEON + ";" +s2[i]);
+         }
+      }
+   }
+
+   private static void sortList(List<String> list) {
+      if (list.size() == 0) return;
+      list.sort(Comparator.comparing((String o) -> o.split(";")[1].substring(0, 5)).thenComparing(o -> o.split(";")[1].substring(5)));
+   }
+
+   private static String concateList(List<String> list, String name) {
+      String result = "";
+      if (list.size() != 0) {
+         result = ";" + String.join(";", list);
+      }
+      return result;
+   }
+
 
    public static String getRealAppType(String optionNumber) {
       switch (optionNumber) {

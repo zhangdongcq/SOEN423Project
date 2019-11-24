@@ -1,5 +1,6 @@
 package ReplicaManagers.Dong.server;
 
+import static ReplicaManagers.Dong.utils_server.Utils.cleanAndConcatAllResponsesForGetSchedule;
 import static ReplicaManagers.Dong.utils_server.Utils.getCityFromAppointmentID;
 import static ReplicaManagers.Dong.utils_server.Utils.cleanAndConcatAllResponses;
 
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -190,6 +192,7 @@ public class ServerImpl extends IServerPOA {
       Map<String, String> response = new HashMap<>();
       //{MTLE131119=3, MTLE141119=6} ==> MTLE131119 3, MTLE141119 6
       cityRecords.get(appointmentType).forEach((appId, strings) -> response.put(appId, strings.get(0)));
+      System.out.println("LocalResponse For app avaliable:" + response);
       return response.isEmpty() ? "" : response.toString()
               .replace("=", " ")
               .replace("{", " ")
@@ -247,24 +250,30 @@ public class ServerImpl extends IServerPOA {
       } catch (IOException e) {
          logger.log(Level.SEVERE, "IO in ReplicaManagers.Dong.server side (ReplicaManagers.Dong.server impl): " + e.getMessage());
       }
-      return cleanAndConcatAllResponses(localResponse, remoteResponse1, remoteResponse2);
+      return cleanAndConcatAllResponsesForGetSchedule(localResponse, remoteResponse1, remoteResponse2);
    }
 
    public String getLocalAppSchedule(String patientID) {
       if (!patientsBookingCount.containsKey(patientID)) {
          return "";
       }
-      Map<String, String> appointmentIdRecords = new HashMap<>();
-
-      cityRecords.forEach((appType, appIdMap) -> appIdMap.forEach((appIdString, appDetailList) -> {
-         if (appDetailList.contains(patientID)) {
-            appointmentIdRecords.put(appType, appIdString);
+      Map<String, List<String>> appointmentIdRecords = new HashMap<>();
+      for (Map.Entry<String, Map<String, List<String>>> appType : cityRecords.entrySet()) {
+         for (Map.Entry<String, List<String>> appId : appType.getValue().entrySet()) {
+            if (appId.getValue().contains(patientID)) {
+               if (Objects.isNull(appointmentIdRecords.get(appType.getKey()))) {
+                  appointmentIdRecords.put(appType.getKey(), new ArrayList<>());
+               }
+               appointmentIdRecords.get(appType.getKey()).add(appId.getKey());
+            }
          }
-      }));
+      }
       return appointmentIdRecords.toString()
-              .replace("=", ";")
-              .replace("{", " ")
-              .replace("}", " ")
+//              .replace("=", ";")
+//              .replace("{", "")
+//              .replace("}", "")
+//              .replace("[", "")
+//              .replace("]", "")
               .trim();
    }
 }
