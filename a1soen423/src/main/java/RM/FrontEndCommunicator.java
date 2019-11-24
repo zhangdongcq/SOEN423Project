@@ -15,7 +15,8 @@ public class FrontEndCommunicator {
         try {
             aSocket = new DatagramSocket();
             byte[] messageByte = message.getBytes();
-            InetAddress aHost = InetAddress.getByName(ipPort.getKey());
+            //InetAddress aHost = InetAddress.getByName(ipPort.getKey());
+            InetAddress aHost = InetAddress.getByName("132.205.64.87");
 
             DatagramPacket request = new DatagramPacket(messageByte, messageByte.length, aHost, ipPort.getValue());
             aSocket.send(request);

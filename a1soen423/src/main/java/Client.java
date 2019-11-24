@@ -18,6 +18,8 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 public class Client {
+	
+	private static boolean hasFailed = false;
 
     public static void main(String[] args) {
 
@@ -33,6 +35,11 @@ public class Client {
                 String sequencerString = SequencerCommunicator.receiveFromSequencer(MessageExecutor.getCountFail());
                 List<String> requestArguments = Arrays.asList(sequencerString.split(";"));
                 if(hasReplicaFailureRequest(requestArguments)) {
+                	continue;
+                } 
+                if(hasFailed)
+                {
+                	System.out.println("This replica has failed, no longer executing requests");
                 	continue;
                 }
                 cleanArgumentList(requestArguments);
@@ -65,9 +72,12 @@ public class Client {
         	System.out.println("A replica has failed: " + requestArguments.stream().reduce("", (a,b)-> (a + ";" + b)));
         	if(Integer.parseInt(requestArguments.get(0))== MessageExecutor.getRmNumber())
         	{
-        		MessageExecutor.setCountFail(3);
-        		System.out.println("This replica has failed, no longer executing requests");
+        		int currentCount = MessageExecutor.getCountFail();
+        		MessageExecutor.setCountFail((currentCount +1));
+        		System.out.println("This replica has recieved a failure, failcount is " + (currentCount+1));
         	}
+        	if(MessageExecutor.getCountFail() >2)
+        		hasFailed = true;
         	return true;
         }
     	return false;

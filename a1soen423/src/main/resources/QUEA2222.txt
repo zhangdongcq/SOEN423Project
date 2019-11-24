@@ -1,0 +1,6 @@
+2019-11-24 05:30:23PM > Request:[ login ] Response:[ successful login ]
+2019-11-24 05:30:23PM > Request:[   132.205.64.87 7789 2 QUEA2222 addAppointment QUEA121212 Physician 23 ] Response:[ 2;2;SUCCESS ]
+2019-11-24 05:30:51PM > Request:[ login ] Response:[ successful login ]
+2019-11-24 05:30:51PM > Request:[   132.205.64.87 7789 3 QUEA2222 bookAppointment MTLP2222 QUEA121212 Physician ] Response:[ 3;2;SUCCESS ]
+2019-11-24 05:32:56PM > Request:[ login ] Response:[ successful login ]
+2019-11-24 05:32:57PM > Request:[   132.205.64.87 7789 6 QUEA2222 listAppointmentAvailability Physician ] Response:[ 6;2;MTLA121212 2;QUEA121212 23 ]

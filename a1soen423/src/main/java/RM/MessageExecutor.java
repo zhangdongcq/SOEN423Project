@@ -33,8 +33,6 @@ public class MessageExecutor {
             portNumber=Integer.parseInt(FE_UPD_PortStr);
             sequencerID=Integer.parseInt(requestArguments.get(2));
             
-            //expectedID = sequencerID; //TODO remove during actual test
-            
             if(sequencerID==expectedID) {
                 response = CorbaDelivery.deliverCorbaRequest(requestArguments ,remotelyInvokableHospital);
                 encapsulateResponse();
@@ -123,5 +121,10 @@ public class MessageExecutor {
     public static int getRmNumber()
     {
     	return RMnumber;
+    }
+    
+    public static int getFailCount()
+    {
+    	return countFail;
     }
 }

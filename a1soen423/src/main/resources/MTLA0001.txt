@@ -1,0 +1,6 @@
+2019-11-24 05:54:17PM > Request:[ login ] Response:[ successful login ]
+2019-11-24 05:54:17PM > Request:[   127.0.0.1 7789 1 MTLA0001 addAppointment MTLA121212 Surgeon 3 ] Response:[ 1;2;SUCCESS ]
+2019-11-24 06:16:54PM > Request:[ login ] Response:[ successful login ]
+2019-11-24 06:16:54PM > Request:[   127.0.0.1 7789 1 MTLA0001 addAppointment MTLA121212 Surgeon 3 ] Response:[ 16;2;SUCCESS ]
+2019-11-24 06:17:48PM > Request:[ login ] Response:[ successful login ]
+2019-11-24 06:17:48PM > Request:[   127.0.0.1 7789 2 MTLA0001 bookAppointment MTLP0009 MTLA121212 Surgeon ] Response:[ 16;2;SUCCESS ]
