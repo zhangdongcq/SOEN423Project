@@ -2,8 +2,13 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
+<<<<<<< Updated upstream
   <date>2019-11-24T13:00:51</date>
   <millis>1574618451561</millis>
+=======
+  <date>2019-11-24T13:03:00</date>
+  <millis>1574618580225</millis>
+>>>>>>> Stashed changes
   <sequence>1</sequence>
   <logger>ReplicaManagers/Dong/server</logger>
   <level>INFO</level>
