@@ -48,7 +48,7 @@ public class AdminRM extends RM implements Runnable{
 				messageToFE=sequencerID+";"+"4"+";"+resultStr;
 				MTLobj.writeTxtClient(clientID,"book Appointment", resultStr);
 				MTLobj.writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"book Appointment", resultStr);
-			}else if(functionName.equalsIgnoreCase("get Appointment Schedule")) {
+			}else if(functionName.equalsIgnoreCase("getAppointmentSchedule")) {
 				patientID=patitions[5];
 				result=MTLobj.getAppointmentSchedule(patientID);
 				if(!result.isEmpty())
@@ -133,7 +133,7 @@ public class AdminRM extends RM implements Runnable{
 				messageToFE=sequencerID+";"+"4"+";"+resultStr;
 				QUEobj.writeTxtClient(clientID,"book Appointment", resultStr);
 				QUEobj.writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"book Appointment", resultStr);
-			}else if(functionName.equalsIgnoreCase("get Appointment Schedule")) {
+			}else if(functionName.equalsIgnoreCase("getAppointmentSchedule")) {
 				patientID=patitions[5];
 				result=QUEobj.getAppointmentSchedule(patientID);
 				if(!result.isEmpty())
@@ -218,7 +218,7 @@ public class AdminRM extends RM implements Runnable{
 				messageToFE=sequencerID+";"+"4"+";"+resultStr;
 				SHEobj.writeTxtClient(clientID,"book Appointment", resultStr);
 				SHEobj.writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"book Appointment", resultStr);
-			}else if(functionName.equalsIgnoreCase("get Appointment Schedule")) {
+			}else if(functionName.equalsIgnoreCase("getAppointmentSchedule")) {
 				patientID=patitions[5];
 				result=SHEobj.getAppointmentSchedule(patientID);
 				if(!result.isEmpty())
