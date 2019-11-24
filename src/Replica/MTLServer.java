@@ -72,9 +72,10 @@ public class MTLServer extends OperationsPOA{
 	private static ORB orb;
 	public MTLServer() throws RemoteException{
 		super();	
-		MTLMap.put("Surgeon",new HashMap<String,ArrayList<String>>());
+		
 		MTLMap.put("Dental",new HashMap<String,ArrayList<String>>());
 		MTLMap.put("Physician",new HashMap<String,ArrayList<String>>());
+		MTLMap.put("Surgeon",new HashMap<String,ArrayList<String>>());
 	}
 	public void setORB(ORB orb_val) {
 		orb = orb_val;
