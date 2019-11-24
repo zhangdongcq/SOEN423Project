@@ -202,7 +202,7 @@ public class ReplicaManager {
 		            }break;  
 		            case "cancelAppointment": {
 		            	String patientID = arg.get(0);
-		            	String appointmentID = arg.get(0);
+		            	String appointmentID = arg.get(1);
 		            	result = result + reference.cancelAppointment(patientID, appointmentID);	
 		            }break;  
 		            case "swapAppointment": {
