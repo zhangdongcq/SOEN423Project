@@ -75,9 +75,10 @@ public class QUEServer extends OperationsPOA{
 	private static ORB orb;
 	public QUEServer() throws RemoteException{
 		super();
-		QUEMap.put("Surgeon",new HashMap<String,ArrayList<String>>());
+		
 		QUEMap.put("Dental",new HashMap<String,ArrayList<String>>());
 		QUEMap.put("Physician",new HashMap<String,ArrayList<String>>());
+		QUEMap.put("Surgeon",new HashMap<String,ArrayList<String>>());
 	}
 	public void setORB(ORB orb_val) {
 		orb = orb_val;
