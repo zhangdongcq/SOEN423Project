@@ -11,6 +11,7 @@ class UdpServer extends Thread {
     private static final Logger logger = Logger.getLogger("udp_server");
     private int targetUdpPort;
     private String targetAddress;
+    public static long timeStampSendRequestToSequencer;
 
     public void setMsgToSend(String msgToSend) {
         this.msgToSend = msgToSend;
@@ -49,6 +50,7 @@ class UdpServer extends Thread {
                         new DatagramPacket(toSend, toSend.length, serverName2, targetUdpPort);
                 System.out.println("(sendReliableAsyncMessageToSequencer)Message will be sent to sequencer: "+ msgToSend);
                 clientSocket.send(requestTarget);
+                timeStampSendRequestToSequencer = System.currentTimeMillis();
 
                 //Receive
                 byte[] repliedData = new byte[1024];
