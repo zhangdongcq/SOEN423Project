@@ -576,14 +576,15 @@ public class SHEServer extends OperationsPOA{
 				accessCount1=1;
 				//SocketCli.close();
 			}
-
+			listAppointmentByType+=	"*** Appointments Summary (MTL) ***"+"\n";	
+			listAppointmentBySchedule+="*** Appointments Summary (MTL) ***"+"\n";
 			//System.out.println("*** Appointments Summary (MTL) ***");
 			if(task.equalsIgnoreCase("listAppointmentAvailability")) {
-				printAppointmentByType(otherMap1,appointmentType);
+				listAppointmentByType+=printAppointmentByType(otherMap1,appointmentType);
 				writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"list Appointment Availability", "Success");
 			}				
 			else if(task.equalsIgnoreCase("getAppointmentSchedule")) {
-				printAppointmentBySchedule(otherMap1,patientID);
+				listAppointmentBySchedule+=printAppointmentBySchedule(otherMap1,patientID);
 				writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"get Appointment Schedule", "Success");
 			}				
 			else if(task.equalsIgnoreCase("bookAppointment")) {
@@ -641,14 +642,15 @@ public class SHEServer extends OperationsPOA{
 				accessCount2=1;
 				//SocketCli2.close();
 			}
-
+			listAppointmentByType+=	"*** Appointments Summary (QUE) ***"+"\n";	
+			listAppointmentBySchedule+="*** Appointments Summary (QUE) ***"+"\n";
 			//System.out.println("*** Appointments Summary (QUE) ***");
 			if(task.equalsIgnoreCase("listAppointmentAvailability")) {
-				printAppointmentByType(otherMap2,appointmentType);
+				listAppointmentByType+=printAppointmentByType(otherMap2,appointmentType);
 				writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"list Appointment Availability", "Success");
 			}				
 			else if(task.equalsIgnoreCase("getAppointmentSchedule")) {
-				printAppointmentBySchedule(otherMap2,patientID);
+				listAppointmentBySchedule+=printAppointmentBySchedule(otherMap2,patientID);
 				writeTxtServerQUE(clientID,patientID,appointmentType,appointmentID,"get Appointment Schedule", "Success");
 			}				
 			else if(task.equalsIgnoreCase("bookAppointment")) {
@@ -673,15 +675,16 @@ public class SHEServer extends OperationsPOA{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-
+		listAppointmentByType+=	"*** Appointments Summary (SHE) ***"+"\n";	
+		listAppointmentBySchedule+="*** Appointments Summary (SHE) ***"+"\n";
 		//System.out.println("*** Appointments Summary (SHE) ***");
 		if(task.equalsIgnoreCase("listAppointmentAvailability")) {
 			writeTxtServerSHE(clientID,patientID,appointmentType,appointmentID,"list Appointment Availability", "Success");
-			printAppointmentByType(SHEMap,appointmentType);
+			listAppointmentByType+=printAppointmentByType(SHEMap,appointmentType);
 		}	
 		else if(task.equalsIgnoreCase("getAppointmentSchedule")) {
 			writeTxtServerSHE(clientID,patientID,appointmentType,appointmentID,"get Appointment Schedule", "Success");
-			printAppointmentBySchedule(SHEMap,patientID);
+			listAppointmentBySchedule+=printAppointmentBySchedule(SHEMap,patientID);
 		}		
 		else if(task.equalsIgnoreCase("bookAppointment")) {
 			writeTxtServerSHE(clientID,patientID,appointmentType,appointmentID,"book Appointment", "accessed");
