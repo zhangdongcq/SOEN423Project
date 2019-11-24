@@ -33,14 +33,14 @@ public class ReplicaManager {
 	
 		boolean running = true;
 		logFile = new Log("RM2.txt");
-		
-		while(running){
+		int countFail =0;
+		while(countFail < 3 ){
 			
 			String sequencerRequest = getSequencerRequest();
 			List<String> parts = Arrays.asList(sequencerRequest.split(";"));
 			
 			if(parts.size() == 4 && parts.get(2).equals("RM"+rmID) && parts.get(3).equals("FAIL")){
-				running = false;
+				countFail++;
 				System.out.println(logFile.writeLog("RM"+rmID+" received a message ["+parts.get(0)+" "+parts.get(1)+"] from Sequencer"));
 				continue;	
 			}else if(parts.size() > 4){
