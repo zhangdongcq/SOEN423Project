@@ -66,9 +66,11 @@ public class PatientRM extends RM implements Runnable{
 				MTLobj.writeTxtClient(clientID,"get Appointment Schedule", resultStr);
 				MTLobj.writeTxtServerMTL(clientID,patientID,"-","-","get Appointment Schedule", resultStr);
 			}else if(functionName.equalsIgnoreCase("cancelAppointment")) {
+
 				String[] slots=patitions[5].split(";");
 				patientID=slots[0];
 				appointmentID=slots[1];
+
 //appointmentType=patitions[7];
 				
 				String result1=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Surgeon");
@@ -123,9 +125,11 @@ public class PatientRM extends RM implements Runnable{
 				QUEobj.writeTxtClient(clientID,"get Appointment Schedule", resultStr);
 				QUEobj.writeTxtServerMTL(clientID,patientID,"-","-","get Appointment Schedule", resultStr);
 			}else if(functionName.equalsIgnoreCase("cancelAppointment")) {
+
 				String[] slots=patitions[5].split(";");
 				patientID=slots[0];
 				appointmentID=slots[1];
+
 //appointmentType=patitions[7];
 				
 				String result1=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Surgeon");
@@ -180,9 +184,11 @@ public class PatientRM extends RM implements Runnable{
 				SHEobj.writeTxtClient(clientID,"get Appointment Schedule", resultStr);
 				SHEobj.writeTxtServerMTL(clientID,patientID,"-","-","get Appointment Schedule", resultStr);
 			}else if(functionName.equalsIgnoreCase("cancelAppointment")) {
+
 				String[] slots=patitions[5].split(";");
 				patientID=slots[0];
 				appointmentID=slots[1];
+
 //appointmentType=patitions[7];
 				
 				String result1=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Surgeon");

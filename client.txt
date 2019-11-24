@@ -243,3 +243,38 @@ MTLA1234       add Appointment                    SUCCESS        2019-11-24 10:4
 MTLA1234       list Appointment Availability      FAIL           2019-11-24 10:43:08.012                                     
 MTLA1234       add Appointment                    SUCCESS        2019-11-24 10:47:43.783                                     
 MTLA1234       add Appointment                    SUCCESS        2019-11-24 10:48:02.102                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 11:23:24.479                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 11:23:46.067                                     
+MTLA1234       list Appointment Availability      FAIL           2019-11-24 11:24:01.255                                     
+MTLA1234       book Appointment                   SUCCESS        2019-11-24 11:25:00.688                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 11:36:42.827                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 11:37:08.951                                     
+MTLA1234       book Appointment                   SUCCESS        2019-11-24 11:37:40.687                                     
+MTLA1234       swap Appointment                   SUCCESS        2019-11-24 11:38:39.907                                     
+MTLA1234       list Appointment Availability      FAIL           2019-11-24 11:41:37.187                                     
+MTLA1234       list Appointment Availability      FAIL           2019-11-24 11:42:16.418                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 12:22:51.235                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 12:23:21.229                                     
+MTLA1234       list Appointment Availability      SUCCESS        2019-11-24 12:23:35.439                                     
+MTLA1234       list Appointment Availability      SUCCESS        2019-11-24 12:24:08.993                                     
+MTLA1234       book Appointment                   SUCCESS        2019-11-24 12:24:58.216                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 12:48:13.505                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 12:49:45.972                                     
+MTLA1234       list Appointment Availability      SUCCESS        2019-11-24 12:50:42.686                                     
+MTLA1234       list Appointment Availability      SUCCESS        2019-11-24 12:50:54.088                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 12:57:05.789                                     
+MTLA1234       list Appointment Availability      SUCCESS        2019-11-24 12:57:17.161                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 12:57:31.185                                     
+MTLA1234       list Appointment Availability      SUCCESS        2019-11-24 12:57:38.5                                       
+MTLA1234       book Appointment                   SUCCESS        2019-11-24 12:58:46.077                                     
+MTLA1234       swap Appointment                   SUCCESS        2019-11-24 13:00:19.0                                       
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 13:04:20.503                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 13:04:42.284                                     
+MTLA1234       book Appointment                   SUCCESS        2019-11-24 13:05:05.887                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 13:17:07.686                                     
+MTLA1234       book Appointment                   SUCCESS        2019-11-24 13:17:28.538                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 13:25:57.998                                     
+MTLA1234       book Appointment                   SUCCESS        2019-11-24 13:26:15.129                                     
+MTLA1234       get Appointment Schedule           FAIL           2019-11-24 13:26:28.749                                     
+MTLA1234       get Appointment Schedule           SUCCESS        2019-11-24 13:30:24.706                                     
+MTLA1234       get Appointment Schedule           SUCCESS        2019-11-24 13:31:38.037                                     
