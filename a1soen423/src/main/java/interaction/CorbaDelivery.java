@@ -35,8 +35,11 @@ public class CorbaDelivery {
                         deliveryArguments.get(5), StringConversion.getAppointmentType(deliveryArguments.get(6))
                 );
             case "listAppointmentAvailability":
-                return remotelyInvokableHospital.listAppointmentAvailability(
+            	String result =  remotelyInvokableHospital.listAppointmentAvailability(
                         StringConversion.getAppointmentType(deliveryArguments.get(5)));
+            	if(result.isEmpty())
+            		return ";";
+            	return result;
             case "swapAppointment":
                     return remotelyInvokableHospital.swapAppointment(deliveryArguments.get(5), deliveryArguments.get(6),
                             StringConversion.getAppointmentType(deliveryArguments.get(7)), deliveryArguments.get(8),

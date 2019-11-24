@@ -1,0 +1,8 @@
+2019-11-23 02:49:24PM > Request:[ login ] Response:[ successful login ]
+2019-11-23 02:49:24PM > Request:[   127.0.0.1 7789 16 QUEA1111 addAppointment QUEA181111 Physician 2 ] Response:[ 16;2;SUCCESS ]
+2019-11-23 02:49:33PM > Request:[ login ] Response:[ successful login ]
+2019-11-23 02:49:33PM > Request:[   127.0.0.1 7789 17 QUEA1111 addAppointment QUEA181111 Surgeon 2 ] Response:[ 17;2;SUCCESS ]
+2019-11-23 02:49:55PM > Request:[ login ] Response:[ successful login ]
+2019-11-23 02:49:55PM > Request:[   127.0.0.1 7789 18 QUEA1111 bookAppointment MTLP1234 QUEA181111 Physician ] Response:[ 18;2;SUCCESS ]
+2019-11-23 02:50:14PM > Request:[ login ] Response:[ successful login ]
+2019-11-23 02:50:14PM > Request:[   127.0.0.1 7789 19 QUEA1111 bookAppointment MTLP1234 QUEA181111 Surgeon ] Response:[ 19;2;FAIL ]
