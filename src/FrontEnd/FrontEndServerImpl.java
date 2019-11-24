@@ -32,6 +32,8 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    public long timeStampReceiveFromRM;
    //a hashmap to store each RM name and its response time (RTT)
    private HashMap<String, Integer> rtt = new HashMap<String, Integer>();
+   //hashmap <RMid, <commnad, numberOfFails>>
+   private HashMap <String, HashMap<String, Integer>>  failureRecords = new HashMap <String, HashMap<String, Integer>>();
    public int RTT;
 
    FrontEndServerImpl(String frontEndName) {
@@ -89,6 +91,13 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
             String response = getResponseFromRM(aSocket, buffer);
             String[] detailedResponse = response.split(";");
             currentSequenceId = detailedResponse[0];
+            String rmID = detailedResponse[1];
+            String answer = detailedResponse[2];
+            String command = UdpServer.command;
+//            if(answer.equals("FAIL"))
+//            	addToFailureRecords(rmID, command, answer);
+//            	//check if there is a failed rm
+//            else
             addMessageToRecords(detailedResponse);
             allResponsesReceived = Utils.isAllPopulated(allRequestRecords.get(currentSequenceId), numberOfRMs);
 
@@ -109,6 +118,52 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
       }
 //      if (aSocket != null) aSocket.close();
       finalResult = false;
+   }
+   
+   //there migh be more than one faulty RMs, so return a String containing all faulty Rm names
+   public String findFaultyRMs (){
+	   String faultyRMs = "";
+	   if(!failureRecords.isEmpty()){
+		   for(HashMap.Entry<String, HashMap<String, Integer>> entry1: failureRecords.entrySet()){
+				   for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
+					   if(entry2.getValue() == 3){
+						   faultyRMs = faultyRMs + entry1.getKey()+";";
+					   }
+					   
+				   }
+		   }
+	   }
+	return faultyRMs;
+   }
+   
+   
+   public void addToFailureRecords(String rmID, String command, String ans){
+	   if(!failureRecords.isEmpty()){
+		   for(HashMap.Entry<String, HashMap<String, Integer>> entry1: failureRecords.entrySet()){
+			   if(entry1.getKey().equals(rmID)){
+				   for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
+						if(entry2.getKey().equals(command)){
+							entry1.getValue().replace(entry2.getKey(), entry2.getValue()+1);
+							return;
+						}
+					}
+				   	HashMap<String, Integer> inner = new HashMap<String, Integer>();
+				   	inner.put(command, 1);
+				   	failureRecords.put(entry1.getKey(), inner);
+				   	return;
+				}
+		    }
+		   	HashMap<String, Integer> inner = new HashMap<String, Integer>();
+		   	inner.put(command, 1);
+		   	failureRecords.put(rmID, inner);
+		   	return;
+	   }else{
+		   //if the hashMap is totally empty, add the first record
+		   	HashMap<String, Integer> inner = new HashMap<String, Integer>();
+	   		inner.put(command, 1);
+	   		failureRecords.put(rmID, inner);
+	   }
+		   
    }
 
    private void addMessageToRecords(String[] detailedResponse) {

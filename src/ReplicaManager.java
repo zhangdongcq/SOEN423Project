@@ -152,7 +152,7 @@ public class ReplicaManager {
 		String result = sequenceNum.toString()+";"+rmID+";";
 		if(sequenceNum == currentSequenceNum){
 			try {
-	            ORB orb = ORB.init(new String[]{"-ORBInitialPort","1050","-ORBInitialHost","localhost"},null);
+	            ORB orb = ORB.init(new String[]{"-ORBInitialPort","1055","-ORBInitialHost","localhost"},null);
 	            org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
 	            NamingContext ncRef = NamingContextHelper.narrow(objRef);
 	
