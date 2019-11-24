@@ -21,16 +21,16 @@ public class DhmsServer {
 	        	
 	        	Properties props = new Properties();
 	            //Generate and initiate the ORB
-	            props.put("org.omg.CORBA.ORBInitialPort", "1050");
+	            props.put("org.omg.CORBA.ORBInitialPort", "1055");
 	            props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
 	            ORB orb = ORB.init(args, props);
 	        	
 	        	POA rootpoa = (POA)orb.resolve_initial_references("RootPOA");
 	            rootpoa.the_POAManager().activate();
 	                
-	            DhmsServant MTL = new DhmsServant("localhost","1050","MTL");
-	            DhmsServant QUE = new DhmsServant("localhost","1050","QUE");
-	            DhmsServant SHE = new DhmsServant("localhost","1050","SHE");
+	            DhmsServant MTL = new DhmsServant("localhost","1055","MTL");
+	            DhmsServant QUE = new DhmsServant("localhost","1055","QUE");
+	            DhmsServant SHE = new DhmsServant("localhost","1055","SHE");
 	            	
 	            //add some initial data in the servers
 //	            MTL.addAppointment("MTLE100919", "Physician", 5);
@@ -76,7 +76,7 @@ public class DhmsServer {
 	            path = new NameComponent[] {nc3};
 	            ncRef.rebind(path, hrefSHE);
 	            
-	            System.out.println("Three servers are up and running, registered to name service on localhost:1050");
+	            System.out.println("Three servers are up and running, registered to name service on localhost:1055");
 	       
 	            java.lang.Object sync = new java.lang.Object();
 	            synchronized(sync) {
