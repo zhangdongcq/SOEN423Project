@@ -75,9 +75,10 @@ public class SHEServer extends OperationsPOA{
 	private static ORB orb;
 	public SHEServer() throws RemoteException{
 		super();
-		SHEMap.put("Surgeon",new HashMap<String,ArrayList<String>>());
+		
 		SHEMap.put("Dental",new HashMap<String,ArrayList<String>>());
 		SHEMap.put("Physician",new HashMap<String,ArrayList<String>>());
+		SHEMap.put("Surgeon",new HashMap<String,ArrayList<String>>());
 	}
 	public void setORB(ORB orb_val) {
 		orb = orb_val;
