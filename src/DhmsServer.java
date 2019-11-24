@@ -31,26 +31,7 @@ public class DhmsServer {
 	            DhmsServant MTL = new DhmsServant("localhost","1055","MTL");
 	            DhmsServant QUE = new DhmsServant("localhost","1055","QUE");
 	            DhmsServant SHE = new DhmsServant("localhost","1055","SHE");
-	            	
-	            //add some initial data in the servers
-//	            MTL.addAppointment("MTLE100919", "Physician", 5);
-//	            MTL.addAppointment("MTLE110919", "Physician", 5);
-//	            MTL.addAppointment("MTLM110919", "Surgeon", 4);
-//	            MTL.addAppointment("MTLA100919", "Dental", 3);
-//	            MTL.addAppointment("MTLA110919", "Dental", 2);
-//	            
-//	            QUE.addAppointment("QUEE100919", "Physician", 5);
-//	            QUE.addAppointment("QUEE110919", "Physician", 5);
-//	            QUE.addAppointment("QUEM120919", "Surgeon", 4);
-//	            QUE.addAppointment("QUEA130919", "Dental", 3);
-//	            QUE.addAppointment("QUEA140919", "Dental", 2);
-//	            
-//	            SHE.addAppointment("SHEE150919", "Physician", 5);
-//	            SHE.addAppointment("SHEE160919", "Physician", 5);
-//	            SHE.addAppointment("SHEM110919", "Surgeon", 4);
-//	            SHE.addAppointment("SHEA120919", "Dental", 3);
-//	            SHE.addAppointment("SHEA130919", "Dental", 2);
-//	            
+
 
 	            org.omg.CORBA.Object refMTL = rootpoa.servant_to_reference(MTL);
 	            Dhms hrefMTL = DhmsHelper.narrow(refMTL);
