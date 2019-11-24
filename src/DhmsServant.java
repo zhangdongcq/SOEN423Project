@@ -606,11 +606,22 @@ public class DhmsServant extends DhmsPOA{
 	
 	
 	
-	public void updateCapacity(String appointmentID, String appointmentType, int capacity){
-		HashMap<String, Integer> newCapacity = new HashMap<String, Integer>();
-		newCapacity.put(appointmentID, capacity);
-		appointmentRecords.replace(appointmentType,newCapacity);
+	
+	public void updateCapacity(String appointmentID, String appointmentType, int newCapacity){
+		
+		if(!appointmentRecords.isEmpty()){
+			for(HashMap.Entry<String, HashMap<String, Integer>> entry1 : appointmentRecords.entrySet()){
+				for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
+						if(entry1.getKey().equals(appointmentType) && entry2.getKey().equals(appointmentID)){
+							entry1.getValue().replace(appointmentID, newCapacity);
+						}
+				}
+			}
+		}
+		
 	}
+	
+	
 	
 	
 	
@@ -636,7 +647,7 @@ public class DhmsServant extends DhmsPOA{
 							for(HashMap.Entry<String, ArrayList<String>> patientEntryTypeID: patientIDentry.getValue().entrySet()){
 								if(patientEntryTypeID.getKey().equals(appointmentType)){
 									if(patientEntryTypeID.getValue().contains(appointmentID)){
-										logFile.writeLog("Booking not successfull. This appointment already exists in patient's record"+appointmentID);
+										logFile.writeLog("Booking not successfull. This appointment already exists in patient's record");
 										return "FAIL";
 									}
 									patientEntryTypeID.getValue().add(appointmentID);
@@ -678,8 +689,6 @@ public class DhmsServant extends DhmsPOA{
 		
 		
 	}
-	
-	
 	
 	
 	public String getLocalSchedule(String patientID){
