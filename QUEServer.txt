@@ -412,3 +412,31 @@ MTLA0001       MTLP0020       Surgeon             MTLA101119          swapAppoin
 -              -              -                   -                   Send DB                            Success        2019-11-24 10:43:03.942                                     
 -              -              Surgeon             -                   list Appointment Availability      Success        2019-11-24 10:48:08.823                                     
 -              -              -                   -                   Send DB                            Success        2019-11-24 10:48:08.819                                     
+-              -              Surgeon             -                   list Appointment Availability      Success        2019-11-24 11:23:57.235                                     
+-              -              -                   -                   Send DB                            Success        2019-11-24 11:23:57.232                                     
+MTLA1234       MTLP1234       Surgeon             MTLA111111          book Appointment                   accessed       2019-11-24 11:24:56.68                                      
+MTLA1234       MTLP1234       Surgeon             MTLA111111          book Appointment                   accessed       2019-11-24 11:37:36.666                                     
+-              -              -                   -                   Send DB                            Success        2019-11-24 11:37:36.662                                     
+MTLA1234       MTLP1234       Surgeon             MTLA111111          swapAppointment                    accessed       2019-11-24 11:38:35.893                                     
+-              -              Dental1             -                   list Appointment Availability      Success        2019-11-24 11:41:33.176                                     
+-              -              Surgeon             -                   list Appointment Availability      Success        2019-11-24 11:42:12.409                                     
+-              -              Physician           -                   list Appointment Availability      Success        2019-11-24 12:23:31.401                                     
+-              -              -                   -                   Send DB                            Success        2019-11-24 12:23:31.397                                     
+-              -              Surgeonan           -                   list Appointment Availability      Success        2019-11-24 12:24:04.982                                     
+MTLA1234       MTLP1234       Surgeon             MTLA111111          book Appointment                   accessed       2019-11-24 12:24:54.206                                     
+-              -              SurgeonSurgeon      -                   list Appointment Availability      Success        2019-11-24 12:50:38.679                                     
+-              -              SurgeonSurgeon      -                   list Appointment Availability      Success        2019-11-24 12:50:50.081                                     
+-              -              Surgeon             -                   list Appointment Availability      Success        2019-11-24 12:57:13.143                                     
+-              -              -                   -                   Send DB                            Success        2019-11-24 12:57:13.139                                     
+-              -              Surgeon             -                   list Appointment Availability      Success        2019-11-24 12:57:34.491                                     
+MTLA1234       MTLP1234       Surgeon             MTLA111111          book Appointment                   accessed       2019-11-24 12:58:42.068                                     
+MTLA1234       MTLP1234       Surgeon             MTLA111111          swapAppointment                    accessed       2019-11-24 13:00:14.987                                     
+MTLA1234       MTLP1234       Surgeon             MTLA111111          book Appointment                   accessed       2019-11-24 13:05:01.845                                     
+-              -              -                   -                   Send DB                            Success        2019-11-24 13:05:01.84                                      
+MTLA1234       MTLP1234       Surgeon             MTLA111111          book Appointment                   accessed       2019-11-24 13:17:24.503                                     
+-              -              -                   -                   Send DB                            Success        2019-11-24 13:17:24.499                                     
+MTLA1234       MTLP1234       Surgeon             MTLA111111          book Appointment                   accessed       2019-11-24 13:26:11.107                                     
+-              -              -                   -                   Send DB                            Success        2019-11-24 13:26:11.103                                     
+-              MTLP12341111   -                   -                   get Appointment Schedule           Success        2019-11-24 13:26:24.738                                     
+-              MTLP1234       -                   -                   get Appointment Schedule           Success        2019-11-24 13:28:33.713                                     
+-              MTLP1234       -                   -                   get Appointment Schedule           Success        2019-11-24 13:31:32.112                                     
