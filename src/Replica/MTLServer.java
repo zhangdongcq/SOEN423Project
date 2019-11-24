@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NameComponent;
@@ -113,7 +114,10 @@ public class MTLServer extends OperationsPOA{
 		
 		try {
 			// create and initialize the ORB //
-			orb = ORB.init(args, null);
+			Properties props = new Properties();
+            props.put("org.omg.CORBA.ORBInitialPort", "1090");
+            props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
+			orb = ORB.init(args, props);
 			
 			// get reference to rootpoa &amp; activate
 			POA rootpoa = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));

@@ -222,3 +222,13 @@ SHEA0001       list Appointment Availability      Success        2019-11-05 20:5
 MTLA0001       swap Appointment                   Success        2019-11-05 20:57:29.398                                     
 MTLA0001       swap Appointment                   Failed         2019-11-05 20:58:55.252                                     
 MTLA0001       list Appointment Availability      Failed         2019-11-06 20:19:38.335                                     
+MTLA1234       list Appointment Availability      FAIL           2019-11-24 09:24:58.5                                       
+MTLA1234       list Appointment Availability      FAIL           2019-11-24 09:27:22.845                                     
+MTLA1234       list Appointment Availability      FAIL           2019-11-24 09:29:17.942                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 09:37:26.153                                     
+MTLA1234       list Appointment Availability      FAIL           2019-11-24 09:38:19.954                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 09:42:33.821                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 09:43:55.71                                      
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 09:47:34.099                                     
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 09:49:44.68                                      
+MTLA1234       add Appointment                    SUCCESS        2019-11-24 09:57:16.923                                     

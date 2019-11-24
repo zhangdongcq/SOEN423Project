@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import org.omg.CORBA.ORB;
 import org.omg.CosNaming.NamingContextExt;
@@ -25,7 +26,7 @@ public class RM {
 	static AdminRM admin=null;
 	static PatientRM patient=null;
 	static int sequencerID=0;
-	static int expectedID=0;
+	static int expectedID=1;
 	static int sequencerIDInBuffer=100;
 	static int countFail=0;
 	static String FE_IP="";
@@ -53,15 +54,19 @@ public class RM {
 		}
 	}
 	public static void main(String[] args) {
-		orbMTL = ORB.init(args, null);
-		orbQUE = ORB.init(args, null);
-		orbSHE = ORB.init(args, null);
+		Properties props = new Properties();
+        props.put("org.omg.CORBA.ORBInitialPort", "1090");
+        props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
+		orbMTL = ORB.init(args, props);
+		orbQUE = ORB.init(args, props);
+		orbSHE = ORB.init(args, props);
 		RM rm=new RM();
 		admin=new AdminRM();
 		patient=new PatientRM();
 		try {
 			receiveFromSequencer();
-			sendMessageToFE(responseFromServers);
+//			System.out.println("Sending resposne to FE: " + responseFromServers);
+//			sendMessageToFE(responseFromServers);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -81,7 +86,9 @@ public class RM {
 				aSocket.receive(requestFromSequencer);
 				
 				String sentenceStr = new String(requestFromSequencer.getData());				
-				executeRequest(sentenceStr);								
+				executeRequest(sentenceStr);	
+				System.out.println("Sending resposne to FE: " + responseFromServers);
+				sendMessageToFE(responseFromServers);
 			}
 			System.err.println("Failcount exceeds 3, replica has failed!");
 		} catch (SocketException e) {
@@ -122,7 +129,7 @@ public class RM {
 			FE_UPD_Port=Integer.parseInt(FE_UPD_PortStr);
 			sequencerID=Integer.parseInt(patitions[2]);			
 			if(sequencerID==expectedID) {
-				if(patitions[0].charAt(3)=='A') {					
+				if(patitions[3].charAt(3)=='A') {					
 					responseFromServers=admin.adminStart(patitions);
 				}else {
 					responseFromServers=patient.patientStart(patitions);
