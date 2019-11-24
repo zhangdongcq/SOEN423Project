@@ -61,8 +61,18 @@ public class AdminRM extends RM implements Runnable{
 			}else if(functionName.equalsIgnoreCase("cancelAppointment")) {
 				patientID=patitions[5];
 				appointmentID=patitions[6];
-				appointmentType=patitions[7];
-				result=MTLobj.cancelAppointment(clientID, patientID,appointmentID, appointmentType);
+				//appointmentType=patitions[7];
+				
+				String result1=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Surgeon");
+				String result2=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Physician");
+				String result3=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Dental");
+				if(result1.contains("Successfully cancelled") ||
+						result2.contains("Successfully cancelled") || result3.contains("Successfully cancelled"))
+						result = "Successfully cancelled";
+				else{
+					result = "FAIL";
+				}
+				
 				String resultStr=(result.contains("Successfully cancelled"))?"SUCCESS":"FAIL";
 				messageToFE=sequencerID+";"+"4"+";"+resultStr;
 				//System.out.println(result);
@@ -146,8 +156,17 @@ public class AdminRM extends RM implements Runnable{
 			}else if(functionName.equalsIgnoreCase("cancelAppointment")) {
 				patientID=patitions[5];
 				appointmentID=patitions[6];
-				appointmentType=patitions[7];
-				result=QUEobj.cancelAppointment(clientID, patientID,appointmentID, appointmentType);
+				//appointmentType=patitions[7];
+				
+				String result1=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Surgeon");
+				String result2=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Physician");
+				String result3=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Dental");
+				if(result1.contains("Successfully cancelled") ||
+						result2.contains("Successfully cancelled") || result3.contains("Successfully cancelled"))
+						result = "Successfully cancelled";
+				else{
+					result = "FAIL";
+				}
 				String resultStr=(result.contains("Successfully cancelled"))?"SUCCESS":"FAIL";
 				messageToFE=sequencerID+";"+"4"+";"+resultStr;
 				//System.out.println(result);
@@ -231,8 +250,17 @@ public class AdminRM extends RM implements Runnable{
 			}else if(functionName.equalsIgnoreCase("cancelAppointment")) {
 				patientID=patitions[5];
 				appointmentID=patitions[6];
-				appointmentType=patitions[7];
-				result=SHEobj.cancelAppointment(clientID, patientID,appointmentID, appointmentType);
+				//appointmentType=patitions[7];
+				
+				String result1=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Surgeon");
+				String result2=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Physician");
+				String result3=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Dental");
+				if(result1.contains("Successfully cancelled") ||
+						result2.contains("Successfully cancelled") || result3.contains("Successfully cancelled"))
+						result = "Successfully cancelled";
+				else{
+					result = "FAIL";
+				}
 				String resultStr=(result.contains("Successfully cancelled"))?"SUCCESS":"FAIL";
 				messageToFE=sequencerID+";"+"4"+";"+resultStr;
 				//System.out.println(result);
