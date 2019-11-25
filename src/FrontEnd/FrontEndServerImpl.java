@@ -80,7 +80,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
     		  sendFailureMessageToAll(String.valueOf(num));
     	  }
       }
-      return getCleanResponse();
+      return result;
    }
 
    private void sendTimeoutFailureMessage() {

@@ -2,13 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-<<<<<<< Updated upstream
-  <date>2019-11-24T13:00:51</date>
-  <millis>1574618451561</millis>
-=======
-  <date>2019-11-24T13:03:00</date>
-  <millis>1574618580225</millis>
->>>>>>> Stashed changes
+  <date>2019-11-25T14:58:26</date>
+  <millis>1574711906863</millis>
   <sequence>1</sequence>
   <logger>ReplicaManagers/Dong/server</logger>
   <level>INFO</level>
@@ -17,4 +12,3 @@
   <thread>1</thread>
   <message>UDP ReplicaManagers.Dong.server que ReplicaManagers.Dong.server is ready.</message>
 </record>
-</log>
