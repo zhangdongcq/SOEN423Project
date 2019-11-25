@@ -148,12 +148,12 @@ public class RM {
 	}
 	
 	 private static String[] cleanArgumentList(String[] requestArgs)
-	    {
-		 	String[] args = new String[requestArgs.length];
-	    	for(int i = 0; i< requestArgs.length; i++)
-	    		args[i] = (String)requestArgs[i].trim();
-	    	return args;
-	    }
+    {
+	 	String[] args = new String[requestArgs.length];
+    	for(int i = 0; i< requestArgs.length; i++)
+    		args[i] = (String)requestArgs[i].trim();
+    	return args;
+    }
 	 
 	public static boolean checkBufferSequencerID(int expectedID) {
 	    String[] bufferedRequest;
