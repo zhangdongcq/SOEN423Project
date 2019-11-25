@@ -69,7 +69,7 @@ public class Client {
     
     private static boolean hasReplicaFailureRequest(List<String> requestArguments)
     {
-    	if(requestArguments.get(1) == "FAIL") {
+    	if(requestArguments.size() == 2) {
         	System.out.println("A replica has failed: " + requestArguments.stream().reduce("", (a,b)-> (a + ";" + b)));
         	if(Integer.parseInt(requestArguments.get(0))== MessageExecutor.getRmNumber())
         	{
