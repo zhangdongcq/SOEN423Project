@@ -227,9 +227,20 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    private String getCleanResponse() {
       //4: Clean data to detect replica failures, make sure keep only one response in List
       //TODO: call cleanData()
-	   ArrayList<String> cleanResponse = Utils.findMajority(allRequestRecords.get(currentSequenceId));
+	   HashMap<Integer,String> responses = allRequestRecords.get(currentSequenceId);
+	   ArrayList<String> cleanResponse = Utils.findMajority(responses);
+	   
+	   boolean allResponsesAreTheSame = responses.values().stream().allMatch(item -> Objects.nonNull(item) && item.equals(cleanResponse.get(0)));
+	   boolean allMachinesHaveWrongResponse = Objects.nonNull(cleanResponse.get(0)) && cleanResponse.get(0).equals("NO_MAJORITY");
+	   if(!allResponsesAreTheSame && !allMachinesHaveWrongResponse) //Already send fail when all are wrong
+	   {
+		   updateFailureMachines(cleanResponse.get(0), responses);
+	   }
+	   
       //5: Return result
       //TODO: Return clean msg to client stub which shows the msg in client console
+	   if(Objects.isNull(cleanResponse) || Objects.isNull(cleanResponse.get(0)))
+		   return "NO_MAJORITY";
       switch (cleanResponse.get(0)) {
          case NO_MAJORITY:
             return noMajorityString;
@@ -240,6 +251,29 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
          default:
             return cleanResponse.get(0);
       }
+   }
+   
+   private void updateFailureMachines(String cleanResponse, HashMap<Integer,String> responses)
+   {
+	   for(HashMap.Entry<Integer,String> response : responses.entrySet())
+	   {
+		   if(Objects.isNull(response.getValue()))
+				   continue; //Replica timed out, already failed
+		   boolean responseIsCorrect = response.getValue().equals(cleanResponse);
+		   if(!responseIsCorrect)
+		   {
+			   int currentCount = replicaNames.get(response.getKey());
+			   currentCount++;
+			   replicaNames.put(response.getKey(), currentCount);
+			   UdpServer failureNoticeUdpThread = new UdpServer(sequencerUdpPort, localhost, response.getKey() + ";FAIL", allRequestRecords, timeOutTwenty);
+		    	  failureNoticeUdpThread.start();
+			   if(currentCount>2)
+			   {
+				   replicaNames.remove(response.getKey());
+				   numberOfRMs--;
+			   }
+		   }
+	   }   
    }
    
    public static Map<Integer,Integer> getRmNames()
