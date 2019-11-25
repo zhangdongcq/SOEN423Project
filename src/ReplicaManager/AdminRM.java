@@ -122,7 +122,7 @@ public class AdminRM extends RM implements Runnable{
 				appointmentType=patitions[5];
 				result=MTLobj.listAppointmentAvailability(appointmentType);
 				if(!result.isEmpty())
-					result=result.substring(0, result.length()-1);
+					result=result.substring(0, result.length()-3);
 				String resultStr=(!result.isEmpty())?"SUCCESS":"FAIL";
 				messageToFE=sequencerID+";"+"4"+";"+result;
 				//System.out.println(result);
@@ -215,7 +215,7 @@ public class AdminRM extends RM implements Runnable{
 				appointmentType=patitions[5];
 				result=QUEobj.listAppointmentAvailability(appointmentType);
 				if(!result.isEmpty())
-					result=result.substring(0, result.length()-1);
+					result=result.substring(0, result.length()-3);
 				String resultStr=(!result.isEmpty())?"SUCCESS":"FAIL";
 				messageToFE=sequencerID+";"+"4"+";"+result;
 				//System.out.println(result);
@@ -308,7 +308,7 @@ public class AdminRM extends RM implements Runnable{
 				appointmentType=patitions[5];
 				result=SHEobj.listAppointmentAvailability(appointmentType);
 				if(!result.isEmpty())
-					result=result.substring(0, result.length()-1);
+					result=result.substring(0, result.length()-3);
 				String resultStr=(!result.isEmpty())?"SUCCESS":"FAIL";
 				messageToFE=sequencerID+";"+"4"+";"+result;
 				//System.out.println(result);
