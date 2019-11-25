@@ -40,18 +40,16 @@ public class AdminRM extends RM implements Runnable{
 		if(clientID.contains("MTL"))
 		{
 			if(functionName.equalsIgnoreCase("bookAppointment")) {
-				String[] slots=patitions[5].split(";");
-				patientID=slots[0];
-				appointmentID=slots[1];
-				appointmentType=slots[2];
+				patientID=patitions[5];
+				appointmentID=patitions[6];
+				appointmentType=patitions[7];
 				result=MTLobj.bookAppointment(clientID,patientID, appointmentID, appointmentType);
 				String resultStr=(result.contains("Congratulations"))?"SUCCESS":"FAIL";
 				messageToFE=sequencerID+";"+"4"+";"+resultStr;
 				MTLobj.writeTxtClient(clientID,"book Appointment", resultStr);
 				MTLobj.writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"book Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("getAppointmentSchedule")) {
-				String[] slots=patitions[5].split(";");
-				patientID=slots[0];
+				patientID=patitions[5];
 				result=MTLobj.getAppointmentSchedule(patientID);
 				if(!result.isEmpty())
 					result=result.substring(0, result.length()-1);
@@ -61,13 +59,9 @@ public class AdminRM extends RM implements Runnable{
 				MTLobj.writeTxtClient(clientID,"get Appointment Schedule", resultStr);
 				MTLobj.writeTxtServerMTL(clientID,patientID,"-","-","get Appointment Schedule", resultStr);
 			}else if(functionName.equalsIgnoreCase("cancelAppointment")) {
-
-				String[] slots=patitions[5].split(";");
-				patientID=slots[0];
-				appointmentID=slots[1];
-
-				//appointmentType=patitions[7];
-				
+				patientID=patitions[5];
+				appointmentID=patitions[6];
+				appointmentType=patitions[7];
 				String result1=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Surgeon");
 				String result2=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Physician");
 				String result3=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Dental");
@@ -77,19 +71,17 @@ public class AdminRM extends RM implements Runnable{
 				else{
 					result = "FAIL";
 				}
-				
 				String resultStr=(result.contains("Successfully cancelled"))?"SUCCESS":"FAIL";
 				messageToFE=sequencerID+";"+"4"+";"+resultStr;
 				//System.out.println(result);
 				MTLobj.writeTxtClient(clientID,"cancel Appointment", resultStr);
 				MTLobj.writeTxtServerMTL(clientID,patientID,"-","-","cancel Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("swapAppointment")) {
-				String[] slots=patitions[5].split(";");
-				patientID=slots[0];
-				oldAppointmentID=slots[1];
-				oldAppointmentType=slots[2];
-				newAppointmentID=slots[3];
-				newAppointmentType=slots[4];
+				patientID=patitions[5];
+				oldAppointmentID=patitions[6];
+				oldAppointmentType=patitions[7];
+				newAppointmentID=patitions[8];
+				newAppointmentType=patitions[9];
 				result=MTLobj.swapAppointment(clientID, patientID,oldAppointmentID, oldAppointmentType,newAppointmentID, newAppointmentType);
 				String resultStr=(result.contains("Successfully swapped"))?"SUCCESS":"FAIL";
 				messageToFE=sequencerID+";"+"4"+";"+resultStr;
@@ -97,11 +89,10 @@ public class AdminRM extends RM implements Runnable{
 				MTLobj.writeTxtClient(clientID,"swap Appointment", resultStr);
 				MTLobj.writeTxtServerMTL(clientID,patientID,"-","-","swap Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("addAppointment")) {
-				String[] slots=patitions[5].split(";");
-				appointmentID=slots[0];
-				appointmentType=slots[1];
+				appointmentID=patitions[5];
+				appointmentType=patitions[6];
 				String appointmentWeekStr=findWeek(appointmentID);
-				String capacityStr=slots[2];
+				String capacityStr=patitions[7];
 				
 				if(MTLobj.checkAppointmentExisted(appointmentID,appointmentType)) {
 					return "The appointment you entered exists in MTL Database. Please enter another one.";
@@ -114,9 +105,8 @@ public class AdminRM extends RM implements Runnable{
 				MTLobj.writeTxtClient(clientID,"add Appointment", resultStr);
 				MTLobj.writeTxtServerMTL(clientID,clientID,"-","-","add Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("removeAppointment")) {
-				String[] slots=patitions[5].split(";");
-				appointmentID=slots[0];
-				appointmentType=slots[1];
+				appointmentID=patitions[5];
+				appointmentType=patitions[6];
 					if(!MTLobj.checkAppointmentExisted(appointmentID,appointmentType)) {
 						MTLobj.writeTxtServerMTL(clientID,clientID,"-","-","remove Appointment", "Failed");
 						return "The appointment you entered does not exist in MTL Database. Please enter another one.";
@@ -129,8 +119,7 @@ public class AdminRM extends RM implements Runnable{
 				MTLobj.writeTxtClient(clientID,"remove Appointment", resultStr);
 				MTLobj.writeTxtServerMTL(clientID,clientID,"-","-","remove Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("listAppointmentAvailability")) {
-				String[] slots=patitions[5].split(";");
-				appointmentType=slots[0];
+				appointmentType=patitions[5];
 				result=MTLobj.listAppointmentAvailability(appointmentType);
 				if(!result.isEmpty())
 					result=result.substring(0, result.length()-1);
@@ -144,18 +133,16 @@ public class AdminRM extends RM implements Runnable{
 		else if(clientID.contains("QUE"))
 		{
 			if(functionName.equalsIgnoreCase("bookAppointment")) {
-				String[] slots=patitions[5].split(";");
-				patientID=slots[0];
-				appointmentID=slots[1];
-				appointmentType=slots[2];
+				patientID=patitions[5];
+				appointmentID=patitions[6];
+				appointmentType=patitions[7];
 				result=QUEobj.bookAppointment(clientID,patientID, appointmentID, appointmentType);
 				String resultStr=(result.contains("Congratulations"))?"SUCCESS":"FAIL";
 				messageToFE=sequencerID+";"+"4"+";"+resultStr;
 				QUEobj.writeTxtClient(clientID,"book Appointment", resultStr);
 				QUEobj.writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"book Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("getAppointmentSchedule")) {
-				String[] slots=patitions[5].split(";");
-				patientID=slots[0];
+				patientID=patitions[5];
 				result=QUEobj.getAppointmentSchedule(patientID);
 				if(!result.isEmpty())
 					result=result.substring(0, result.length()-1);
@@ -165,16 +152,12 @@ public class AdminRM extends RM implements Runnable{
 				QUEobj.writeTxtClient(clientID,"get Appointment Schedule", resultStr);
 				QUEobj.writeTxtServerMTL(clientID,patientID,"-","-","get Appointment Schedule", resultStr);
 			}else if(functionName.equalsIgnoreCase("cancelAppointment")) {
-
-				String[] slots=patitions[5].split(";");
-				patientID=slots[0];
-				appointmentID=slots[1];
-
-				//appointmentType=patitions[7];
-				
-				String result1=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Surgeon");
-				String result2=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Physician");
-				String result3=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Dental");
+				patientID=patitions[5];
+				appointmentID=patitions[6];
+				appointmentType=patitions[7];
+				String result1=QUEobj.cancelAppointment(clientID, patientID,appointmentID, "Surgeon");
+				String result2=QUEobj.cancelAppointment(clientID, patientID,appointmentID, "Physician");
+				String result3=QUEobj.cancelAppointment(clientID, patientID,appointmentID, "Dental");
 				if(result1.contains("Successfully cancelled") ||
 						result2.contains("Successfully cancelled") || result3.contains("Successfully cancelled"))
 						result = "Successfully cancelled";
@@ -187,12 +170,11 @@ public class AdminRM extends RM implements Runnable{
 				QUEobj.writeTxtClient(clientID,"cancel Appointment", resultStr);
 				QUEobj.writeTxtServerMTL(clientID,patientID,"-","-","cancel Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("swapAppointment")) {
-				String[] slots=patitions[5].split(";");
-				patientID=slots[0];
-				oldAppointmentID=slots[1];
-				oldAppointmentType=slots[2];
-				newAppointmentID=slots[3];
-				newAppointmentType=slots[4];
+				patientID=patitions[5];
+				oldAppointmentID=patitions[6];
+				oldAppointmentType=patitions[7];
+				newAppointmentID=patitions[8];
+				newAppointmentType=patitions[9];
 				result=QUEobj.swapAppointment(clientID, patientID,oldAppointmentID, oldAppointmentType,newAppointmentID, newAppointmentType);
 				String resultStr=(result.contains("Successfully swapped"))?"SUCCESS":"FAIL";
 				messageToFE=sequencerID+";"+"4"+";"+resultStr;
@@ -200,11 +182,10 @@ public class AdminRM extends RM implements Runnable{
 				QUEobj.writeTxtClient(clientID,"swap Appointment", resultStr);
 				QUEobj.writeTxtServerMTL(clientID,patientID,"-","-","swap Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("addAppointment")) {
-				String[] slots=patitions[5].split(";");
-				appointmentID=slots[0];
-				appointmentType=slots[1];
+				appointmentID=patitions[5];
+				appointmentType=patitions[6];
 				String appointmentWeekStr=findWeek(appointmentID);
-				String capacityStr=slots[2];
+				String capacityStr=patitions[7];
 				
 				if(QUEobj.checkAppointmentExisted(appointmentID,appointmentType)) {
 					return "The appointment you entered exists in MTL Database. Please enter another one.";
@@ -217,9 +198,8 @@ public class AdminRM extends RM implements Runnable{
 				QUEobj.writeTxtClient(clientID,"add Appointment", resultStr);
 				QUEobj.writeTxtServerMTL(clientID,clientID,"-","-","add Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("removeAppointment")) {
-				String[] slots=patitions[5].split(";");
-				appointmentID=slots[0];
-				appointmentType=slots[1];
+				appointmentID=patitions[5];
+				appointmentType=patitions[6];
 					if(!QUEobj.checkAppointmentExisted(appointmentID,appointmentType)) {
 						QUEobj.writeTxtServerMTL(clientID,clientID,"-","-","remove Appointment", "Failed");
 						return "The appointment you entered does not exist in MTL Database. Please enter another one.";
@@ -232,8 +212,7 @@ public class AdminRM extends RM implements Runnable{
 				QUEobj.writeTxtClient(clientID,"remove Appointment", resultStr);
 				QUEobj.writeTxtServerMTL(clientID,clientID,"-","-","remove Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("listAppointmentAvailability")) {
-				String[] slots=patitions[5].split(";");
-				appointmentType=slots[0];
+				appointmentType=patitions[5];
 				result=QUEobj.listAppointmentAvailability(appointmentType);
 				if(!result.isEmpty())
 					result=result.substring(0, result.length()-1);
@@ -247,18 +226,16 @@ public class AdminRM extends RM implements Runnable{
 		else if(clientID.contains("SHE"))
 		{
 			if(functionName.equalsIgnoreCase("bookAppointment")) {
-				String[] slots=patitions[5].split(";");
-				patientID=slots[0];
-				appointmentID=slots[1];
-				appointmentType=slots[2];
+				patientID=patitions[5];
+				appointmentID=patitions[6];
+				appointmentType=patitions[7];
 				result=SHEobj.bookAppointment(clientID,patientID, appointmentID, appointmentType);
 				String resultStr=(result.contains("Congratulations"))?"SUCCESS":"FAIL";
 				messageToFE=sequencerID+";"+"4"+";"+resultStr;
 				SHEobj.writeTxtClient(clientID,"book Appointment", resultStr);
 				SHEobj.writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"book Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("getAppointmentSchedule")) {
-				String[] slots=patitions[5].split(";");
-				patientID=slots[0];
+				patientID=patitions[5];
 				result=SHEobj.getAppointmentSchedule(patientID);
 				if(!result.isEmpty())
 					result=result.substring(0, result.length()-1);
@@ -268,16 +245,12 @@ public class AdminRM extends RM implements Runnable{
 				SHEobj.writeTxtClient(clientID,"get Appointment Schedule", resultStr);
 				SHEobj.writeTxtServerMTL(clientID,patientID,"-","-","get Appointment Schedule", resultStr);
 			}else if(functionName.equalsIgnoreCase("cancelAppointment")) {
-
-				String[] slots=patitions[5].split(";");
-				patientID=slots[0];
-				appointmentID=slots[1];
-
-				//appointmentType=patitions[7];
-				
-				String result1=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Surgeon");
-				String result2=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Physician");
-				String result3=MTLobj.cancelAppointment(clientID, patientID,appointmentID, "Dental");
+				patientID=patitions[5];
+				appointmentID=patitions[6];
+				appointmentType=patitions[7];
+				String result1=SHEobj.cancelAppointment(clientID, patientID,appointmentID, "Surgeon");
+				String result2=SHEobj.cancelAppointment(clientID, patientID,appointmentID, "Physician");
+				String result3=SHEobj.cancelAppointment(clientID, patientID,appointmentID, "Dental");
 				if(result1.contains("Successfully cancelled") ||
 						result2.contains("Successfully cancelled") || result3.contains("Successfully cancelled"))
 						result = "Successfully cancelled";
@@ -290,12 +263,11 @@ public class AdminRM extends RM implements Runnable{
 				SHEobj.writeTxtClient(clientID,"cancel Appointment", resultStr);
 				SHEobj.writeTxtServerMTL(clientID,patientID,"-","-","cancel Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("swapAppointment")) {
-				String[] slots=patitions[5].split(";");
-				patientID=slots[0];
-				oldAppointmentID=slots[1];
-				oldAppointmentType=slots[2];
-				newAppointmentID=slots[3];
-				newAppointmentType=slots[4];
+				patientID=patitions[5];
+				oldAppointmentID=patitions[6];
+				oldAppointmentType=patitions[7];
+				newAppointmentID=patitions[8];
+				newAppointmentType=patitions[9];
 				result=SHEobj.swapAppointment(clientID, patientID,oldAppointmentID, oldAppointmentType,newAppointmentID, newAppointmentType);
 				String resultStr=(result.contains("Successfully swapped"))?"SUCCESS":"FAIL";
 				messageToFE=sequencerID+";"+"4"+";"+resultStr;
@@ -303,11 +275,10 @@ public class AdminRM extends RM implements Runnable{
 				SHEobj.writeTxtClient(clientID,"swap Appointment", resultStr);
 				SHEobj.writeTxtServerMTL(clientID,patientID,"-","-","swap Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("addAppointment")) {
-				String[] slots=patitions[5].split(";");
-				appointmentID=slots[0];
-				appointmentType=slots[1];
+				appointmentID=patitions[5];
+				appointmentType=patitions[6];
 				String appointmentWeekStr=findWeek(appointmentID);
-				String capacityStr=slots[2];
+				String capacityStr=patitions[7];
 				
 				if(SHEobj.checkAppointmentExisted(appointmentID,appointmentType)) {
 					return "The appointment you entered exists in MTL Database. Please enter another one.";
@@ -320,9 +291,8 @@ public class AdminRM extends RM implements Runnable{
 				SHEobj.writeTxtClient(clientID,"add Appointment", resultStr);
 				SHEobj.writeTxtServerMTL(clientID,clientID,"-","-","add Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("removeAppointment")) {
-				String[] slots=patitions[5].split(";");
-				appointmentID=slots[0];
-				appointmentType=slots[1];
+				appointmentID=patitions[5];
+				appointmentType=patitions[6];
 					if(!SHEobj.checkAppointmentExisted(appointmentID,appointmentType)) {
 						SHEobj.writeTxtServerMTL(clientID,clientID,"-","-","remove Appointment", "Failed");
 						return "The appointment you entered does not exist in MTL Database. Please enter another one.";
@@ -335,8 +305,7 @@ public class AdminRM extends RM implements Runnable{
 				SHEobj.writeTxtClient(clientID,"remove Appointment", resultStr);
 				SHEobj.writeTxtServerMTL(clientID,clientID,"-","-","remove Appointment", resultStr);
 			}else if(functionName.equalsIgnoreCase("listAppointmentAvailability")) {
-				String[] slots=patitions[5].split(";");
-				appointmentType=slots[0];
+				appointmentType=patitions[5];
 				result=SHEobj.listAppointmentAvailability(appointmentType);
 				if(!result.isEmpty())
 					result=result.substring(0, result.length()-1);
