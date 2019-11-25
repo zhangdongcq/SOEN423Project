@@ -74,11 +74,21 @@ public class QUEServer extends OperationsPOA{
 	String cityForAdd="";
 	private static ORB orb;
 	public QUEServer() throws RemoteException{
-		super();
-		
-		QUEMap.put("Dental",new HashMap<String,ArrayList<String>>());
-		QUEMap.put("Physician",new HashMap<String,ArrayList<String>>());
-		QUEMap.put("Surgeon",new HashMap<String,ArrayList<String>>());
+		ArrayList<String> temp1=new ArrayList<String>();
+		ArrayList<String> temp2=new ArrayList<String>();	
+		ArrayList<String> temp3=new ArrayList<String>();	
+
+		Map<String,ArrayList<String>> t1=new HashMap<String,ArrayList<String>>();
+
+		QUEMap.put("Dental",t1);
+
+	    Map<String,ArrayList<String>> t2=new HashMap<String,ArrayList<String>>();
+
+		QUEMap.put("Physician",t2);
+
+		Map<String,ArrayList<String>> t3=new HashMap<String,ArrayList<String>>();
+
+		QUEMap.put("Surgeon",t3);
 	}
 	public void setORB(ORB orb_val) {
 		orb = orb_val;
@@ -224,8 +234,6 @@ public class QUEServer extends OperationsPOA{
 	public synchronized boolean checkAppointmentExisted(String appointmentID, String appointmentType)
 	{
 		boolean key1=QUEMap.containsKey(appointmentType);
-		if(Objects.isNull(QUEMap.get(appointmentType)))
-			return false;
 		boolean key2=QUEMap.get(appointmentType).containsKey(appointmentID);
 		if(key1&&key2) {
 			return true;
@@ -407,7 +415,6 @@ public class QUEServer extends OperationsPOA{
 		}
 		return sortAppointmentBySchedule(getAppointmentSchedule);
 	}
-	
 	public synchronized String cancelAppointment(String clientID,String patientID, String appointmentID,String appointmentType)
 	{
 		String success="";
