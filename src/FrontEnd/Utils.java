@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -103,7 +104,11 @@ public class Utils {
    }
 
    public static ArrayList<String> findMajority(HashMap<Integer, String> responseList) {
-      String[] responseListArray = responseList.values().toArray(new String[0]);
+      List<String> cleanMsgList = new ArrayList<>();
+      for(Map.Entry<Integer, String> element : responseList.entrySet()){
+         if(!Objects.isNull(element.getValue())) cleanMsgList.add(element.getValue());
+      }
+      String[] responseListArray = cleanMsgList.toArray(new String[cleanMsgList.size()]);
       String majority =  findMajority(responseListArray);
       ArrayList<String> a = new ArrayList<>();
       a.add(majority);
@@ -123,7 +128,7 @@ public class Utils {
    }
 
    public static int findFailureMachine(HashMap<Integer, String> responseList) {
-      for (Integer name : FrontEndServerImpl.getRmNames()) {
+      for (Integer name : FrontEndServerImpl.getRmNames().keySet()) {
          if (responseList.get(name) == null) return name;
       }
       return -1;
