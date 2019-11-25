@@ -33,6 +33,7 @@ public class Client {
             org.omg.CORBA.Object objRef = orb.resolve_initial_references("NameService");
             while (true) {
                 String sequencerString = SequencerCommunicator.receiveFromSequencer(MessageExecutor.getCountFail());
+                System.out.println("Recived message: " + sequencerString);
                 List<String> requestArguments = Arrays.asList(sequencerString.split(";"));
                 if(hasReplicaFailureRequest(requestArguments)) {
                 	continue;
@@ -40,7 +41,7 @@ public class Client {
                 if(hasFailed)
                 {
                 	System.out.println("This replica has failed, no longer executing requests");
-                	continue;
+                	break;
                 }
                 cleanArgumentList(requestArguments);
                 int userIDLocation = 3;
@@ -68,7 +69,7 @@ public class Client {
     
     private static boolean hasReplicaFailureRequest(List<String> requestArguments)
     {
-    	if(requestArguments.size() == 2) {
+    	if(requestArguments.get(1) == "FAIL") {
         	System.out.println("A replica has failed: " + requestArguments.stream().reduce("", (a,b)-> (a + ";" + b)));
         	if(Integer.parseInt(requestArguments.get(0))== MessageExecutor.getRmNumber())
         	{

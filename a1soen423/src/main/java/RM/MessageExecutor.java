@@ -24,7 +24,7 @@ public class MessageExecutor {
     {
     	if(countFail == 3)
     	{
-    		System.out.println("This replica has failed (3incorrect responses or timeout). No longer executing requests");
+    		System.out.println("This replica has failed (3 incorrect responses or timeout). No longer executing requests");
     		return;
     	}
         if(requestArguments.size()>2) {
@@ -32,6 +32,7 @@ public class MessageExecutor {
             String FE_UPD_PortStr=requestArguments.get(1);
             portNumber=Integer.parseInt(FE_UPD_PortStr);
             sequencerID=Integer.parseInt(requestArguments.get(2));
+            
             
             if(sequencerID==expectedID) {
                 response = CorbaDelivery.deliverCorbaRequest(requestArguments ,remotelyInvokableHospital);
