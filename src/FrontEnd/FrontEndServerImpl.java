@@ -28,7 +28,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    private static final int sequencerUdpPort = 6789;
    private static final int frontEndReplicaManagerListenerUdpPort = 7789;
    private static int numberOfRMs;
-   private static Set<Integer> replicaNames = new HashSet<Integer>();
+   private static Map<Integer,Integer> replicaNames = new HashMap<Integer,Integer>();
    //0: Sequencer. 1: RM1. 2: RM2. 3: RM3. 4: RM4.
    private boolean finalResult = false;
    private boolean allResponsesReceived = false;
@@ -68,7 +68,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
          if (!allResponsesReceived) {
             currentSequenceId = String.valueOf(allRequestRecords.size()-1);
             if (Objects.isNull(allRequestRecords.get(currentSequenceId))) return "No any response for your request.";
-            sendFailureMessage();
+            sendTimeoutFailureMessage();
          }
       } catch (SocketException e) {
          e.printStackTrace();
@@ -76,20 +76,23 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
       }
       String result = getCleanResponse();
       if(result.equals(noMajorityString)){
-    	  for(int num : replicaNames){
+    	  for(int num : replicaNames.keySet()){
     		  sendFailureMessageToAll(String.valueOf(num));
     	  }
       }
       return getCleanResponse();
    }
 
-   private void sendFailureMessage() {
+   private void sendTimeoutFailureMessage() {
       int failureMachineId = Utils.findFailureMachine(allRequestRecords.get(currentSequenceId));
+      System.out.println("Machine " + failureMachineId + " has timed out");
       numberOfRMs--;
-//      replicaNames.remove(failureMachineId);
       replicaNames.remove(failureMachineId);
-      UdpServer failureNoticeUdpThread = new UdpServer(sequencerUdpPort, localhost, failureMachineId + ";FAIL", allRequestRecords, timeOutTwenty);
-      failureNoticeUdpThread.start();
+      for(int i=0; i<3; i++) {
+    	  System.out.println("Sending UDP failure");
+    	  UdpServer failureNoticeUdpThread = new UdpServer(sequencerUdpPort, localhost, failureMachineId + ";FAIL", allRequestRecords, timeOutTwenty);
+    	  failureNoticeUdpThread.start();
+      }
    }
    
    private void sendFailureMessageToAll(String failureMachineId) {
@@ -190,7 +193,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
 
       if (noRecordExistsForSequenceNumber) {
     	  HashMap<Integer, String> records = new HashMap<>();
-    	  for(Integer replica : replicaNames)
+    	  for(Integer replica : replicaNames.keySet())
     	  {
     		  records.put(replica, null);
     	  }
@@ -239,14 +242,14 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
       }
    }
    
-   public static Set<Integer> getRmNames()
+   public static Map<Integer,Integer> getRmNames()
    {
 	   return replicaNames;
    }
    
    public static void addRM(Integer rmNumber)
    {
-	   replicaNames.add(rmNumber);
+	   replicaNames.put(rmNumber, 0);
    }
    
    public static void setNumberOfRMs(int _numberOfRMs)

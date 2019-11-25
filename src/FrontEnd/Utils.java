@@ -123,7 +123,7 @@ public class Utils {
    }
 
    public static int findFailureMachine(HashMap<Integer, String> responseList) {
-      for (Integer name : FrontEndServerImpl.getRmNames()) {
+      for (Integer name : FrontEndServerImpl.getRmNames().keySet()) {
          if (responseList.get(name) == null) return name;
       }
       return -1;
