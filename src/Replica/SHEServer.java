@@ -74,11 +74,21 @@ public class SHEServer extends OperationsPOA{
 	String cityForAdd="";
 	private static ORB orb;
 	public SHEServer() throws RemoteException{
-		super();
-		
-		SHEMap.put("Dental",new HashMap<String,ArrayList<String>>());
-		SHEMap.put("Physician",new HashMap<String,ArrayList<String>>());
-		SHEMap.put("Surgeon",new HashMap<String,ArrayList<String>>());
+		ArrayList<String> temp1=new ArrayList<String>();
+		ArrayList<String> temp2=new ArrayList<String>();	
+		ArrayList<String> temp3=new ArrayList<String>();	
+
+		Map<String,ArrayList<String>> t1=new HashMap<String,ArrayList<String>>();
+
+		SHEMap.put("Dental",t1);
+
+	    Map<String,ArrayList<String>> t2=new HashMap<String,ArrayList<String>>();
+
+		SHEMap.put("Physician",t2);
+
+		Map<String,ArrayList<String>> t3=new HashMap<String,ArrayList<String>>();
+
+		SHEMap.put("Surgeon",t3);
 	}
 	public void setORB(ORB orb_val) {
 		orb = orb_val;
@@ -223,8 +233,6 @@ public class SHEServer extends OperationsPOA{
 	public synchronized boolean checkAppointmentExisted(String appointmentID, String appointmentType)
 	{
 		boolean key1=SHEMap.containsKey(appointmentType);
-		if(Objects.isNull(SHEMap.get(appointmentType)))
-			return false;
 		boolean key2=SHEMap.get(appointmentType).containsKey(appointmentID);
 		if(key1&&key2) {
 			return true;
@@ -453,6 +461,7 @@ public class SHEServer extends OperationsPOA{
 			}
 		}
 	}
+
 	public String printAppointmentByType(Map<String, Map<String,ArrayList<String>>> map, String type) {
 		String printAppointmentByType="";
 		for(Map.Entry<String, Map<String,ArrayList<String>>> mtl:map.entrySet())
@@ -676,8 +685,8 @@ public class SHEServer extends OperationsPOA{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-//		listAppointmentByType+=	"*** Appointments Summary (SHE) ***"+"\n";	
-//		listAppointmentBySchedule+="*** Appointments Summary (SHE) ***"+"\n";
+		listAppointmentByType+=	"*** Appointments Summary (SHE) ***"+"\n";	
+		listAppointmentBySchedule+="*** Appointments Summary (SHE) ***"+"\n";
 		//System.out.println("*** Appointments Summary (SHE) ***");
 		if(task.equalsIgnoreCase("listAppointmentAvailability")) {
 			writeTxtServerSHE(clientID,patientID,appointmentType,appointmentID,"list Appointment Availability", "Success");
