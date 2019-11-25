@@ -1,0 +1,7 @@
+module corbasystem{
+
+    interface IFrontEndServer{
+       string initiateServer(in string city);
+       string requestHandler(in string userId, in string command, in string parameters);
+    };
+};

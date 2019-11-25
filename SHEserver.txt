@@ -1,0 +1,20 @@
+2019-11-24 22:39:08: SHE UDP port: 3332
+2019-11-24 22:59:15: SHE UDP port: 3332
+2019-11-24 23:02:08: listLocalAppointments: records are empty
+2019-11-24 23:02:08: [SHE Server]: Received app availabilities for: (Physician) request from MTL server and replied ""
+2019-11-24 23:02:13: listLocalAppointments: records are empty
+2019-11-24 23:02:13: [SHE Server]: Received app availabilities for: (Surgeon) request from MTL server and replied ""
+2019-11-24 23:02:18: listLocalAppointments: records are empty
+2019-11-24 23:02:18: [SHE Server]: Received app availabilities for: (Dental) request from MTL server and replied ""
+2019-11-24 23:03:26: getLocalSchedule: Patient MTLP3333 has no scheduled appointments
+2019-11-24 23:03:26: [SHE Server]: Received app availabilities for: (MTLP3333) request from MTL server and replied ""
+2019-11-24 23:08:13: SHE UDP port: 3332
+2019-11-24 23:10:28: getLocalSchedule: Patient MTLP3333 has no scheduled appointments
+2019-11-24 23:10:28: [SHE Server]: Received app availabilities for: (MTLP3333) request from MTL server and replied ""
+2019-11-24 23:11:24: getLocalSchedule: Patient MTLP3333 has no scheduled appointments
+2019-11-24 23:11:24: [SHE Server]: Received app availabilities for: (MTLP3333) request from MTL server and replied ""
+2019-11-24 23:15:07: SHE UDP port: 3332
+2019-11-24 23:17:30: getLocalSchedule: Patient MTLP3333 has no scheduled appointments
+2019-11-24 23:17:30: [SHE Server]: Received app availabilities for: (MTLP3333) request from MTL server and replied ""
+2019-11-24 23:18:29: getLocalSchedule: Patient MTLP3333 has no scheduled appointments
+2019-11-24 23:18:29: [SHE Server]: Received app availabilities for: (MTLP3333) request from MTL server and replied ""

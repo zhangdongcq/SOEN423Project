@@ -32,8 +32,8 @@ public class ReplicaManager {
 	public static void main(String args[]){
 	
 		boolean running = true;
-		logFile = new Log("RM2.txt");
-		int countFail =0;
+		logFile = new Log("RM3.txt");
+		int countFail = 0;
 		while(countFail < 3 ){
 			
 			String sequencerRequest = getSequencerRequest();
