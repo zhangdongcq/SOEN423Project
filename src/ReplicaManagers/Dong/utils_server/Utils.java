@@ -25,6 +25,7 @@ public class Utils {
    public static final String LIST_APP_AVAILABILITY = "listAppointmentAvailability";
    public static final String GET_APP_SCHE = "getAppointmentSchedule";
    public static final String BOOK_REMOTE_APP = "bookAppointment";
+   public static final String CANCEL_APP = "cancelAppointment";
    public static final String APP_TYPE = "appointmentType";
    public static final String ONE_TIME = "one";
    public static final String TWO_TIME = "two";

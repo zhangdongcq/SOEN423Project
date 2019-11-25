@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -101,9 +102,19 @@ public class Utils {
       return "NO_MAJORITY";
    }
 
-   public static String findMajority(HashMap<Integer, String> responseList) {
+   public static ArrayList<String> findMajority(HashMap<Integer, String> responseList) {
       String[] responseListArray = responseList.values().toArray(new String[0]);
-      return findMajority(responseListArray);
+      String majority =  findMajority(responseListArray);
+      ArrayList<String> a = new ArrayList<>();
+      a.add(majority);
+      for(Map.Entry<Integer, String> item : responseList.entrySet())
+      {
+    	  if(Objects.isNull(item) || Objects.isNull(item.getValue()))
+    		  continue;
+    	  if(!item.getValue().equals(majority))
+    		  a.add(String.valueOf(item.getKey()));
+      }
+      return a;
    }
 
    public static boolean isAllPopulated(HashMap<Integer, String> responseList, int numberOfRMs) {

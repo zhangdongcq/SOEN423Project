@@ -113,6 +113,16 @@ public class ServerImpl extends IServerPOA {
       if (patientID.isEmpty() || appointmentID.isEmpty()) {
          return FAIL;
       }
+      
+      if (!getCityFromAppointmentID(appointmentID).equalsIgnoreCase(this.serverName)) { // book remote ReplicaManagers.Dong.server app
+          try {
+			return Utils.getRemoteServerQueryResult(Utils.CANCEL_APP, String.join(".", patientID.toUpperCase(), appointmentID), getCityFromAppointmentID(appointmentID).toLowerCase());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       }
+      
       if (cityRecords.size() == 0) {
          return FAIL;
       }

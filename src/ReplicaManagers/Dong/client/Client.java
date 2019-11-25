@@ -37,6 +37,7 @@ public class Client {
    private static Map<String, String[]> requestsFromSequencer = new HashMap<>();
    private static final Logger loggerClient = Logger.getLogger("ReplicaManagers/Dong/client");
    private static final Logger loggerUser = Logger.getLogger("user");
+   private static int failureCounter = 0;
 
    public static void main(String args[]) {
 
@@ -46,7 +47,7 @@ public class Client {
       try {
          aSocket = new MulticastSocket(6790);
          System.out.println("Replica Manager 1111 Started............");
-         aSocket.joinGroup(InetAddress.getByName("228.5.6.10"));
+         aSocket.joinGroup(InetAddress.getByName("228.5.6.9"));
          byte[] buffer = new byte[1024];
          while (true) {
             DatagramPacket requestFromSe = new DatagramPacket(buffer, buffer.length);
@@ -57,7 +58,10 @@ public class Client {
             // 127.0.0.1;8675;1;MTLA2222;addAppointment;appointmentID;appointmentType;capacity
             if (request.contains(";FAIL")) {
                //TODO: Handle three-time failure!
-               System.out.println("Got a FAILUIRE!!");
+            	failureCounter++;
+            	if(failureCounter == 3){
+            		System.out.println("Got a FAILUIRE!! Reached three time!");
+            	}
                continue;
             }
             String[] header = request.split(";");

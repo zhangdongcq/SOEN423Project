@@ -1,4 +1,4 @@
-package Client;
+package test.Client;
 
 import org.junit.Test;
 
@@ -7,7 +7,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import Client.ClientTester;
+import test.Client.ClientTester;
 
 public class ClientIntegrationTest {
 

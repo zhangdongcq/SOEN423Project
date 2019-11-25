@@ -19,7 +19,7 @@ public class Sequencer {
    private static Map<Integer, String> msgBackup = new HashMap<>();
    private static Queue<String> allMsgs = new LinkedList<>();
    private static Integer globalSequenceCounter = 0;
-   private static final String multicastAddress = "228.5.6.10";
+   private static final String multicastAddress = "228.5.6.9";
    private static final int multicastPort = 6790;
    private static DatagramPacket request;
 
@@ -85,6 +85,6 @@ public class Sequencer {
    }
 
    private static String encapsulateRequest(String msgFromFrontEnd, String feAddress, int fePort) {
-      return msgFromFrontEnd.contains("FAIL") ? msgFromFrontEnd : String.join(";", feAddress, fePort + "", ++globalSequenceCounter + "", msgFromFrontEnd);
+      return msgFromFrontEnd.contains("FAIL") ? msgFromFrontEnd : String.join(";", "132.205.64.87", fePort + "", ++globalSequenceCounter + "", msgFromFrontEnd);
    }
 }
