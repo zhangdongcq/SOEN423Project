@@ -191,8 +191,8 @@ public class Utils {
               String.join(",", localResponse, remoteResponse1, remoteResponse2)
                       .split(",")
       );
-//      allResponses.sort(Comparator.comparing((String o) -> o.substring(0, 5)).thenComparing(o -> o.substring(5)));
-      allResponses.sort(Comparator.naturalOrder());
+      allResponses.sort(Comparator.comparing((String o) -> o.substring(0, 5)).thenComparing(o -> o.substring(5)));
+//      allResponses.sort(Comparator.naturalOrder());
       return String.join(";", allResponses);
    }
 
@@ -211,7 +211,7 @@ public class Utils {
       sb.append(concateList(den, APP_TYPE_DENTAL));
       sb.append(concateList(phy, APP_TYPE_PHYSICIAN));
       sb.append(concateList(sur, APP_TYPE_SURGEON));
-      return sb.toString().substring(1);
+      return sb.toString().isEmpty()? "" : sb.toString().substring(1);
    }
 
    private static void getAppData(List<String> phy, List<String> den, List<String> sur, String response) {
