@@ -22,7 +22,9 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    private String currentSequenceId;
    private String localhost = "localhost";
    private static final int timeOutTwenty = 20;
+
    private static int rmTimeOut = 6000; //TODO make this dynamic (exponential moving average??)
+
    private static final int sequencerUdpPort = 6789;
    private static final int frontEndReplicaManagerListenerUdpPort = 7789;
    private static int numberOfRMs;
@@ -33,8 +35,6 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    public long timeStampReceiveFromRM;
    //a hashmap to store each RM name and its response time (RTT)
    private HashMap<String, Integer> rtt = new HashMap<String, Integer>();
-   //hashmap <RMid, <commnad, numberOfFails>>
-   private HashMap <String, HashMap<String, Integer>>  failureRecords = new HashMap <String, HashMap<String, Integer>>();
    public int RTT;
 
    FrontEndServerImpl(String frontEndName) {
@@ -88,7 +88,9 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    private void getAllResponseMessagesFromRMs(DatagramSocket aSocket, byte[] buffer) {
 	   while (!finalResult) {
          try {
+
         	System.out.println("RM TIME OUT BEFORE ALL RESPONSES: "+ rmTimeOut);
+
             String response = getResponseFromRM(aSocket, buffer);
             String[] detailedResponse = response.split(";");
             currentSequenceId = detailedResponse[0];
@@ -122,51 +124,55 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    }
    
    //there migh be more than one faulty RMs, so return a String containing all faulty Rm names
-   public String findFaultyRMs (){
-	   String faultyRMs = "";
-	   if(!failureRecords.isEmpty()){
-		   for(HashMap.Entry<String, HashMap<String, Integer>> entry1: failureRecords.entrySet()){
-				   for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
-					   if(entry2.getValue() == 3){
-						   faultyRMs = faultyRMs + entry1.getKey()+";";
-					   }
-					   
-				   }
-		   }
-	   }
-	return faultyRMs;
-   }
-   
-   
-   public void addToFailureRecords(String rmID, String command, String ans){
-	   if(!failureRecords.isEmpty()){
-		   for(HashMap.Entry<String, HashMap<String, Integer>> entry1: failureRecords.entrySet()){
-			   if(entry1.getKey().equals(rmID)){
-				   for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
-						if(entry2.getKey().equals(command)){
-							entry1.getValue().replace(entry2.getKey(), entry2.getValue()+1);
-							return;
-						}
-					}
-				   	HashMap<String, Integer> inner = new HashMap<String, Integer>();
-				   	inner.put(command, 1);
-				   	failureRecords.put(entry1.getKey(), inner);
-				   	return;
-				}
-		    }
-		   	HashMap<String, Integer> inner = new HashMap<String, Integer>();
-		   	inner.put(command, 1);
-		   	failureRecords.put(rmID, inner);
-		   	return;
-	   }else{
-		   //if the hashMap is totally empty, add the first record
-		   	HashMap<String, Integer> inner = new HashMap<String, Integer>();
-	   		inner.put(command, 1);
-	   		failureRecords.put(rmID, inner);
-	   }
-		   
-   }
+//   public String findFaultyRMs (){
+//	   String faultyRMs = "";
+//	   if(!failureRecords.isEmpty()){
+//		   for(HashMap.Entry<String, HashMap<String, Integer>> entry1: failureRecords.entrySet()){
+//				   for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
+//					   if(entry2.getValue() == 3){
+//						   faultyRMs = faultyRMs + entry1.getKey()+";";
+//					   }
+//					   
+//				   }
+//		   }
+//	   }
+//	return faultyRMs;
+//   }
+//   
+//   
+//   public void addToFailureRecords(String rmID, String command, String ans){
+//	   if(!failureRecords.isEmpty()){
+//		   for(HashMap.Entry<String, HashMap<String, Integer>> entry1: failureRecords.entrySet()){
+//			   if(entry1.getKey().equals(rmID)){
+//				   for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
+//						if(entry2.getKey().equals(command)){
+//							entry1.getValue().replace(entry2.getKey(), entry2.getValue()+1);
+//							return;
+//						}
+//					}
+//				   	HashMap<String, Integer> inner = new HashMap<String, Integer>();
+//				   	inner.put(command, 1);
+//				   	failureRecords.put(entry1.getKey(), inner);
+//				   	return;
+//				}
+//		    }
+//		   	HashMap<String, Integer> inner = new HashMap<String, Integer>();
+//		   	inner.put(command, 1);
+//		   	failureRecords.put(rmID, inner);
+//		   	return;
+//	   }else{
+//		   //if the hashMap is totally empty, add the first record
+//		   	HashMap<String, Integer> inner = new HashMap<String, Integer>();
+//	   		inner.put(command, 1);
+//	   		failureRecords.put(rmID, inner);
+//	   }
+//		   
+//   }
 
+   
+ 
+   
+   
    private void addMessageToRecords(String[] detailedResponse) {
       String replicaMachineId = detailedResponse[1];
       String rmMsg;
@@ -244,18 +250,17 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
       DatagramPacket reply = new DatagramPacket(bufferLocal, bufferLocal.length);//reply packet ready but not populated.
       aSocket.setSoTimeout(rmTimeOut);
       aSocket.receive(reply);
-      
-      timeStampReceiveFromRM = System.currentTimeMillis();
-      RTT = getRTT(UdpServer.timeStampSendRequestToSequencer,timeStampReceiveFromRM); //get individual RTT for the specific Replica Manager
+
       String re = new String(bufferLocal, 0, reply.getLength());
-      updateRTT(re, RTT);//put that RTT in the hashMap with all RTTs for all Replica Managers
-      
       System.out.println("Got a response from a Replica Manager："+re);
+      String replicaNumber = re.split(";")[1];
+      System.out.println("Got a response from a Replica Manager " + replicaNumber +"："+re);
+
       return new String(bufferLocal, 0, reply.getLength());
    }
    
    
-   
+
 
    private String getCleanResponse() {
       //4: Clean data to detect replica failures, make sure keep only one response in List

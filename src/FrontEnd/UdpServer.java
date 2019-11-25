@@ -11,6 +11,7 @@ class UdpServer extends Thread {
     private static final Logger logger = Logger.getLogger("udp_server");
     private int targetUdpPort;
     private String targetAddress;
+    public static long timeStampSendRequestToSequencer;
 
     public void setMsgToSend(String msgToSend) {
         this.msgToSend = msgToSend;
