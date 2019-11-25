@@ -71,11 +71,23 @@ public class MTLServer extends OperationsPOA{
 	String cityForAdd="";
 	private static ORB orb;
 	public MTLServer() throws RemoteException{
-		super();	
-		
-		MTLMap.put("Dental",new HashMap<String,ArrayList<String>>());
-		MTLMap.put("Physician",new HashMap<String,ArrayList<String>>());
-		MTLMap.put("Surgeon",new HashMap<String,ArrayList<String>>());
+		super();
+		ArrayList<String> temp1=new ArrayList<String>();
+		ArrayList<String> temp2=new ArrayList<String>();	
+		ArrayList<String> temp3=new ArrayList<String>();	
+
+		Map<String,ArrayList<String>> t1=new HashMap<String,ArrayList<String>>();
+
+		MTLMap.put("Dental",t1);
+
+	    Map<String,ArrayList<String>> t2=new HashMap<String,ArrayList<String>>();
+
+		MTLMap.put("Physician",t2);
+
+		Map<String,ArrayList<String>> t3=new HashMap<String,ArrayList<String>>();
+
+		MTLMap.put("Surgeon",t3);
+
 	}
 	public void setORB(ORB orb_val) {
 		orb = orb_val;
@@ -223,8 +235,6 @@ public class MTLServer extends OperationsPOA{
 	public synchronized boolean checkAppointmentExisted(String appointmentID, String appointmentType)
 	{
 		boolean key1=MTLMap.containsKey(appointmentType);
-		if(Objects.isNull(MTLMap.get(appointmentType)))
-			return false;
 		boolean key2=MTLMap.get(appointmentType).containsKey(appointmentID);
 		if(key1&&key2) {
 			return true;
@@ -406,6 +416,7 @@ public class MTLServer extends OperationsPOA{
 			e.printStackTrace();
 		}
 		return sortAppointmentBySchedule(getAppointmentSchedule);
+		
 	}
 	public synchronized String cancelAppointment(String clientID,String patientID, String appointmentID,String appointmentType)
 	{
@@ -421,8 +432,6 @@ public class MTLServer extends OperationsPOA{
 		}
 		return success;
 	}
-	
-	
 	
 	public synchronized String swapAppointment(String clientID, String patientID,String oldAppointmentID, String oldAppointmentType,String newAppointmentID, String newAppointmentType) {
 		String success="";
@@ -456,6 +465,7 @@ public class MTLServer extends OperationsPOA{
 			}
 		}
 	}
+
 	public String printAppointmentByType(Map<String, Map<String,ArrayList<String>>> map, String type) {
 		String printAppointmentByType="";
 		for(Map.Entry<String, Map<String,ArrayList<String>>> mtl:map.entrySet())
@@ -470,7 +480,7 @@ public class MTLServer extends OperationsPOA{
 			}
 			
 		}
-
+		
 		return sortAppointmentByType(printAppointmentByType);
 	}
 	public String sortAppointmentByType(String printAppointmentByType){
@@ -482,6 +492,7 @@ public class MTLServer extends OperationsPOA{
 		}
 		return sortedString;
 	}
+
 	public String printAppointmentBySchedule(Map<String, Map<String,ArrayList<String>>> map,String clientID){
 		String printAppointmentBySchedule="";
 		for(Map.Entry<String, Map<String,ArrayList<String>>> mtl:map.entrySet())
@@ -496,6 +507,7 @@ public class MTLServer extends OperationsPOA{
 				}
 			}
 		}
+		
 		return printAppointmentBySchedule;
 	}
 	public String sortAppointmentBySchedule(String printAppointmentBySchedule) {
@@ -582,6 +594,8 @@ public class MTLServer extends OperationsPOA{
 				accessCount1=1;
 				//SocketCli.close();
 			}
+//			listAppointmentByType+=	"*** Appointments Summary (MTL) ***"+"\n";	
+//			listAppointmentBySchedule+="*** Appointments Summary (MTL) ***"+"\n";
 			//System.out.println("*** Appointments Summary (MTL) ***");
 			if(task.equalsIgnoreCase("listAppointmentAvailability"))
 			{
@@ -603,8 +617,9 @@ public class MTLServer extends OperationsPOA{
 			{
 				printAppointment(MTLMap);
 				writeTxtServerMTL(clientID,patientID,appointmentType,appointmentID,"swapAppointment", "accessed");
-			}			
-
+			}
+//			listAppointmentByType+=	"*** Appointments Summary (QUE) ***"+"\n";	
+//			listAppointmentBySchedule+="*** Appointments Summary (QUE) ***"+"\n";	
 			//System.out.println("*** Appointments Summary (QUE) ***");
 			if(task.equalsIgnoreCase("listAppointmentAvailability")) {
 				listAppointmentByType+=printAppointmentByType(otherMap1,appointmentType);
@@ -668,7 +683,9 @@ public class MTLServer extends OperationsPOA{
 				accessCount2=1;
 				//SocketCli2.close();
 			}
-
+			
+//			listAppointmentByType+=	"*** Appointments Summary (SHE) ***"+"\n";	
+//			listAppointmentBySchedule+="*** Appointments Summary (SHE) ***"+"\n";
 			//System.out.println("*** Appointments Summary (SHE) ***");
 			if(task.equalsIgnoreCase("listAppointmentAvailability"))
 			{
@@ -702,7 +719,7 @@ public class MTLServer extends OperationsPOA{
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-
+	
 		
 		if(task.equalsIgnoreCase("listAppointmentAvailability")) {
 			return listAppointmentByType;
@@ -1392,4 +1409,5 @@ public class MTLServer extends OperationsPOA{
 		
 		return true;
 	}
+
 }
