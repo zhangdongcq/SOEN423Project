@@ -2,8 +2,8 @@
 <!DOCTYPE log SYSTEM "logger.dtd">
 <log>
 <record>
-  <date>2019-11-24T13:01:16</date>
-  <millis>1574618476608</millis>
+  <date>2019-11-25T13:41:48</date>
+  <millis>1574707308494</millis>
   <sequence>6</sequence>
   <logger>user</logger>
   <level>INFO</level>
@@ -13,19 +13,19 @@
   <message>SUCCESS;</message>
 </record>
 <record>
-  <date>2019-11-24T13:01:48</date>
-  <millis>1574618508112</millis>
-  <sequence>11</sequence>
+  <date>2019-11-25T13:43:22</date>
+  <millis>1574707402743</millis>
+  <sequence>10</sequence>
   <logger>user</logger>
   <level>INFO</level>
   <class>Client.Client</class>
   <method>runUserOperations</method>
   <thread>1</thread>
-  <message>SUCCESS;</message>
+  <message>FAIL;</message>
 </record>
 <record>
-  <date>2019-11-24T13:02:00</date>
-  <millis>1574618520995</millis>
+  <date>2019-11-25T13:44:06</date>
+  <millis>1574707446643</millis>
   <sequence>16</sequence>
   <logger>user</logger>
   <level>INFO</level>
@@ -35,113 +35,14 @@
   <message>SUCCESS;</message>
 </record>
 <record>
-  <date>2019-11-24T13:02:17</date>
-  <millis>1574618537725</millis>
-  <sequence>22</sequence>
+  <date>2019-11-25T13:44:49</date>
+  <millis>1574707489886</millis>
+  <sequence>21</sequence>
   <logger>user</logger>
   <level>INFO</level>
   <class>Client.Client</class>
   <method>runUserOperations</method>
   <thread>1</thread>
   <message>SUCCESS;</message>
-</record>
-<record>
-  <date>2019-11-24T13:03:40</date>
-  <millis>1574618620990</millis>
-  <sequence>25</sequence>
-  <logger>user</logger>
-  <level>INFO</level>
-  <class>Client.Client</class>
-  <method>runUserOperations</method>
-  <thread>1</thread>
-  <message>SUCCESS;</message>
-</record>
-<record>
-  <date>2019-11-24T13:05:49</date>
-  <millis>1574618749647</millis>
-  <sequence>28</sequence>
-  <logger>user</logger>
-  <level>INFO</level>
-  <class>Client.Client</class>
-  <method>runUserOperations</method>
-  <thread>1</thread>
-  <message>Dental;QUEA131313;Physician;MTLA121212;Surgeon;MTLA121212;</message>
-</record>
-<record>
-  <date>2019-11-24T13:06:32</date>
-  <millis>1574618792272</millis>
-  <sequence>33</sequence>
-  <logger>user</logger>
-  <level>INFO</level>
-  <class>Client.Client</class>
-  <method>runUserOperations</method>
-  <thread>1</thread>
-  <message>SUCCESS;</message>
-</record>
-<record>
-  <date>2019-11-24T13:06:45</date>
-  <millis>1574618805914</millis>
-  <sequence>38</sequence>
-  <logger>user</logger>
-  <level>INFO</level>
-  <class>Client.Client</class>
-  <method>runUserOperations</method>
-  <thread>1</thread>
-  <message>SUCCESS;</message>
-</record>
-<record>
-  <date>2019-11-24T13:06:53</date>
-  <millis>1574618813443</millis>
-  <sequence>41</sequence>
-  <logger>user</logger>
-  <level>INFO</level>
-  <class>Client.Client</class>
-  <method>runUserOperations</method>
-  <thread>1</thread>
-  <message>Dental;MTLM121212;QUEA131313;Physician;MTLA121212;Surgeon;MTLA121212;</message>
-</record>
-<record>
-  <date>2019-11-24T13:07:08</date>
-  <millis>1574618828649</millis>
-  <sequence>44</sequence>
-  <logger>user</logger>
-  <level>INFO</level>
-  <class>Client.Client</class>
-  <method>runUserOperations</method>
-  <thread>1</thread>
-  <message>MTLA121212 21;QUEA121212 23;</message>
-</record>
-<record>
-  <date>2019-11-24T13:07:16</date>
-  <millis>1574618836705</millis>
-  <sequence>47</sequence>
-  <logger>user</logger>
-  <level>INFO</level>
-  <class>Client.Client</class>
-  <method>runUserOperations</method>
-  <thread>1</thread>
-  <message>MTLA121212 22;</message>
-</record>
-<record>
-  <date>2019-11-24T13:07:21</date>
-  <millis>1574618841901</millis>
-  <sequence>50</sequence>
-  <logger>user</logger>
-  <level>INFO</level>
-  <class>Client.Client</class>
-  <method>runUserOperations</method>
-  <thread>1</thread>
-  <message>MTLM121212 2;QUEA131313 22;</message>
-</record>
-<record>
-  <date>2019-11-24T13:32:33</date>
-  <millis>1574620353463</millis>
-  <sequence>53</sequence>
-  <logger>user</logger>
-  <level>INFO</level>
-  <class>Client.Client</class>
-  <method>runUserOperations</method>
-  <thread>1</thread>
-  <message>Dental;MTLM121212;Dental;QUEA131313;Physician;MTLA121212;Surgeon;MTLA121212;</message>
 </record>
 </log>
