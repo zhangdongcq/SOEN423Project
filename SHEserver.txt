@@ -18,3 +18,5 @@
 2019-11-24 23:17:30: [SHE Server]: Received app availabilities for: (MTLP3333) request from MTL server and replied ""
 2019-11-24 23:18:29: getLocalSchedule: Patient MTLP3333 has no scheduled appointments
 2019-11-24 23:18:29: [SHE Server]: Received app availabilities for: (MTLP3333) request from MTL server and replied ""
+2019-11-24 23:24:51: getLocalSchedule: Patient MTLP3333 has no scheduled appointments
+2019-11-24 23:24:51: [SHE Server]: Received app availabilities for: (MTLP3333) request from MTL server and replied ""

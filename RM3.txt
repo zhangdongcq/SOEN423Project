@@ -138,3 +138,13 @@
 2019-11-24 23:18:29: RM3: current Sequence Number in RM: 9
 2019-11-24 23:18:29: RM3 REPLY: 9;3;Physician;MTLA111111;Surgeon;MTLA222222
 2019-11-24 23:18:29: RM3 sent a reply: [9;3;Physician;MTLA111111;Surgeon;MTLA222222] to FE: 127.0.0.1:7789
+2019-11-24 23:23:32: RM3 gets msg from sequencer: 127.0.0.1;7789;10;MTLA3333;swapAppointment;MTLP3333;MTLA222222;Surgeon;MTLA333333;Dental
+2019-11-24 23:23:32: RM3 received a message [10 MTLA3333 swapAppointment MTLP3333;MTLA222222;Surgeon;MTLA333333;Dental;] from Sequencer
+2019-11-24 23:23:32: RM3: current Sequence Number in RM: 10
+2019-11-24 23:23:32: RM3 REPLY: 10;3;SUCCESS
+2019-11-24 23:23:32: RM3 sent a reply: [10;3;SUCCESS] to FE: 127.0.0.1:7789
+2019-11-24 23:24:51: RM3 gets msg from sequencer: 127.0.0.1;7789;11;MTLA3333;getAppointmentSchedule;MTLP3333
+2019-11-24 23:24:51: RM3 received a message [11 MTLA3333 getAppointmentSchedule MTLP3333;] from Sequencer
+2019-11-24 23:24:51: RM3: current Sequence Number in RM: 11
+2019-11-24 23:24:51: RM3 REPLY: 11;3;Dental;MTLA333333;Physician;MTLA111111
+2019-11-24 23:24:51: RM3 sent a reply: [11;3;Dental;MTLA333333;Physician;MTLA111111] to FE: 127.0.0.1:7789
