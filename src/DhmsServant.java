@@ -311,7 +311,9 @@ public class DhmsServant extends DhmsPOA{
 	            th2.join();
 	            logFile.writeLog("["+serverLocation+" Server]: Got the reply of getAppointmentSchedule("+patientID+") request from "+th2.remoteServer+" server. \""+th2.replyFromServer+"\"");
 	
-	            
+	            if(resultStr.isEmpty())
+	            	return resultStr;
+	            else
 	            resultStr = removeLastChar(sortAppointmentSchedule(String.valueOf(getLocalSchedule(patientID))+th1.replyFromServer+th2.replyFromServer));
 	            //resultStr = sortAppointmentSchedule(String.valueOf(getLocalSchedule(patientID))+th1.replyFromServer+th2.replyFromServer);
 
