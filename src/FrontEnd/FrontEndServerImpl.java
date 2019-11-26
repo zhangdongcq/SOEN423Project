@@ -246,9 +246,12 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    {
 	   for(HashMap.Entry<Integer,String> response : responses.entrySet())
 	   {
-		   if(Objects.isNull(response.getValue()))
-				   continue; //Replica timed out, already failed
-		   boolean responseIsCorrect = response.getValue().equals(cleanResponse);
+//		   if(Objects.isNull(response.getValue()))
+//				   continue; //Replica timed out, already failed
+         boolean responseIsCorrect =
+                 (Objects.isNull(response.getValue()) && cleanResponse.equals("NONE")) ||
+                 response.getValue().equals(cleanResponse);
+
 		   if(!responseIsCorrect)
 		   {
 			   int currentCount = replicaNames.get(response.getKey());
