@@ -82,11 +82,11 @@ public class RM {
 			System.out.println("Replica Manager 1111 Started............");
 			aSocket.joinGroup(InetAddress.getByName("228.5.6.9"));
 			byte[] buffer = new byte[1000];			
-			while (countFail<3) {
+			while (countFail<1) {
 				DatagramPacket requestFromSequencer = new DatagramPacket(buffer, buffer.length);
 				aSocket.receive(requestFromSequencer);
 				
-				String sentenceStr = new String(requestFromSequencer.getData());				
+				String sentenceStr = new String(requestFromSequencer.getData(),requestFromSequencer.getOffset(),requestFromSequencer.getLength());				
 				executeRequest(sentenceStr);	
 				System.out.println("Sending resposne to FE: " + responseFromServers);
 				sendMessageToFE(responseFromServers);
