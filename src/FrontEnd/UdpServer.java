@@ -11,6 +11,7 @@ class UdpServer extends Thread {
     private static final Logger logger = Logger.getLogger("udp_server");
     private int targetUdpPort;
     private String targetAddress;
+    public static long timeStampSendRequestToSequencer;
 
     public void setMsgToSend(String msgToSend) {
         this.msgToSend = msgToSend;
@@ -21,8 +22,6 @@ class UdpServer extends Thread {
     private int timeOut;
     private int counter = 1;
     private boolean resend = false;
-    public static long timeStampSendRequestToSequencer;
-    public static String command;
 
     UdpServer(int targetUdpPort, String targetAddress, String msgToSend, Map<String, HashMap<Integer,String>> allRequestRecords, int timeOut) {
         this.targetUdpPort = targetUdpPort;
@@ -35,8 +34,6 @@ class UdpServer extends Thread {
     @Override
     public void run() {
         while (counter-- > 0) {
-        	String [] parts = msgToSend.split(";");
-        	command = parts[1];
             System.out.println("Request message from the client is : " + msgToSend);
             if (resend) msgToSend += ";RESEND";
             DatagramSocket clientSocket = null;
@@ -91,4 +88,3 @@ class UdpServer extends Thread {
         }
     }
 }
-

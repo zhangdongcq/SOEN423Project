@@ -22,7 +22,7 @@ import org.omg.PortableServer.POAPackage.WrongPolicy;
 import corbasystem.IFrontEndServer;
 import corbasystem.IFrontEndServerHelper;
 
-public class FrontEndSever {
+public class FrontEndServer {
    private static final Logger logger = Logger.getLogger("server");
 
    public static void main(String[] args) {
@@ -54,7 +54,7 @@ public class FrontEndSever {
       //Generate and initiate the ORB
       Properties props = new Properties();
       //Initiate the port
-      props.put("org.omg.CORBA.ORBInitialPort", "1050");
+      props.put("org.omg.CORBA.ORBInitialPort", "1055");
       //Bind the server
       props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
       //Initiate ORB

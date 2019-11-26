@@ -118,7 +118,7 @@ public class Client {
 	   try {
 	   Properties props = new Properties();
        //Generate and initiate the ORB
-       props.put("org.omg.CORBA.ORBInitialPort", "1050");
+       props.put("org.omg.CORBA.ORBInitialPort", "1055");
        props.put("org.omg.CORBA.ORBInitialHost", "127.0.0.1");
        ORB orb = ORB.init(args, props);
        // Get Root naming server

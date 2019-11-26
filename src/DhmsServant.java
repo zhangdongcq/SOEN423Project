@@ -312,9 +312,12 @@ public class DhmsServant extends DhmsPOA{
 	            logFile.writeLog("["+serverLocation+" Server]: Got the reply of getAppointmentSchedule("+patientID+") request from "+th2.remoteServer+" server. \""+th2.replyFromServer+"\"");
 	
 	            
-	            resultStr = removeLastChar(sortAppointmentSchedule(String.valueOf(getLocalSchedule(patientID))+th1.replyFromServer+th2.replyFromServer));
-	            //resultStr = sortAppointmentSchedule(String.valueOf(getLocalSchedule(patientID))+th1.replyFromServer+th2.replyFromServer);
-
+	            resultStr = String.valueOf(getLocalSchedule(patientID))+th1.replyFromServer+th2.replyFromServer;
+	            if(resultStr.isEmpty())
+	            	return resultStr;
+	            else
+	            	resultStr = removeLastChar(sortAppointmentSchedule(String.valueOf(getLocalSchedule(patientID))+th1.replyFromServer+th2.replyFromServer));
+	           
 	            //release thread object
 	            th1 = null;
 	            th2 = null;
@@ -553,7 +556,7 @@ public class DhmsServant extends DhmsPOA{
 					if(entryPatient.getKey().equals(patientID) && entryPatient2.getValue().contains(appointmentID)){
 						entryPatient2.getValue().remove(appointmentID);
 						if(entryPatient2.getValue().isEmpty()){
-							entryPatient.getValue().clear();
+							entryPatient2.getValue().clear();
 						}
 						//add appointment back in appointment records
 						returnAppointment(entryPatient2.getKey(), appointmentID);
