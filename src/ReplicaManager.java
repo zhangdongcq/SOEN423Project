@@ -34,7 +34,7 @@ public class ReplicaManager {
 		boolean running = true;
 		logFile = new Log("RM3.txt");
 		int countFail = 0;
-		while(countFail < 3 ){
+		while(countFail  < 1){
 			
 			String sequencerRequest = getSequencerRequest();
 			List<String> parts = Arrays.asList(sequencerRequest.split(";"));

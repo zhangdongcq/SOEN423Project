@@ -21,3 +21,7 @@
 2019-11-24 23:24:51: getLocalSchedule: Patient MTLP3333 has no scheduled appointments
 2019-11-24 23:24:51: [SHE Server]: Received app availabilities for: (MTLP3333) request from MTL server and replied ""
 2019-11-25 10:39:18: SHE UDP port: 3332
+2019-11-26 15:24:39: SHE UDP port: 3332
+2019-11-26 15:24:39: SHE UDP port: 3332
+2019-11-26 15:24:39: SHE UDP port: 3332
+2019-11-26 15:24:39: SHE UDP port: 3332
