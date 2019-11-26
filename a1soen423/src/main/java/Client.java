@@ -77,7 +77,7 @@ public class Client {
         		MessageExecutor.setCountFail((currentCount +1));
         		System.out.println("This replica has recieved a failure, failcount is " + (currentCount+1));
         	}
-        	if(MessageExecutor.getCountFail() >2)
+        	if(MessageExecutor.getCountFail() > 0)
         		hasFailed = true;
         	return true;
         }

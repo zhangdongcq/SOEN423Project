@@ -22,7 +22,7 @@ public class MessageExecutor {
 
     public static void executeRequest(List<String> requestArguments, RemotelyInvokableHospital remotelyInvokableHospital)
     {
-    	if(countFail == 3)
+    	if(countFail == 1)
     	{
     		System.out.println("This replica has failed (3 incorrect responses or timeout). No longer executing requests");
     		return;
