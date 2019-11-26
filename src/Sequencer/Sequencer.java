@@ -85,6 +85,6 @@ public class Sequencer {
    }
 
    private static String encapsulateRequest(String msgFromFrontEnd, String feAddress, int fePort) {
-      return msgFromFrontEnd.contains("FAIL") ? msgFromFrontEnd : String.join(";", "127.0.0.1", fePort + "", ++globalSequenceCounter + "", msgFromFrontEnd);
+      return msgFromFrontEnd.contains("FAIL") ? msgFromFrontEnd : String.join(";", "132.205.64.180", fePort + "", ++globalSequenceCounter + "", msgFromFrontEnd);
    }
 }

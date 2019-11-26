@@ -16,7 +16,9 @@ public class Utils {
             byte[] msg = allMsgs.poll().getBytes();
             DatagramPacket packet = new DatagramPacket(msg, msg.length,
                     group, port);
-            socket.send(packet);
+            for(int i=0; i< 6; i++){
+            	socket.send(packet);
+            }
          }
          socket.close();
    }

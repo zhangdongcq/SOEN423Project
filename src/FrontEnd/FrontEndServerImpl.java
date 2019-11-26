@@ -25,6 +25,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    private static final int timeOutTwenty = 20;
    //private static final int timeOutTwoHundreds = 2000; 
    private static int rmTimeOut = 6000;//TODO make this dynamic (exponential moving average??)
+   private static int minTimeOut = 5000;
    private static final int sequencerUdpPort = 6789;
    private static final int frontEndReplicaManagerListenerUdpPort = 7789;
    private static int numberOfRMs;
@@ -98,7 +99,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
    private void getAllResponseMessagesFromRMs(DatagramSocket aSocket, byte[] buffer) {
 	   while (!finalResult) {
          try {
-//        	 System.out.println("RM TIME OUT BEFORE ALL RESPONSES: "+ rmTimeOut);
+        	System.out.println("RM TIME OUT BEFORE ALL RESPONSES: "+ rmTimeOut);
             String response = getResponseFromRM(aSocket, buffer);
             String[] detailedResponse = response.split(";");
             currentSequenceId = detailedResponse[0];
@@ -106,9 +107,9 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
             allResponsesReceived = Utils.isAllPopulated(allRequestRecords.get(currentSequenceId), numberOfRMs);
 
             if (allResponsesReceived){ 
-//            	//after all responses are received, set a new timeOut
-//            	rmTimeOut = setNewTimeOutRm(rtt);
-//            	System.out.println("RM TIME OUT AFTER ALL RESPONSES: "+ rmTimeOut);
+            	//after all responses are received, set a new timeOut
+            	rmTimeOut = setNewTimeOutRm(rtt);
+            	System.out.println("RM TIME OUT AFTER ALL RESPONSES: "+ rmTimeOut);
             	break;
             }
          } catch (SocketTimeoutException e) {
@@ -156,6 +157,8 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
 	   if(!rtt.isEmpty()){
 		 long longestResponse = rtt.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get().getValue();
 		 newTimeOut = (int) (longestResponse*2);
+		 if (newTimeOut < minTimeOut)
+			 return minTimeOut;
 
 	   }
 
@@ -202,10 +205,10 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
       DatagramPacket reply = new DatagramPacket(bufferLocal, bufferLocal.length);//reply packet ready but not populated.
       aSocket.setSoTimeout(rmTimeOut);
       aSocket.receive(reply);
-//      timeStampReceiveFromRM = System.currentTimeMillis();
-//      RTT = getRTT(UdpServer.timeStampSendRequestToSequencer,timeStampReceiveFromRM); 
+      timeStampReceiveFromRM = System.currentTimeMillis();
+      RTT = getRTT(UdpServer.timeStampSendRequestToSequencer,timeStampReceiveFromRM); 
       String re = new String(bufferLocal, 0, reply.getLength());
-//      updateRTT(re, RTT);//put that RTT in the hashMap with all RTTs for all Replica Managers
+      updateRTT(re, RTT);//put that RTT in the hashMap with all RTTs for all Replica Managers
       if(Objects.isNull(re)) return "ERROR: EMPTY RESPONSE";
       String replicaNumber = re.split(";")[1];
       System.out.println("Got a response from a Replica Manager " + replicaNumber +"："+re);
@@ -248,11 +251,17 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
 	   {
 //		   if(Objects.isNull(response.getValue()))
 //				   continue; //Replica timed out, already failed
-         boolean responseIsCorrect =
-                 (Objects.isNull(response.getValue()) && cleanResponse.equals("NONE")) ||
-                 response.getValue().equals(cleanResponse);
+//		   boolean responseIsNull = Objects.isNull(response.getValue());
+//		   boolean responseAndCleanIsNull = (responseIsNull) && cleanResponse.equals("NONE");
+//		   boolean incorrect = responseIsNull || response.getValue().equals(cleanResponse);
+//         boolean responseIsCorrect =
+//                 (responseIsNull) && cleanResponse.equals("NONE") 
+//                 || Objects.isNull(response.getValue())  ||
+//                 response.getValue().equals(cleanResponse);
+         
+         boolean wrongResponse = !Objects.isNull(response.getValue()) && !response.getValue().equals(cleanResponse);
 
-		   if(!responseIsCorrect)
+		   if(wrongResponse)
 		   {
 			   int currentCount = replicaNames.get(response.getKey());
 			   currentCount++;
