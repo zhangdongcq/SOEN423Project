@@ -75,11 +75,6 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
          return "UDP Socket Problem in FE";
       }
       String result = getCleanResponse();
-      if(result.equals(noMajorityString)){
-    	  for(int num : replicaNames.keySet()){
-    		  sendFailureMessageToAll(String.valueOf(num));
-    	  }
-      }
       return result;
    }
 
@@ -94,11 +89,6 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
     	  failureNoticeUdpThread.start();
       }
    }
-   
-   private void sendFailureMessageToAll(String failureMachineId) {
-	      UdpServer failureNoticeUdpThread = new UdpServer(sequencerUdpPort, localhost, failureMachineId + ";FAIL", allRequestRecords, timeOutTwenty);
-	      failureNoticeUdpThread.start();
-	   }
 
    private void sendReliableAsyncMessageToSequencer(String msgToSend) {
       UdpServer frontEndToSequencerThread = new UdpServer(sequencerUdpPort, localhost, msgToSend, allRequestRecords, timeOutTwenty);
@@ -231,8 +221,7 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
 	   ArrayList<String> cleanResponse = Utils.findMajority(responses);
 	   
 	   boolean allResponsesAreTheSame = responses.values().stream().allMatch(item -> Objects.nonNull(item) && item.equals(cleanResponse.get(0)));
-	   boolean allMachinesHaveWrongResponse = Objects.nonNull(cleanResponse.get(0)) && cleanResponse.get(0).equals("NO_MAJORITY");
-	   if(!allResponsesAreTheSame && !allMachinesHaveWrongResponse) //Already send fail when all are wrong
+	   if(!allResponsesAreTheSame) //Already send fail when all are wrong
 	   {
 		   updateFailureMachines(cleanResponse.get(0), responses);
 	   }
@@ -265,10 +254,10 @@ public class FrontEndServerImpl extends IFrontEndServerPOA {
 			   int currentCount = replicaNames.get(response.getKey());
 			   currentCount++;
 			   replicaNames.put(response.getKey(), currentCount);
-			   UdpServer failureNoticeUdpThread = new UdpServer(sequencerUdpPort, localhost, response.getKey() + ";FAIL", allRequestRecords, timeOutTwenty);
-		    	  failureNoticeUdpThread.start();
 			   if(currentCount>2)
 			   {
+				   UdpServer failureNoticeUdpThread = new UdpServer(sequencerUdpPort, localhost, response.getKey() + ";FAIL", allRequestRecords, timeOutTwenty);
+			    	  failureNoticeUdpThread.start();
 				   replicaNames.remove(response.getKey());
 				   numberOfRMs--;
 			   }
