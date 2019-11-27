@@ -724,7 +724,7 @@ public class DhmsServant extends DhmsPOA{
 			String result = "";
 			for(HashMap.Entry<String, HashMap<String, Integer>> entry1 : appointmentRecords.entrySet()){
 				for(HashMap.Entry<String,Integer> entry2: entry1.getValue().entrySet()){
-					if(entry1.getKey().equals(appointmentType) && entry2.getValue()>0){
+					if(entry1.getKey().equals(appointmentType)){ //&& entry2.getValue()>0){
 						
 						result = result+entry2.getKey().toString()+" "+entry2.getValue().toString()+";";
 					}
