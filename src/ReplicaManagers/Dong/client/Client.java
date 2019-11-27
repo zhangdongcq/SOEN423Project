@@ -58,10 +58,10 @@ public class Client {
             // 127.0.0.1;8675;1;MTLA2222;addAppointment;appointmentID;appointmentType;capacity
             if (request.contains(";FAIL")) {
                //TODO: Handle three-time failure!
-            	failureCounter++;
-            	if(failureCounter == 3){
-            		System.out.println("Got a FAILUIRE!! Reached three time!");
-            	}
+//            	failureCounter++;
+//            	if(failureCounter == 3){
+               System.out.println("Got a FAILUIRE!! Reached three time!");
+//            	}
                continue;
             }
             String[] header = request.split(";");
@@ -78,7 +78,7 @@ public class Client {
             String operationResult = getReplicaResponse().trim();
             Utils.sendResultToFrontEnd(operationResult, sequenceId, replicaManagerId, frontEndIp, frontEndPort);
             System.out.println("(ReplicaManager) gets msg from sequencer: " + request);
-            System.out.println("(ReplicaManager) send msg to frontend: " + String.join(";",sequenceId, replicaManagerId, operationResult));
+            System.out.println("(ReplicaManager) send msg to frontend: " + String.join(";", sequenceId, replicaManagerId, operationResult));
          }
       } catch (SocketException e) {
          System.out.println("Socket: " + e.getMessage());
