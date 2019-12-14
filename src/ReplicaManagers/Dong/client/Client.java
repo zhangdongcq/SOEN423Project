@@ -28,6 +28,7 @@ public class Client {
    private static String userType;
    private static String operatorId;
    private static String sequenceId = "1";
+   private static String goodOperation = "";
    private static String targetCity;
    private static IServer server;
    private static String frontEndIp;
@@ -56,14 +57,13 @@ public class Client {
             request = new String(requestFromSe.getData(),
                     requestFromSe.getOffset(), requestFromSe.getLength());
             // 127.0.0.1;8675;1;MTLA2222;addAppointment;appointmentID;appointmentType;capacity
+            if(goodOperation.equals(request)){ continue; }
             if (request.contains(";FAIL")) {
-               //TODO: Handle three-time failure!
-//            	failureCounter++;
-//            	if(failureCounter == 3){
-               System.out.println("Got a FAILUIRE!! Reached three time!");
-//            	}
+               String msg = String.format("Attention! Machine with ID %s is in FAILURE!!!", request.split(";")[0]);
+               System.out.println(msg);
                continue;
             }
+            goodOperation = request;
             String[] header = request.split(";");
             frontEndIp = header[0];
             frontEndPort = header[1];
