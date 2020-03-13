@@ -1,0 +1,84 @@
+
+r
+java:S1192~"WDefine a constant instead of duplicating this literal "Thanks for using DHMS." 4 times.(ò”€ˆûÿÿÿÿ
+{
+java:S1192x"`Define a constant instead of duplicating this literal "Do you want to continue? yes/no" 4 times.(–ºĞàùÿÿÿÿ
+g
+java:S1192""LDefine a constant instead of duplicating this literal "NameService" 6 times.(ÇĞùíşÿÿÿÿ
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(•İÈ‚ıÿÿÿÿ
+>
+java:S1148/"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S1148D"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+k	java:S116"QRename this field "MTLobj" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Èµ˜Åøÿÿÿÿ
+f	java:S116"QRename this field "QUEobj" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ùï”
+k	java:S116"QRename this field "SHEobj" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Õ³‰ïúÿÿÿÿ
+S	java:S106."9Replace this use of System.out or System.err by a logger.(£Ü÷ìøÿÿÿÿ
+;
+java:S3010F"%Remove this assignment of "clientID".(¨ Ê”
+<
+java:S3010G"&Remove this assignment of "patientID".(Š‡Îó
+H
+java:S3010H"-Remove this assignment of "oldAppointmentID".(±¬Ü¹øÿÿÿÿ
+J
+java:S3010I"/Remove this assignment of "oldAppointmentType".(¾ÿìåÿÿÿÿÿ
+C
+java:S3010J"-Remove this assignment of "newAppointmentID".(Ù×ô¨
+E
+java:S3010K"/Remove this assignment of "newAppointmentType".(«®®–
+S	java:S106C"9Replace this use of System.out or System.err by a logger.(£Ü÷ìøÿÿÿÿ
+K
+java:S2209F"5Change this instance-reference to a static reference.(¨ Ê”
+K
+java:S2209G"5Change this instance-reference to a static reference.(Š‡Îó
+P
+java:S2209H"5Change this instance-reference to a static reference.(±¬Ü¹øÿÿÿÿ
+P
+java:S2209I"5Change this instance-reference to a static reference.(¾ÿìåÿÿÿÿÿ
+K
+java:S2209J"5Change this instance-reference to a static reference.(Ù×ô¨
+K
+java:S2209K"5Change this instance-reference to a static reference.(«®®–
+P
+java:S1854R":Remove this useless assignment to local variable "client".(·¶¢­
+m
+java:S3776M"RRefactor this method to reduce its Cognitive Complexity from 63 to the 15 allowed.(íä¸üÿÿÿÿ
+S
+java:S1197M"8Move the array designator from the variable to the type.(íä¸üÿÿÿÿ
+S	java:S106V"9Replace this use of System.out or System.err by a logger.(êÜ™åùÿÿÿÿ
+S	java:S106W"9Replace this use of System.out or System.err by a logger.(ŞÒ—üÿÿÿÿ
+S	java:S106X"9Replace this use of System.out or System.err by a logger.(®ÿ‡ıÿÿÿÿ
+S	java:S106Z"9Replace this use of System.out or System.err by a logger.(ŞÒ—üÿÿÿÿ
+S	java:S106["9Replace this use of System.out or System.err by a logger.(Ïş’Ñùÿÿÿÿ
+S	java:S106]"9Replace this use of System.out or System.err by a logger.(ŞÒ—üÿÿÿÿ
+M	java:S106^"9Replace this use of System.out or System.err by a logger.(ÄšŒa
+S	java:S106i"9Replace this use of System.out or System.err by a logger.(¢Šáõşÿÿÿÿ
+S	java:S106p"9Replace this use of System.out or System.err by a logger.(…Ş¶ˆşÿÿÿÿ
+S	java:S106x"9Replace this use of System.out or System.err by a logger.(–ºĞàùÿÿÿÿ
+S	java:S106~"9Replace this use of System.out or System.err by a logger.(ò”€ˆûÿÿÿÿ
+T	java:S106‡"9Replace this use of System.out or System.err by a logger.(–ºĞàùÿÿÿÿ
+T	java:S106"9Replace this use of System.out or System.err by a logger.(ò”€ˆûÿÿÿÿ
+T	java:S106—"9Replace this use of System.out or System.err by a logger.(¢Šáõşÿÿÿÿ
+T	java:S106"9Replace this use of System.out or System.err by a logger.(šğø™ûÿÿÿÿ
+T	java:S106£"9Replace this use of System.out or System.err by a logger.(–ºĞàùÿÿÿÿ
+T	java:S106©"9Replace this use of System.out or System.err by a logger.(ò”€ˆûÿÿÿÿ
+T	java:S106¯"9Replace this use of System.out or System.err by a logger.(–ºĞàùÿÿÿÿ
+T	java:S106µ"9Replace this use of System.out or System.err by a logger.(ò”€ˆûÿÿÿÿ
+O	java:S106½"9Replace this use of System.out or System.err by a logger.(ÀŞ
+O	java:S106Æ"9Replace this use of System.out or System.err by a logger.(ı‡şÓ
+T	java:S106Î"9Replace this use of System.out or System.err by a logger.(ğÙ‚Éùÿÿÿÿ
+8	java:S131Ó""Add a default case to this switch.(™Ïêƒ
+T	java:S106Ü"9Replace this use of System.out or System.err by a logger.(¢â·Ëşÿÿÿÿ
+O	java:S106ä"9Replace this use of System.out or System.err by a logger.(´÷ÓÙ
+T	java:S106ë"9Replace this use of System.out or System.err by a logger.(‘¦ºÒüÿÿÿÿ
+O	java:S106ö"9Replace this use of System.out or System.err by a logger.(ìÄ×Ù
+O	java:S106ş"9Replace this use of System.out or System.err by a logger.(¦šÚË
+T	java:S106ˆ"9Replace this use of System.out or System.err by a logger.(£ŞÒÿúÿÿÿÿ
+O	java:S106‹"9Replace this use of System.out or System.err by a logger.(Ûê¢û
+T	java:S106"9Replace this use of System.out or System.err by a logger.(©ç¼–şÿÿÿÿ
+O	java:S106"9Replace this use of System.out or System.err by a logger.(Ùéš
+O	java:S106“"9Replace this use of System.out or System.err by a logger.(•š ƒ
+T	java:S106˜"9Replace this use of System.out or System.err by a logger.(Ùö†­ıÿÿÿÿ
+A
+java:S1481R"+Remove this unused "client" local variable.(·¶¢­
+R	java:S125š"<This block of commented-out lines of code should be removed.(İ•

@@ -1,0 +1,117 @@
+
+|
+java:S1192v"fDefine a constant instead of duplicating this literal "Successfully get the appointment for " 3 times.(Ø¤ÜÑ
+q
+java:S1192¸"UDefine a constant instead of duplicating this literal "Successfully removed" 3 times.(™¿ÁÌşÿÿÿÿ
+l
+java:S1192V"QDefine a constant instead of duplicating this literal "book Appointment" 6 times.(ŒÔü¤ıÿÿÿÿ
+³
+java:S1192°"–Define a constant instead of duplicating this literal "The appointment you entered does not exist in MTL Database. Please enter another one." 3 times.(‰æªûÿÿÿÿ
+t
+java:S1192w"YDefine a constant instead of duplicating this literal "get Appointment Schedule" 6 times.(¨ò÷’üÿÿÿÿ
+n
+java:S1192˜"WDefine a constant instead of duplicating this literal "Successfully cancelled" 3 times.(ñé¾
+h
+java:S1192ì"RDefine a constant instead of duplicating this literal "Successfully list" 3 times.(ÂŒ¾
+j
+java:S1192±"SDefine a constant instead of duplicating this literal "remove Appointment" 9 times.(ï„ß„
+c
+java:S1192T"HDefine a constant instead of duplicating this literal "Failed" 24 times.(ä“ÉÉÿÿÿÿÿ
+d
+java:S1192T"IDefine a constant instead of duplicating this literal "Success" 21 times.(ä“ÉÉÿÿÿÿÿ
+q
+java:S1192¾"UDefine a constant instead of duplicating this literal "Successfully swapped" 3 times.(…¦˜§ùÿÿÿÿ
+m
+java:S1192À"QDefine a constant instead of duplicating this literal "swap Appointment" 6 times.(’ßı«ûÿÿÿÿ
+f
+java:S1192õ"PDefine a constant instead of duplicating this literal "add Appointment" 6 times.(å‡ãr
+z
+java:S1192î"^Define a constant instead of duplicating this literal "list Appointment Availability" 6 times.(°ç×Ÿúÿÿÿÿ
+o
+java:S1192š"SDefine a constant instead of duplicating this literal "cancel Appointment" 6 times.(×’×şÿÿÿÿ
+«
+java:S1192ì"Define a constant instead of duplicating this literal "The appointment you entered exists in MTL Database. Please enter another one." 3 times.(›ÚĞ‰şÿÿÿÿ
+H
+java:S1199K"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ
+H
+java:S1199o"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ
+I
+java:S1199"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ
+I
+java:S1199²"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ
+I
+java:S1199Ù"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ
+I
+java:S1199¤"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ
+I
+java:S1199ç"-Extract this nested code block into a method.(ÒÌâ–øÿÿÿÿ
+[	java:S112"FDefine and throw a dedicated exception instead of using a generic one.(‹»¼¿
+P
+java:S11418"5Extract this nested try block into a separate method.(¡»¢üùÿÿÿÿ
+t	java:S120"ZRename this package name to match the regular expression '^[a-z_]+(\.[a-z_][a-z0-9_]*)*$'.(•İÈ‚ıÿÿÿÿ
+>
+java:S1148<"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+>
+java:S1148@"#Use a logger to log this exception.(€ÉÔ…ıÿÿÿÿ
+X
+java:S1128"=Remove this unused import 'java.rmi.registry.LocateRegistry'.(†ÇÅ«øÿÿÿÿ
+R
+java:S1128"7Remove this unused import 'java.rmi.registry.Registry'.(¢Ò¹ğıÿÿÿÿ
+P
+java:S1128"5Remove this unused import 'java.rmi.RemoteException'.(Ä÷àÿÿÿÿÿ
+‚
+java:S1130"lRemove the declaration of thrown exception 'java.lang.Exception', as it cannot be thrown from method's body.(‹»¼¿
+S	java:S106!"9Replace this use of System.out or System.err by a logger.(ªÓ¼áşÿÿÿÿ
+S	java:S106$"9Replace this use of System.out or System.err by a logger.(œ±«¨ùÿÿÿÿ
+N	java:S106("9Replace this use of System.out or System.err by a logger.(ëÈ±–
+N	java:S106,"9Replace this use of System.out or System.err by a logger.(Å°•ğ
+S	java:S1060"9Replace this use of System.out or System.err by a logger.(÷è™ıÿÿÿÿ
+M
+java:S1135;"2Complete the task associated to this TODO comment.(ÕÌ®şÿÿÿÿ
+M
+java:S1135?"2Complete the task associated to this TODO comment.(ÕÌ®şÿÿÿÿ
+i
+java:S3776C"SRefactor this method to reduce its Cognitive Complexity from 164 to the 15 allowed.(öÊÎ
+7	java:S131F""Add a default case to this switch.(ªÑ·Ë
+S	java:S106U"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+S	java:S106]"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+S	java:S106e"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+N	java:S106v"9Replace this use of System.out or System.err by a logger.(Ø¤ÜÑ
+N	java:S106~"9Replace this use of System.out or System.err by a logger.(Ø¤ÜÑ
+O	java:S106†"9Replace this use of System.out or System.err by a logger.(Ø¤ÜÑ
+T	java:S106™"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+T	java:S106¡"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+T	java:S106©"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+O	java:S106µ"9Replace this use of System.out or System.err by a logger.(Ùéš
+O	java:S106¸"9Replace this use of System.out or System.err by a logger.(•š ƒ
+O	java:S106¿"9Replace this use of System.out or System.err by a logger.(õ€€«
+O	java:S106Ç"9Replace this use of System.out or System.err by a logger.(õ€€«
+O	java:S106Ï"9Replace this use of System.out or System.err by a logger.(õ€€«
+O	java:S106Ú"9Replace this use of System.out or System.err by a logger.(Ş«Å†
+T	java:S106ì"9Replace this use of System.out or System.err by a logger.(›ÚĞ‰şÿÿÿÿ
+D
+java:S1125ó"(Remove the literal "true" boolean value.(×«˜ıÿÿÿÿ
+T	java:S106ô"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+T	java:S106€"9Replace this use of System.out or System.err by a logger.(›ÚĞ‰şÿÿÿÿ
+>
+java:S1125‡"(Remove the literal "true" boolean value.(°Ûëg
+T	java:S106ˆ"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+T	java:S106”"9Replace this use of System.out or System.err by a logger.(›ÚĞ‰şÿÿÿÿ
+D
+java:S1125›"(Remove the literal "true" boolean value.(ñëÀŒøÿÿÿÿ
+T	java:S106œ"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+O	java:S106¥"9Replace this use of System.out or System.err by a logger.(ó®ğŠ
+T	java:S106°"9Replace this use of System.out or System.err by a logger.(‰æªûÿÿÿÿ
+T	java:S106¹"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+T	java:S106Ã"9Replace this use of System.out or System.err by a logger.(‰æªûÿÿÿÿ
+T	java:S106Ì"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+T	java:S106Ö"9Replace this use of System.out or System.err by a logger.(‰æªûÿÿÿÿ
+T	java:S106ß"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+T	java:S106í"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+T	java:S106õ"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+T	java:S106ı"9Replace this use of System.out or System.err by a logger.(®ıáëûÿÿÿÿ
+H
+java:S1602‹",Remove useless curly braces around statement(Â¶œşÿÿÿÿ
+T	java:S106‹"9Replace this use of System.out or System.err by a logger.(Â¶œşÿÿÿÿ
+N
+java:S1135"2Complete the task associated to this TODO comment.(» æÿÿÿÿÿ
